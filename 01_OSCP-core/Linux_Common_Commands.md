@@ -200,6 +200,117 @@ curl http://<KALI_IP>/file -o file
 
 ---
 
+## Nano (Text Editor)
+
+Nano is the simplest terminal text editor — use it to edit config files, scripts, or drop a payload directly on the target.
+
+```bash
+nano filename.py
+nano exploit.sh
+nano /etc/crontab
+```
+→ Opens the file in nano for editing. If the file doesn't exist, nano will create it on save.
+
+| Action | Shortcut | What it does |
+|--------|----------|--------------|
+| Save | `Ctrl+O` → Enter | Writes changes to disk — you'll be prompted to confirm the filename |
+| Exit | `Ctrl+X` | Closes nano — prompts to save if you have unsaved changes |
+| Cut line | `Ctrl+K` | Cuts the entire current line and holds it in a buffer |
+| Paste line | `Ctrl+U` | Pastes whatever is in the cut buffer at the cursor position |
+| Search | `Ctrl+W` | Opens a search prompt — type your term and press Enter to find it |
+| Go to line | `Ctrl+_` | Jumps directly to a specific line number — useful in long files |
+| Undo | `Alt+U` | Undoes the last action |
+| Redo | `Alt+E` | Redoes the last undone action |
+
+---
+
+## Terminal Line Editing
+
+These shortcuts work directly on the command line while you're typing — no editor needed.
+
+| Shortcut | What it does |
+|----------|--------------|
+| `Ctrl+A` | Jump to the beginning of the current line |
+| `Ctrl+E` | Jump to the end of the current line |
+| `Alt+B` | Jump back one word at a time |
+| `Alt+F` | Jump forward one word at a time |
+| `Ctrl+W` | Delete the word immediately before the cursor |
+| `Ctrl+U` | Delete everything from the cursor back to the start of the line |
+| `Ctrl+K` | Delete everything from the cursor to the end of the line |
+| `Ctrl+Y` | Paste back what you deleted with `Ctrl+U` or `Ctrl+K` |
+| `Ctrl+XX` | Toggle between the cursor's current position and the start of the line |
+
+> These are especially useful when you've typed a long command and need to fix something in the middle without using the arrow keys the whole way.
+
+---
+
+## Piping
+
+The pipe `|` takes the output of one command and feeds it directly as input into the next. It's how you chain commands together to filter and process data on the fly.
+
+```bash
+cat /etc/passwd | grep bash
+```
+→ Reads the passwd file and filters for only lines containing "bash" — quickly shows which users have a real shell.
+
+```bash
+ps aux | grep root
+```
+→ Lists all processes then filters for root-owned ones. A fast way to spot interesting services without reading the full list.
+
+```bash
+ls -la | grep ".conf"
+```
+→ Lists directory contents and filters for config files. Useful when a folder has many files and you only care about a specific type.
+
+```bash
+cat /etc/passwd | cut -d: -f1
+```
+→ Pipes passwd output into `cut`, which splits each line by `:` and returns only the first field — gives you a clean list of just usernames.
+
+---
+
+## Grep
+
+Grep searches for a pattern inside files or piped output. One of the most used tools for sifting through large amounts of text quickly.
+
+```bash
+grep "password" config.txt
+```
+→ Searches a single file for the word "password" and prints every matching line. Case-sensitive by default.
+
+```bash
+grep -i "password" config.txt
+```
+→ Same search but case-insensitive — catches "Password", "PASSWORD", etc. Use this when you're not sure how it was written.
+
+```bash
+grep -r "password" /var/www/
+```
+→ Recursively searches every file under `/var/www/` for the pattern. Use this to hunt credentials across an entire web root.
+
+```bash
+grep -n "password" config.txt
+```
+→ Shows matching lines along with their line numbers. Helpful when you want to jump directly to the match in nano or less.
+
+```bash
+grep -v "nologin" /etc/passwd
+```
+→ Inverts the match — shows every line that does NOT contain "nologin". Good for filtering out service accounts to see only real users.
+
+```bash
+grep -E "root|admin|password" config.txt
+```
+→ Extended grep lets you search for multiple patterns at once using `|` as OR. Returns any line that matches any of the terms.
+
+```bash
+grep -rl "password" /etc/
+```
+→ Returns only the filenames (not the lines) of files that contain "password" under `/etc/`. Use this first to identify which files to dig into.
+
+---
+
 ## Related Notes
 
 - [[Linux_Priv_Esc]]
