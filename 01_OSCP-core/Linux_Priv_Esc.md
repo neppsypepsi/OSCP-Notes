@@ -11,6 +11,8 @@
 
 ## 1. Sudo Abuse
 
+> **In the event of:** You've just landed a shell as a low-privilege user and want to know if there's a fast, clean path to root — this is helpful because misconfigured sudo permissions are the most common privesc on OSCP boxes and require zero exploitation if present.
+
 ```bash
 sudo -l
 ```
@@ -21,6 +23,8 @@ sudo -l
 
 ## 2. SUID Binaries
 
+> **In the event of:** You have no sudo rights and need another angle — this is helpful because a developer or admin may have left a standard binary (like `find`, `vim`, or `cp`) with the SUID bit set by accident, and any one of those can be abused to read or write files as root.
+
 ```bash
 find / -perm -4000 -type f 2>/dev/null
 ```
@@ -29,6 +33,8 @@ find / -perm -4000 -type f 2>/dev/null
 ---
 
 ## 3. Cron Jobs
+
+> **In the event of:** Sudo and SUID come up empty — this is helpful because a root-owned cron job running a writable script is essentially a scheduled gift; you plant your payload, wait for the timer, and it executes as root without any further interaction.
 
 ```bash
 cat /etc/crontab
@@ -43,6 +49,8 @@ ls -la /etc/cron.*
 ---
 
 ## 4. Credential Hunting
+
+> **In the event of:** You're stuck as a low-privilege user with no obvious exploit path — this is helpful because a found password often lets you `su` to another user or directly to root, bypassing the need for any technical exploit entirely.
 
 ```bash
 cat ~/.bash_history
@@ -63,6 +71,8 @@ cat /var/www/html/config.php
 
 ## 5. Writable /etc/passwd
 
+> **In the event of:** You've found weak file permissions during enumeration — this is helpful because if `/etc/passwd` is writable, you can manufacture your own root account from scratch without needing any existing credentials or exploits.
+
 ```bash
 ls -la /etc/passwd
 ```
@@ -79,6 +89,8 @@ su hacker
 ---
 
 ## 6. Kernel Exploits
+
+> **In the event of:** Everything else has failed and you're running an old or unpatched system — this is helpful because outdated kernels often have public CVEs with ready-made exploits, but treat this as a last resort since a bad kernel exploit can panic and crash the entire machine.
 
 ```bash
 uname -a
