@@ -14,7 +14,7 @@
 ```bash
 sudo -l
 ```
-→ Shows NOPASSWD entries. Look up the binary on **GTFOBins** for the exact exploit path.
+→ Shows which commands the current user can run as another user (usually root) without a password. Cross-reference every binary listed against **GTFOBins** to find a known abuse technique.
 → See [[04_Attack-Chains/sudo-gcore-privesc]] for the gcore memory dump chain.
 
 ---
@@ -24,7 +24,7 @@ sudo -l
 ```bash
 find / -perm -4000 -type f 2>/dev/null
 ```
-→ Runs as file owner (usually root) regardless of who executes. Check every result on **GTFOBins**.
+→ Searches the entire filesystem for binaries with the SUID bit set, which causes them to execute with the file owner's privileges (often root) instead of the caller's. Every result is a potential privilege escalation — look each one up on **GTFOBins** for a known exploitation path.
 
 ---
 
@@ -32,9 +32,13 @@ find / -perm -4000 -type f 2>/dev/null
 
 ```bash
 cat /etc/crontab
+```
+→ Displays the system-wide cron schedule, showing tasks set to run automatically at specific times and the user they run as. If any script listed here is writable by you, you can inject commands that will execute as root when the job triggers.
+
+```bash
 ls -la /etc/cron.*
 ```
-→ Look for scripts running as root that you can write to. Modify the script → wait for it to run → shell as root.
+→ Lists all cron directories (hourly, daily, weekly, etc.) to surface additional scheduled jobs that may not appear in the main crontab. Check each script file's permissions — a world-writable cron script is an instant root path.
 
 ---
 
@@ -42,10 +46,18 @@ ls -la /etc/cron.*
 
 ```bash
 cat ~/.bash_history
+```
+→ Reads the shell history of the current user, which often reveals commands run with plaintext credentials or sensitive flags. Admins frequently type passwords directly into commands (e.g. `mysql -u root -pPassword123`) without realizing the history logs it.
+
+```bash
 find / -name "*.conf" -o -name "*.bak" 2>/dev/null | xargs grep -l "password" 2>/dev/null
+```
+→ Searches the entire filesystem for config and backup files, then filters for any that contain the word "password". A single hit can expose database credentials, SSH keys, or app secrets that allow lateral movement or direct root access.
+
+```bash
 cat /var/www/html/config.php
 ```
-→ History and config files often contain plaintext passwords.
+→ Reads the web application's configuration file, which commonly stores database credentials in plaintext. These creds are often reused for system accounts, making this a reliable source for lateral movement or privilege escalation.
 
 ---
 
@@ -54,7 +66,7 @@ cat /var/www/html/config.php
 ```bash
 ls -la /etc/passwd
 ```
-→ If writable, add a new root user with a known password hash.
+→ Checks the permissions on the passwd file, which normally should only be writable by root. If you see write permissions for your user or group, you can inject a new root-level account directly.
 
 ```bash
 openssl passwd -1 -salt hack password123
@@ -62,6 +74,7 @@ openssl passwd -1 -salt hack password123
 echo 'hacker:<hash>:0:0:root:/root:/bin/bash' >> /etc/passwd
 su hacker
 ```
+→ `openssl passwd` generates a valid MD5-crypt hash that the passwd file format accepts — use this so you can log in with a known password. The appended entry sets UID and GID to `0`, which Linux treats as root regardless of the username, giving you a full root shell via `su hacker`.
 
 ---
 
@@ -69,13 +82,19 @@ su hacker
 
 ```bash
 uname -a
+```
+→ Prints the full kernel version string, including the exact build number needed to match against known CVEs. Kernel exploits are a last resort — they are version-specific, noisy, and can crash the system if they fail.
+
+```bash
 searchsploit linux kernel <version>
 ```
-→ Last resort. Match exact kernel version, transfer binary, execute.
+→ Queries the local Exploit-DB database for known public exploits matching the kernel version. Once you find a match, transfer the exploit binary to the target and execute it to get root.
 
 ---
 
 ## Quick Checklist After Shell
+
+Run this block immediately after landing a shell before doing anything else — covers the most common privesc paths in one pass.
 
 ```bash
 whoami && id
