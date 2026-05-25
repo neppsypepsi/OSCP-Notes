@@ -4,24 +4,53 @@
     "type": "split",
     "children": [
       {
-        "id": "a84ba1325bc053b9",
+        "id": "af022920cba59c94",
         "type": "tabs",
         "children": [
           {
-            "id": "4b65014827e4ab0d",
+            "id": "bf91648ec2b659e3",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "05_Labs/PG-Practice/Blackgate.md",
+                "file": "01_OSCP-core/Linux_Priv_Esc.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Blackgate"
+              "title": "Linux_Priv_Esc"
+            }
+          },
+          {
+            "id": "071a2e4a57679a9d",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "05_Labs/PG-Practice/ochima.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "ochima"
+            }
+          },
+          {
+            "id": "94efe63cf1c9b8ec",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "05_Labs/PG-Practice/ochima.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "ochima"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -104,7 +133,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "01_OSCP-core/Windows_Common_Commands.md.md",
+                "file": "01_OSCP-core/Curl.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -114,7 +143,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Windows_Common_Commands.md"
+              "title": "Backlinks for Curl"
             }
           },
           {
@@ -184,53 +213,60 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "bases:Create new base": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
-      "command-palette:Open command palette": false,
-      "bases:Create new base": false
+      "command-palette:Open command palette": false
     }
   },
-  "active": "4b65014827e4ab0d",
+  "active": "071a2e4a57679a9d",
   "lastOpenFiles": [
-    "02_Tools/Recon_with_NMAP.md",
-    "Untitled.base",
-    "05_Labs/PG-Practice/Blackgate.md",
-    "01_OSCP-core/Linux_Common_Commands.md.tmp.224204.1774291176220",
-    "05_Labs/PG-Practice/Blackgate.md.tmp.224204.1774291153422",
-    "01_OSCP-core/Attack-Workflow.md",
-    "05_Labs/Labs-Index.md",
-    "05_Labs/_Template/BoxName.md",
-    "01_OSCP-core/Lab-Setup/VPN-Connections.md",
-    "02_Tools/Hydra.md",
-    "01_OSCP-core/Linux_Common_Commands.md",
-    "01_OSCP-core/Linux_Priv_Esc.md",
-    "04_Attack-Chains/Exhibitor-ZooKeeper-RCE-to-Root.md",
-    "04_Attack-Chains",
     "02_Tools/ReverseShells.md",
-    "02_Tools/Password_Spraying.md",
-    "02_Tools/SearchSploit.md",
-    "03_Ports-and-Services/Port-Overview-and-Priorities.md",
-    "02_Tools/SMB.md",
-    "02_Tools/Web_Enum.md",
+    "05_Labs/PG-Practice/ochima.md.tmp.772402.5a418f41f4a2",
+    "01_OSCP-core/Linux_Priv_Esc.md",
+    "01_OSCP-core/Linux_Priv_Esc.md.tmp.772402.f01ab44cccf7",
+    "01_OSCP-core/Linux_Priv_Esc.md.tmp.772402.62841750b515",
+    "01_OSCP-core/Juicy_Files.md",
     "02_Tools/File_Transfer.md",
-    "02_Tools/HTA Files-Access.md",
-    "02_Tools/enum4linux.md",
-    "02_Tools/Msfvenom.md",
-    "01_OSCP-core/Windows_Common_Commands.md.md",
-    "01_OSCP-core/Linux_Project_Structure.md.md",
-    "01_OSCP-core/Nano.md.md",
-    "02_Tools/JohntheRipper.md.md",
-    "02_Tools/enum4linux.md.md",
+    "05_Labs/PG-Practice/ochima.md",
+    "01_OSCP-core/Linux_Common_Commands.md",
+    "01_OSCP-core/Windows_Priv_Esc.md",
+    "01_OSCP-core/Linux_Project_Structure.md",
+    "02_Tools/File_Transfer.md.tmp.772402.e0306c2f834c",
+    "02_Tools/SearchSploit.md",
+    "05_Labs/PG-Practice/PyLoader.md",
+    "01_OSCP-core/Push to github steps.md",
+    "02_Tools/ReverseShells.md.tmp.3796587.9c87213925a1",
+    "02_Tools/ReverseShells.md.tmp.3796587.487ac814bcf8",
+    "02_Tools/ReverseShells.md.tmp.3796587.c7563a748624",
+    "02_Tools/ReverseShells.md.tmp.3796587.f3cb10db20cf",
+    "02_Tools/ReverseShells.md.tmp.3796587.228a619fa633",
+    "05_Labs/PG-Practice/RubyDome.md",
+    "02_Tools/wpscan.md",
+    "02_Tools/Web_Enum.md",
+    "05_Labs/PG-Practice/Workaholic.md",
+    "05_Labs/PG-Practice/HUB.md",
+    "05_Labs/PG-Practice/Blackgate.md",
+    "05_Labs/PG-Practice/Law.md",
+    "01_OSCP-core/Curl.md",
+    "01_OSCP-core/Curl.md.tmp.2451173.1777850432644",
+    "02_Tools/sqlmap.md",
+    "02_Tools/NetExec.md",
+    "02_Tools/Web_Template_RCE.md",
+    "02_Tools/Web_Login_Brute_Force.md",
+    "01_OSCP-core/Attack-Workflow.md",
+    "02_Tools/Netcat.md",
+    "Pasted image 20260503014547.png",
+    "Pasted image 20260503014418.png",
+    "Pasted image 20260503004851.png",
+    "Pasted image 20260503003048.png",
     "Screenshot 2025-12-30 at 8.01.40 PM.png",
-    "Screenshot 2025-12-30 at 8.01.40 PM 1.png",
-    "01_OSCP-core/Lab-Setup",
-    "02_Tools",
-    "Web Enum",
-    "Ports and Services",
-    "Attack Workflow",
-    "00_Inbox"
+    "Pasted image 20260428234908.png",
+    "Pasted image 20260428234623.png",
+    "Pasted image 20260411202405.png",
+    "Screenshot 2025-12-30 at 8.01.40 PM 1.png"
   ]
 }

