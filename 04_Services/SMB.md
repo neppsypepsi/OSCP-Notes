@@ -113,6 +113,11 @@ crackmapexec smb <IP>
 
 ```bash
 smbclient //<IP>/<share> -U user%password
+
+#or anonymously 
+
+smbclient //<IP>/<share> -N
+
 ```
 
 Once Inside smbclient:

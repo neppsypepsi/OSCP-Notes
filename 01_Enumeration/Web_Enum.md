@@ -155,13 +155,26 @@ Use **only if**:
 
 ### **File Extensions**
 ```bash
-gobuster dir -u http://<IP> -w <wordlist> -x php,txt,zip,conf,bak
+gobuster dir -u http://<IP> -w /usr/share/dirb/wordlists/common.txt -x php,txt,bak
 ```
-This checks for:
 
-- PHP files
-- Config files
-- Backups
+**Always add `-x php,txt,bak` when the server runs PHP.** You know it runs PHP from the nmap output — look for `PHP/x.x.x` in the Apache version string.
+
+Without `-x`, gobuster only finds directories. It will find `/images` but never `db.php` sitting right next to `index.php`. The `-x` flag tells gobuster to append each extension to every word in the wordlist, so "db" becomes `db.php`, `db.txt`, `db.bak` — all checked separately.
+
+**Why each extension matters:**
+- `php` — PHP scripts that may accept parameters, handle uploads, or contain credentials
+- `txt` — READMEs, changelogs, license files — often reveal app name, version, and file structure
+- `bak` — backup copies of files (e.g. `config.php.bak`) that the server serves as plaintext instead of executing, exposing source code and credentials
+
+**Extension cheatsheet by server type:**
+
+| Server | Extensions to add |
+|---|---|
+| Apache + PHP | `php,txt,bak` |
+| IIS (Windows) | `asp,aspx,txt,bak` |
+| Tomcat (Java) | `jsp,txt,bak` |
+| Any | always include `txt,bak` regardless |
 
 ## **🧠 How to Read Gobuster Output (What Matters)**
 

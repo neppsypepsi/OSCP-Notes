@@ -15,23 +15,18 @@ The vault is an Obsidian markdown vault. All files are `.md`. Always edit files 
 ### Vault Structure
 ```
 OSCP-Notes/
-├── 01_OSCP-core/        # Core concepts, workflows, common commands
-│   ├── Attack-Workflow.md
-│   ├── Linux_Common_Commands.md
-│   ├── Linux_Priv_Esc.md
-│   ├── Linux_Project_Structure.md
-│   ├── Nano.md
-│   ├── PowerShell.md
-│   ├── Priv_Esc.md
-│   ├── Windows_Common_Commands.md
-│   └── Lab-Setup/
-│       └── VPN-Connections.md
-├── 02_Tools/            # One file per tool (nmap, hydra, ligolo, etc.)
-├── 03_Ports-and-Services/
-├── 04_Attack-Chains/    # Full attack chain walkthroughs
-├── 05_Labs/             # Lab notes (PG Practice, HTB, etc.)
+├── 01_Enumeration/      # Finding things — nmap, gobuster, SMB enum, web enum
+├── 02_Exploitation/     # Getting initial access — LFI, RFI, web attacks, reverse shells
+├── 03_Post-Exploitation/# After shell — Linux privesc, file transfer, common commands
+├── 04_Services/         # One file per service/protocol — FTP, SMB, MySQL
+├── 05_Tools/            # Pure tool references — Burp, Hydra, Hashcat, Netcat
+├── 06_Windows/          # Windows-specific — privesc, PowerShell, Mimikatz, Ligolo
+├── 07_Attack-Chains/    # Full attack chain walkthroughs
+├── 08_Labs/             # Lab notes
 │   └── PG-Practice/
-├── Exiftool.md
+├── CLAUDE.md
+├── Session-Guide-Boxes.md
+├── VPN-Connections.md
 └── Welcome.md
 ```
 
