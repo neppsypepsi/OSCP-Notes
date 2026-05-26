@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "06_Windows/NetExec.md",
+                "file": "08_Labs/Labs-Index.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "NetExec"
+              "title": "Labs-Index"
             }
           }
         ]
@@ -63,7 +63,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "proof",
+                "query": "linux",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -193,8 +193,23 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "2abaa5604f5d024a",
+  "active": "9daf533029a5b228",
   "lastOpenFiles": [
+    "Welcome.md.tmp.961827.ba36388ed7f2",
+    "03_Post-Exploitation/Linux_Priv_Esc.md",
+    "08_Labs/Labs-Index.md.tmp.961827.c9c02729f4ee",
+    "06_Windows/CrackMapExec.md.tmp.961827.6ec98a131383",
+    "05_Tools/GitHub_Repos.md",
+    "05_Tools/SearchSploit.md",
+    "05_Tools/Msfvenom.md",
+    "Attack-Workflow.md",
+    "02_Exploitation/SearchSploit.md",
+    "CLAUDE.md.tmp.961827.a55b85b54f9b",
+    "When_In_Doubt.md",
+    "01_Enumeration/HTML_Basics.md",
+    "02_Exploitation/wpscan.md",
+    "01_Enumeration/wpscan.md",
+    "06_Windows/NetExec.md",
     "03_Post-Exploitation/Linux_Priv_Esc.md.tmp.961827.5d6486a86eb3",
     "sedPCoG65",
     "CLAUDE.md.tmp.961827.68d78a24d33b",
@@ -202,7 +217,6 @@
     "VPN-Connections.md",
     "02_Exploitation/LFI_RFI.md",
     "02_Exploitation/OWASP.md",
-    "02_Exploitation/SearchSploit.md",
     "02_Exploitation/Msfvenom.md",
     "Push to github steps.md",
     "05_Labs/PG-Practice/Snookums.md",
@@ -213,24 +227,10 @@
     "08_Labs/PG-Practice/PyLoader.md",
     "08_Labs/PG-Practice/ochima.md",
     "08_Labs/PG-Practice/Law.md",
-    "08_Labs/PG-Practice/HUB.md",
-    "08_Labs/PG-Practice/Blackgate.md",
-    "08_Labs/Labs-Index.md",
-    "07_Attack-Chains/Exhibitor-ZooKeeper-RCE-to-Root.md",
-    "06_Windows/RDP_and_WinRM.md",
-    "06_Windows/Impacket.md",
-    "06_Windows/Ligolo.md",
-    "06_Windows/HTA_Files.md",
-    "06_Windows/UNC_Execution.md",
-    "06_Windows/NetExec.md",
     "08_Labs/PG-Practice",
     "08_Labs",
     "07_Attack-Chains",
     "06_Windows",
-    "05_Tools",
-    "04_Services",
-    "03_Post-Exploitation",
-    "02_Exploitation",
     "Pasted image 20260503014547.png",
     "Pasted image 20260503014418.png",
     "Pasted image 20260503004851.png",

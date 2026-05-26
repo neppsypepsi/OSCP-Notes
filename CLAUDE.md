@@ -24,6 +24,8 @@ OSCP-Notes/
 ├── 07_Attack-Chains/    # Full attack chain walkthroughs
 ├── 08_Labs/             # Lab notes
 │   └── PG-Practice/
+├── Attack-Workflow.md   # Master playbook — Step 0 through root
+├── When_In_Doubt.md     # Methodology Q&A reference
 ├── CLAUDE.md
 ├── Session-Guide-Boxes.md
 ├── VPN-Connections.md
