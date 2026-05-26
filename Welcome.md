@@ -7,15 +7,15 @@ Personal notes for OSCP prep and HTB practice.
 ## Core Workflow
 
 - [[Attack-Workflow]] — Master playbook, Step 0 through root
-- [[Priv_Esc]] — Windows privilege escalation order of operations
+- [[Windows_Priv_Esc]] — Windows privilege escalation order of operations
 - [[VPN-Connections]] — Lab setup and VPN connection steps
-- [[Linux_Project_Structure]] — Folder layout to use on every box
+- [[Attack-Workflow]] — Folder layout to use on every box
 
 ---
 
 ## Enumeration Tools
 
-- [[Recon_with_NMAP]] — Port scanning workflow
+- [[Nmap]] — Port scanning workflow
 - [[Web_Enum]] — Web enumeration: gobuster, source review, upload testing
 - [[SMB]] — SMB share enumeration and access
 - [[enum4linux]] — SMB/AD enumeration
@@ -61,7 +61,7 @@ Personal notes for OSCP prep and HTB practice.
 - [[Netcat]] — Raw TCP connections, reverse shell listener, banner grabbing
 - [[Windows_Common_Commands]] — Post-access Windows commands
 - [[PowerShell]] — PowerShell commands for enumeration and file ops
-- [[Nano]] — Terminal text editor shortcuts
+- [[Linux_Common_Commands]] — Terminal text editor shortcuts
 
 ---
 

@@ -121,7 +121,7 @@ This step is fast and intentional.
 
 ### **Tool references (if I need help)**
 
-- [[Recon_with_NMAP]]
+- [[Nmap]]
 - [[VPN-Connections]]
 
 
@@ -187,7 +187,7 @@ Only after I have the full port list do I move on.
 
 ### **Tool references (if I need help)**
 
-- [[Recon_with_NMAP]]
+- [[Nmap]]
 
 
 
@@ -275,7 +275,7 @@ Only AFTER I know the service and version:
 
 ### **Tool references (if I need help)**
 
-- [[Recon_with_NMAP]]
+- [[Nmap]]
 - [[SearchSploit]]
 - [[Port-Overview-and-Priorities]]
 
@@ -540,7 +540,7 @@ This matters because:
 
 - [[Netcat]]
 - [[Msfvenom]]
-- [[Nano]]
+- [[Linux_Common_Commands]]
 
 
 
@@ -622,7 +622,7 @@ I stop enumerating and move to STEP 8.
 ### **Tool references (if I need help)**
 
 - [[winPEAS]]
-- [[Priv_Esc]]
+- [[Windows_Priv_Esc]]
 - [[File_Transfer]]
 
 ## STEP 8 — Privilege Escalation
@@ -648,7 +648,7 @@ I do NOT:
 
 ### **Tool references (if I need help)**
 
-- [[Priv_Esc]]
+- [[Windows_Priv_Esc]]
 - [[Msfvenom]]
 - [[winPEAS]]
 

@@ -172,7 +172,7 @@ IMPORTANT: uploading the file does nothing as you will need to find another way 
 
 ## **🔗 Related Notes**
 
-- [[Recon_with_NMAP]]
+- [[Nmap]]
 - [[enum4linux]]
 - [[CrackMapExec]]
 - [[NetExec]]

@@ -142,7 +142,7 @@ Then check:
 
 ## **Related Notes**
 
-- [[Priv_Esc]]
+- [[Windows_Priv_Esc]]
 - [[Mimikatz]]
 - [[UNC_Execution]]
 - [[File_Transfer]]

@@ -53,7 +53,7 @@ This pulls:
 ## **Related Notes**
 
 - [[winPEAS]]
-- [[Priv_Esc]]
+- [[Windows_Priv_Esc]]
 - [[Hashcat]]
 - [[Impacket]]
 - [[File_Transfer]]
