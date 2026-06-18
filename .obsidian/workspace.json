@@ -13,15 +13,44 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "08_Labs/Labs-Index.md",
+                "file": "05_Tools/Hashcat.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Labs-Index"
+              "title": "Hashcat"
+            }
+          },
+          {
+            "id": "7116f41a6c7d4b62",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "HTA_Files.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "HTA_Files"
+            }
+          },
+          {
+            "id": "a606464943214f4b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "04_Services/SMB.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "SMB"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -63,7 +92,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "linux",
+                "query": "HTA",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -84,11 +113,12 @@
               "title": "Bookmarks"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "horizontal",
-    "width": 721.5
+    "width": 296.5
   },
   "right": {
     "id": "98db62c152ea7a1d",
@@ -193,8 +223,28 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "9daf533029a5b228",
+  "active": "7116f41a6c7d4b62",
   "lastOpenFiles": [
+    "05_Tools/Hashcat.md.tmp.9448.f24ca8a33221",
+    "05_Tools/Hashcat.md",
+    "08_Labs/PG-Practice/Poison.md",
+    "08_Labs/PG-Practice/Suana.md",
+    "01_Enumeration/AD_Username_Generation.md",
+    "03_Post-Exploitation/File_Transfer.md",
+    "06_Windows/NetExec.md.tmp.9448.a574b0ff1316",
+    "06_Windows/winPEAS.md.tmp.9448.fbd5b27a88c5",
+    "06_Windows/NetExec.md.tmp.9448.ce413314385c",
+    "08_Labs/Labs-Index.md.tmp.9448.385e2c1d216e",
+    "01_Enumeration/AD_Username_Generation.md.tmp.9448.6dd4a526c4c2",
+    "06_Windows/Active_Directory_Attacks.md",
+    "06_Windows/Active_Directory_Attacks.md.tmp.9448.6e13329db920",
+    "04_Services/SMB.md",
+    "05_Tools/JohntheRipper.md",
+    "01_Enumeration/Port-Overview-and-Priorities.md",
+    "01_Enumeration/Web_Enum.md",
+    "08_Labs/PG-Practice/ImageMagick.md",
+    "08_Labs/PG-Practice/Snookums.md",
+    "08_Labs/Labs-Index.md",
     "Welcome.md.tmp.961827.ba36388ed7f2",
     "03_Post-Exploitation/Linux_Priv_Esc.md",
     "08_Labs/Labs-Index.md.tmp.961827.c9c02729f4ee",
@@ -210,27 +260,7 @@
     "02_Exploitation/wpscan.md",
     "01_Enumeration/wpscan.md",
     "06_Windows/NetExec.md",
-    "03_Post-Exploitation/Linux_Priv_Esc.md.tmp.961827.5d6486a86eb3",
-    "sedPCoG65",
-    "CLAUDE.md.tmp.961827.68d78a24d33b",
     "03_Post-Exploitation/Juicy_Files.md",
-    "VPN-Connections.md",
-    "02_Exploitation/LFI_RFI.md",
-    "02_Exploitation/OWASP.md",
-    "02_Exploitation/Msfvenom.md",
-    "Push to github steps.md",
-    "05_Labs/PG-Practice/Snookums.md",
-    "08_Labs/PG-Practice/ImageMagick.md",
-    "08_Labs/PG-Practice/Workaholic.md",
-    "08_Labs/PG-Practice/Snookums.md",
-    "08_Labs/PG-Practice/RubyDome.md",
-    "08_Labs/PG-Practice/PyLoader.md",
-    "08_Labs/PG-Practice/ochima.md",
-    "08_Labs/PG-Practice/Law.md",
-    "08_Labs/PG-Practice",
-    "08_Labs",
-    "07_Attack-Chains",
-    "06_Windows",
     "Pasted image 20260503014547.png",
     "Pasted image 20260503014418.png",
     "Pasted image 20260503004851.png",

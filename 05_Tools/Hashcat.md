@@ -26,13 +26,23 @@ Paste **only the hash**, one per line.
 
 
 ### **STEP 2 — Identify Hash Type**
-Most common OSCP modes:
 
-| **Hash Type** | **Mode** |
-|---------------|----------|
-| NTLM | -m 1000 |
-| AS-REP Roast | -m 18200 |
-| Kerberoast | -m 13100 |
+Read the hash prefix first — it tells you the type before you even look anything up:
+
+| **Prefix / Pattern** | **Hash Type** | **Mode** |
+|----------------------|---------------|----------|
+| `$krb5asrep$23$...` | AS-REP Roast | -m 18200 |
+| `$krb5tgs$23$...` | Kerberoast | -m 13100 |
+| 32 hex chars, no prefix | NTLM | -m 1000 |
+| `$2y$` or `$2a$` | bcrypt | -m 3200 |
+| `$1$` | MD5 crypt (Linux shadow) | -m 500 |
+| `$6$` | SHA-512 crypt (Linux shadow) | -m 1800 |
+
+If the prefix isn't in the table above, use the official reference — paste the prefix in Ctrl+F:
+`https://hashcat.net/wiki/doku.php?id=example_hashes`
+
+That page lists every supported mode with an actual example hash next to it.
+Match your hash format to the example → use that mode number.
 
 
 ### **Crack with Wordlist**
