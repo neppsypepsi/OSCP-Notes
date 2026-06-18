@@ -140,9 +140,37 @@ Then check:
 
 
 
+## **AutoLogon Credentials (Plaintext in Registry)**
+
+One of the most reliable credential finds in AD environments.
+Windows stores AutoLogon passwords in plaintext under:
+`HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon`
+
+winPEAS output looks like:
+```
+Looking for AutoLogon credentials (T1552.002)
+    Some AutoLogon credentials were found
+    DefaultDomainName  :  DOMAIN
+    DefaultUserName    :  DOMAIN\username
+    DefaultPassword    :  PlaintextPasswordHere
+```
+
+**Critical gotcha:** `DefaultUserName` may show the display name or a slightly different string from the real sAMAccountName.
+Always verify the actual username before assuming it's correct:
+
+```bash
+netexec smb <IP> -u <guessed_user> -p '<password>'
+```
+
+Once confirmed → try WinRM, SMB, NTDS dump depending on account rights.
+See → [[Active_Directory_Attacks]]
+
+---
+
 ## **Related Notes**
 
 - [[Windows_Priv_Esc]]
+- [[Active_Directory_Attacks]]
 - [[Mimikatz]]
 - [[UNC_Execution]]
 - [[File_Transfer]]

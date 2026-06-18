@@ -32,7 +32,7 @@
 
 | Box | OS | Status | Foothold / Privesc |
 |-----|----|--------|--------------------|
-|     |    |        |                    |
+| [[Suana\|Sauna]] | Windows (AD) | ✅ Complete | Username gen → ASREPRoast (fsmith) → winPEAS AutoLogon (svc_loanmgr) → NTDS dump → PTH as Administrator |
 
 ## TryHackMe
 
