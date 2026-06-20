@@ -76,6 +76,67 @@ The short version:
 
 ---
 
+## Essential Tools Checklist
+
+Before starting any lab session, verify these are present. Missing any of these can block an attack chain.
+
+### Core Recon
+| Tool | Check | Install if missing |
+|---|---|---|
+| `nmap` | `which nmap` | `apt install nmap` |
+| `gobuster` | `which gobuster` | `apt install gobuster` |
+| `feroxbuster` | `which feroxbuster` | `apt install feroxbuster` |
+| `ffuf` | `which ffuf` | `apt install ffuf` |
+| `enum4linux` | `which enum4linux` | `apt install enum4linux` |
+| `smbclient` | `which smbclient` | `apt install smbclient` |
+| `nikto` | `which nikto` | `apt install nikto` |
+
+### Exploitation
+| Tool | Check | Install if missing |
+|---|---|---|
+| `msfconsole` / `msfvenom` | `which msfvenom` | `apt install metasploit-framework` |
+| `searchsploit` | `which searchsploit` | `apt install exploitdb` |
+| `sqlmap` | `which sqlmap` | `apt install sqlmap` |
+| `hydra` | `which hydra` | `apt install hydra` |
+| `burpsuite` | `which burpsuite` | `apt install burpsuite` |
+
+### Post-Exploitation & Privesc
+| Tool | Check | Install if missing |
+|---|---|---|
+| `linpeas` | `which linpeas` | `apt install peass` |
+| `winpeas` | `which winpeas` | `apt install peass` |
+| `evil-winrm` | `which evil-winrm` | `gem install evil-winrm` |
+| `impacket-psexec` | `which impacket-psexec` | `apt install python3-impacket` |
+| `impacket-secretsdump` | `which impacket-secretsdump` | `apt install python3-impacket` |
+| `john` | `which john` | `apt install john` |
+| `hashcat` | `which hashcat` | `apt install hashcat` |
+
+### Credential / Network
+| Tool | Check | Install if missing |
+|---|---|---|
+| `netexec` (replaces crackmapexec) | `which netexec` | `apt install netexec` |
+| `bloodhound-python` | `which bloodhound-python` | `pip3 install bloodhound` |
+
+### Tunneling / Pivoting (CRITICAL for multi-hop labs)
+| Tool | Check | Install if missing |
+|---|---|---|
+| `ligolo-ng` | `which ligolo-proxy` | `apt install ligolo-ng` |
+
+> ligolo-ng is the current standard for OSCP pivoting. It creates a TUN interface on Kali so all tools work transparently on the routed network — no proxychains needed.
+
+### Wordlists
+| Resource | Path | Install if missing |
+|---|---|---|
+| SecLists | `/usr/share/seclists/` | `apt install seclists` |
+| rockyou.txt | `/usr/share/wordlists/rockyou.txt` | `gunzip /usr/share/wordlists/rockyou.txt.gz` |
+
+### Quick install for common gaps
+```bash
+apt install ligolo-ng peass netexec seclists -y
+```
+
+---
+
 ## My Preferences
 
 - **No fluff** — keep explanations concise and practical
