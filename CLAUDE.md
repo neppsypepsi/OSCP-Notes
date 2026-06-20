@@ -96,9 +96,12 @@ Before starting any lab session, verify these are present. Missing any of these 
 |---|---|---|
 | `msfconsole` / `msfvenom` | `which msfvenom` | `apt install metasploit-framework` |
 | `searchsploit` | `which searchsploit` | `apt install exploitdb` |
+| `python3-venv` | `python3 -m venv --help` | `apt install python3-venv` |
 | `sqlmap` | `which sqlmap` | `apt install sqlmap` |
 | `hydra` | `which hydra` | `apt install hydra` |
 | `burpsuite` | `which burpsuite` | `apt install burpsuite` |
+
+> **Python PoC needs `pip install`?** Modern Kali blocks system-wide pip (`externally-managed-environment`). Use a venv — full enable/install/disable lifecycle is in `05_Tools/Python_venv.md`.
 
 ### Post-Exploitation & Privesc
 | Tool | Check | Install if missing |

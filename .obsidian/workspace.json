@@ -13,15 +13,44 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "02_Exploitation/Malicious_Plugin_Upload.md",
+                "file": "03_Post-Exploitation/File_Transfer.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Malicious_Plugin_Upload"
+              "title": "File_Transfer"
+            }
+          },
+          {
+            "id": "8f0ebdc39e51ed68",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "02_Exploitation/ReverseShells.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "ReverseShells"
+            }
+          },
+          {
+            "id": "e2a97cf1a47df500",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "08_Labs/PG-Practice/Twiggy.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Twiggy"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -63,7 +92,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "linux",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -193,9 +222,25 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "9daf533029a5b228",
+  "active": "e2a97cf1a47df500",
   "lastOpenFiles": [
+    "08_Labs/PG-Practice/Fired.md",
+    "03_Post-Exploitation/File_Transfer.md",
+    "08_Labs/PG-Practice/Twiggy.md.tmp.233086.a231e59a0bf0",
+    "03_Post-Exploitation/Linux_Common_Commands.md",
+    "03_Post-Exploitation/File_Transfer.md.tmp.233086.a23272cdf58c",
+    "08_Labs/PG-Practice/Blackgate.md",
+    "02_Exploitation/LFI_RFI.md",
     "02_Exploitation/WebShells.md",
+    "02_Exploitation/ReverseShells.md",
+    "02_Exploitation/ReverseShells.md.tmp.233086.170076b545d7",
+    "02_Exploitation/Password_Spraying.md",
+    "02_Exploitation/Web_Template_RCE.md",
+    "05_Tools/Python_venv.md",
+    "08_Labs/PG-Practice/Twiggy.md",
+    "CLAUDE.md.tmp.233086.b1cb7bc71f9f",
+    "CLAUDE.md.tmp.233086.2e665d463b19",
+    "05_Tools/Python_venv.md.tmp.233086.6f1b359ab33c",
     "02_Exploitation/Malicious_Plugin_Upload.md",
     "05_Tools/GitHub_Repos.md",
     "08_Labs/PG-Practice/Fired.md.tmp.233086.2c1444db5432",
@@ -203,7 +248,6 @@
     "08_Labs/PG-Practice/Suana.md",
     "08_Labs/PG-Practice/Poison.md",
     "08_Labs/PG-Practice/Levram.md",
-    "08_Labs/PG-Practice/Fired.md",
     "08_Labs/PG-Practice/Extplorer.md",
     "06_Windows/Active_Directory_Attacks.md",
     "03_Post-Exploitation/LinPEAS.md",
@@ -215,21 +259,7 @@
     "Welcome.md.tmp.961827.ba36388ed7f2",
     "03_Post-Exploitation/Linux_Priv_Esc.md",
     "08_Labs/Labs-Index.md.tmp.961827.c9c02729f4ee",
-    "06_Windows/CrackMapExec.md.tmp.961827.6ec98a131383",
     "05_Tools/SearchSploit.md",
-    "05_Tools/Msfvenom.md",
-    "Attack-Workflow.md",
-    "02_Exploitation/SearchSploit.md",
-    "CLAUDE.md.tmp.961827.a55b85b54f9b",
-    "When_In_Doubt.md",
-    "01_Enumeration/HTML_Basics.md",
-    "02_Exploitation/wpscan.md",
-    "01_Enumeration/wpscan.md",
-    "06_Windows/NetExec.md",
-    "03_Post-Exploitation/Linux_Priv_Esc.md.tmp.961827.5d6486a86eb3",
-    "sedPCoG65",
-    "CLAUDE.md.tmp.961827.68d78a24d33b",
-    "08_Labs/PG-Practice",
     "Pasted image 20260503014547.png",
     "Pasted image 20260503014418.png",
     "Pasted image 20260503004851.png",
