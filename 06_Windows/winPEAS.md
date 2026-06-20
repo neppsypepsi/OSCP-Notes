@@ -14,10 +14,27 @@ Run winPEAS when:
 - You are NOT SYSTEM yet
 - You want privesc paths
 
+## Where winPEAS Lives on Kali
+
+Always serve from the installed package path — never use stale copies:
+
+```
+/usr/share/peass/winpeas/winPEASx64.exe     ← 64-bit (most targets)
+/usr/share/peass/winpeas/winPEASx86.exe     ← 32-bit
+/usr/share/peass/winpeas/winPEASany.exe     ← any arch
+/usr/share/peass/winpeas/winPEAS.bat        ← if .exe is blocked by AV
+/usr/share/peass/linpeas/linpeas.sh         ← Linux targets
+```
+
+Serve it:
+```bash
+cd /usr/share/peass/winpeas && python3 -m http.server 8000
+```
+
 ## Transferring winPEAS
 See:
-- 02_Tools/File_Transfer.md
-- 02_Tools/UNC_Execution.md
+- [[File_Transfer]]
+- [[UNC_Execution]]
 
 ## Running winPEAS
 

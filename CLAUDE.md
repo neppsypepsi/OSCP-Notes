@@ -105,6 +105,12 @@ Before starting any lab session, verify these are present. Missing any of these 
 |---|---|---|
 | `linpeas` | `which linpeas` | `apt install peass` |
 | `winpeas` | `which winpeas` | `apt install peass` |
+
+> **PEASS files live at `/usr/share/peass/`** — always serve from there, never from stale copies elsewhere.
+> - Linux target: `/usr/share/peass/linpeas/linpeas.sh`
+> - Windows 64-bit: `/usr/share/peass/winpeas/winPEASx64.exe`
+> - Windows any arch: `/usr/share/peass/winpeas/winPEASany.exe`
+> - No .exe execution: `/usr/share/peass/winpeas/winPEAS.bat`
 | `evil-winrm` | `which evil-winrm` | `gem install evil-winrm` |
 | `impacket-psexec` | `which impacket-psexec` | `apt install python3-impacket` |
 | `impacket-secretsdump` | `which impacket-secretsdump` | `apt install python3-impacket` |
