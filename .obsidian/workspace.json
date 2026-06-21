@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "03_Post-Exploitation/File_Transfer.md",
+                "file": "03_Post-Exploitation/LinPEAS.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "File_Transfer"
+              "title": "LinPEAS"
             }
           },
           {
@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "02_Exploitation/ReverseShells.md",
+                "file": "03_Post-Exploitation/Linux_Common_Commands.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "ReverseShells"
+              "title": "Linux_Common_Commands"
             }
           },
           {
@@ -41,16 +41,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "08_Labs/PG-Practice/Twiggy.md",
+                "file": "08_Labs/PG-Practice/Pelican.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Twiggy"
+              "title": "Pelican"
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -92,7 +92,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "winpeas",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -222,22 +222,31 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "e2a97cf1a47df500",
+  "active": "8f0ebdc39e51ed68",
   "lastOpenFiles": [
-    "08_Labs/PG-Practice/Fired.md",
-    "03_Post-Exploitation/File_Transfer.md",
-    "08_Labs/PG-Practice/Twiggy.md.tmp.233086.a231e59a0bf0",
+    "03_Post-Exploitation/Linux_Common_Commands.md.tmp.233086.441cd697faa8",
+    "03_Post-Exploitation/Linux_Common_Commands.md.tmp.233086.aece591b57b6",
+    "03_Post-Exploitation/LinPEAS.md",
     "03_Post-Exploitation/Linux_Common_Commands.md",
+    "03_Post-Exploitation/Linux_Priv_Esc.md",
+    "03_Post-Exploitation/Linux_Common_Commands.md.tmp.233086.7cf560b84d50",
+    "03_Post-Exploitation/LinPEAS.md.tmp.233086.814fde069164",
+    "06_Windows/winPEAS.md",
+    "03_Post-Exploitation/Juicy_Files.md",
+    "08_Labs/PG-Practice/Pelican.md",
+    "02_Exploitation/ReverseShells.md",
+    "03_Post-Exploitation/File_Transfer.md",
+    "08_Labs/PG-Practice/Twiggy.md",
+    "05_Tools/Python_venv.md",
+    "08_Labs/PG-Practice/Fired.md",
+    "08_Labs/PG-Practice/Twiggy.md.tmp.233086.a231e59a0bf0",
     "03_Post-Exploitation/File_Transfer.md.tmp.233086.a23272cdf58c",
     "08_Labs/PG-Practice/Blackgate.md",
     "02_Exploitation/LFI_RFI.md",
     "02_Exploitation/WebShells.md",
-    "02_Exploitation/ReverseShells.md",
     "02_Exploitation/ReverseShells.md.tmp.233086.170076b545d7",
     "02_Exploitation/Password_Spraying.md",
     "02_Exploitation/Web_Template_RCE.md",
-    "05_Tools/Python_venv.md",
-    "08_Labs/PG-Practice/Twiggy.md",
     "CLAUDE.md.tmp.233086.b1cb7bc71f9f",
     "CLAUDE.md.tmp.233086.2e665d463b19",
     "05_Tools/Python_venv.md.tmp.233086.6f1b359ab33c",
@@ -250,16 +259,7 @@
     "08_Labs/PG-Practice/Levram.md",
     "08_Labs/PG-Practice/Extplorer.md",
     "06_Windows/Active_Directory_Attacks.md",
-    "03_Post-Exploitation/LinPEAS.md",
     "01_Enumeration/AD_Username_Generation.md",
-    "08_Labs/PG-Practice/Fired.thismachine-draft.md",
-    "05_Tools/Netcat.md",
-    "02_Exploitation/Malicious_Plugin_Upload.md.tmp.42059.0544549ed64e",
-    "08_Labs/Labs-Index.md",
-    "Welcome.md.tmp.961827.ba36388ed7f2",
-    "03_Post-Exploitation/Linux_Priv_Esc.md",
-    "08_Labs/Labs-Index.md.tmp.961827.c9c02729f4ee",
-    "05_Tools/SearchSploit.md",
     "Pasted image 20260503014547.png",
     "Pasted image 20260503014418.png",
     "Pasted image 20260503004851.png",
