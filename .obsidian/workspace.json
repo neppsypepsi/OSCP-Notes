@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "03_Post-Exploitation/LinPEAS.md",
+                "file": "03_Post-Exploitation/Linux_Priv_Esc.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "LinPEAS"
+              "title": "Linux_Priv_Esc"
             }
           },
           {
@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "03_Post-Exploitation/Linux_Common_Commands.md",
+                "file": "08_Labs/PG-Practice/Pelican.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Linux_Common_Commands"
+              "title": "Pelican"
             }
           },
           {
@@ -49,8 +49,7 @@
               "title": "Pelican"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -222,21 +221,25 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "8f0ebdc39e51ed68",
+  "active": "9daf533029a5b228",
   "lastOpenFiles": [
+    "03_Post-Exploitation/LinPEAS.md",
+    "08_Labs/PG-Practice/Pelican.md",
+    "03_Post-Exploitation/Linux_Priv_Esc.md.tmp.233086.422d38b4aa6a",
+    "08_Labs/PG-Practice/Pelican.md.tmp.233086.e68d5f33bcb2",
+    "08_Labs/PG-Practice/Twiggy.md",
+    "08_Labs/Labs-Index.md",
+    "07_Attack-Chains/Exhibitor-ZooKeeper-RCE-to-Root.md",
+    "03_Post-Exploitation/Linux_Common_Commands.md",
     "03_Post-Exploitation/Linux_Common_Commands.md.tmp.233086.441cd697faa8",
     "03_Post-Exploitation/Linux_Common_Commands.md.tmp.233086.aece591b57b6",
-    "03_Post-Exploitation/LinPEAS.md",
-    "03_Post-Exploitation/Linux_Common_Commands.md",
     "03_Post-Exploitation/Linux_Priv_Esc.md",
     "03_Post-Exploitation/Linux_Common_Commands.md.tmp.233086.7cf560b84d50",
     "03_Post-Exploitation/LinPEAS.md.tmp.233086.814fde069164",
     "06_Windows/winPEAS.md",
     "03_Post-Exploitation/Juicy_Files.md",
-    "08_Labs/PG-Practice/Pelican.md",
     "02_Exploitation/ReverseShells.md",
     "03_Post-Exploitation/File_Transfer.md",
-    "08_Labs/PG-Practice/Twiggy.md",
     "05_Tools/Python_venv.md",
     "08_Labs/PG-Practice/Fired.md",
     "08_Labs/PG-Practice/Twiggy.md.tmp.233086.a231e59a0bf0",
@@ -248,18 +251,13 @@
     "02_Exploitation/Password_Spraying.md",
     "02_Exploitation/Web_Template_RCE.md",
     "CLAUDE.md.tmp.233086.b1cb7bc71f9f",
-    "CLAUDE.md.tmp.233086.2e665d463b19",
-    "05_Tools/Python_venv.md.tmp.233086.6f1b359ab33c",
     "02_Exploitation/Malicious_Plugin_Upload.md",
     "05_Tools/GitHub_Repos.md",
-    "08_Labs/PG-Practice/Fired.md.tmp.233086.2c1444db5432",
     "HTA_Files.md",
     "08_Labs/PG-Practice/Suana.md",
     "08_Labs/PG-Practice/Poison.md",
     "08_Labs/PG-Practice/Levram.md",
     "08_Labs/PG-Practice/Extplorer.md",
-    "06_Windows/Active_Directory_Attacks.md",
-    "01_Enumeration/AD_Username_Generation.md",
     "Pasted image 20260503014547.png",
     "Pasted image 20260503014418.png",
     "Pasted image 20260503004851.png",
