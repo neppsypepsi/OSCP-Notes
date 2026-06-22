@@ -75,3 +75,4 @@ python3 -m venv ~/impacket-venv    # for an impacket-based PoC
 - [[GitHub_Repos]] — cloning PoCs (their `requirements.txt` step needs this venv)
 - [[SearchSploit]]
 - [[ReverseShells]]
+/Downloads/Redis-RCE
