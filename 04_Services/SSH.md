@@ -24,7 +24,10 @@ So the whole game: **get your public key written into a target user's `authorize
 
 ```bash
 ssh-keygen -t ed25519 -f mykey          # -> mykey (private), mykey.pub (public)
-# write contents of mykey.pub into target's ~/.ssh/authorized_keys (any way you can)
+# write contents of mykey.pub into target's ~/.ssh/authorized_keys (any way you can). If you can upload, but are limited to cwd as a way to traverse, then make your .pub file, and use mv to move it into a new file called authorized_keys. From there you can ssh
+
+
+
 ssh -i mykey <user>@<target>            # log in with the private key
 ```
 
@@ -41,6 +44,34 @@ ssh -i mykey <user>@<target>            # log in with the private key
 | home dir | not group/other-writable |
 
 Key must be **one line**, valid format (`ssh-ed25519 AAAA... comment`), trailing newline. If a web upload mangles format/perms → silent `Permission denied (publickey)`. Suspect perms/format before the key itself.
+
+---
+
+## Forcing a Single Key — `-o IdentitiesOnly=yes` (fixes "Too many authentication failures")
+
+`-i mykey` does **not** mean "use only this key." By default ssh offers *every* identity it knows — your agent's loaded keys plus `~/.ssh/id_rsa`, `id_ed25519`, etc. Each rejected key burns an attempt, and the server caps attempts at `MaxAuthTries` (default **6**):
+
+```
+Received disconnect ... Too many authentication failures
+```
+
+…and it falls back to a password prompt you can't answer. Force ssh to use **only** the key you name:
+
+```bash
+ssh -o IdentitiesOnly=yes -i mykey <user>@<target>
+```
+
+Other `-o` flags worth keeping for labs:
+```bash
+-o PreferredAuthentications=publickey            # skip password entirely (fail fast instead of prompting)
+-o PubkeyAcceptedAlgorithms=+ssh-rsa             # needed for OLD ssh-rsa keys — newer OpenSSH disables SHA-1 RSA by default
+-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null   # skip host-key prompts/warnings
+-v   /   -vv                                      # verbose — shows which key is offered and whether the server accepts it
+```
+
+**Gotcha — `-i` takes a *relative* path.** `-i root` points at a file named `root` **in your current directory**. If you found a key at `/home/user/.ssh/keys/root` on the box, run the ssh command from that directory (or give the full path) — otherwise ssh has no key to offer and drops straight to a password prompt.
+
+> When a key login is refused against the target's external IP, **try `127.0.0.1` from your foothold shell too** (and vice-versa). Root is often reachable over loopback when the external attempt is blocked — costs nothing to test both. See [[#SSH Config Aliases → Privesc]] for the `ssh -i ... root@127.0.0.1` pattern. Use `-vv` to see whether the server *accepted* or *rejected* the key.
 
 ---
 

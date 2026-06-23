@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "08_Labs/PG-Practice/Blackgate.md",
+                "file": "08_Labs/PG-Practice/Boolean.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Blackgate"
+              "title": "Boolean"
             }
           },
           {
@@ -41,15 +41,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "08_Labs/PG-Practice/Twiggy.md",
+                "file": "03_Post-Exploitation/LinPEAS.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Twiggy"
+              "title": "LinPEAS"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -91,7 +92,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "burp",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -221,18 +222,34 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "9daf533029a5b228",
+  "active": "8f0ebdc39e51ed68",
   "lastOpenFiles": [
+    "08_Labs/PG-Practice/Boolean.md.tmp.957752.48f38645c0b5",
+    "02_Exploitation/WebShells.md",
+    "05_Tools/BurpSuite.md",
     "08_Labs/PG-Practice/Boolean.md",
-    "08_Labs/PG-Practice/Blackgate.md",
+    "08_Labs/PG-Practice/Boolean.md.tmp.957752.b9675c794946",
+    "03_Post-Exploitation/LinPEAS.md",
     "04_Services/SSH.md",
+    "03_Post-Exploitation/LinPEAS.md.tmp.957752.82284ad994bf",
+    "04_Services/SSH.md.tmp.957752.c0d790971678",
+    "08_Labs/PG-Practice/Boolean.md.tmp.957752.e3d75ab6391e",
+    "Pasted image 20260622191347.png",
+    "Pasted image 20260622190802.png",
+    "Pasted image 20260622190639.png",
+    "Pasted image 20260622190323.png",
+    "Pasted image 20260622185706.png",
+    "Pasted image 20260622185346.png",
+    "Pasted image 20260622185334.png",
+    "03_Post-Exploitation/Linux_Priv_Esc.md",
+    "08_Labs/PG-Practice/Twiggy.md",
+    "03_Post-Exploitation/File_Transfer.md",
+    "01_Enumeration/Web_Enum.md",
+    "08_Labs/PG-Practice/Blackgate.md",
     "02_Exploitation/ReverseShells.md",
     "04_Services/SSH.md.tmp.749878.5743b8cbba1e",
     "08_Labs/PG-Practice/Blackgate.md.tmp.749878.8c9ba1278498",
     "08_Labs/PG-Practice/Astronaut.md",
-    "03_Post-Exploitation/Linux_Priv_Esc.md",
-    "08_Labs/PG-Practice/Twiggy.md",
-    "03_Post-Exploitation/LinPEAS.md",
     "08_Labs/PG-Practice/Pelican.md",
     "05_Tools/Python_venv.md",
     "03_Post-Exploitation/Linux_Priv_Esc.md.tmp.233086.422d38b4aa6a",
@@ -242,31 +259,16 @@
     "03_Post-Exploitation/Linux_Common_Commands.md",
     "03_Post-Exploitation/Linux_Common_Commands.md.tmp.233086.441cd697faa8",
     "03_Post-Exploitation/Linux_Common_Commands.md.tmp.233086.aece591b57b6",
-    "03_Post-Exploitation/Linux_Common_Commands.md.tmp.233086.7cf560b84d50",
-    "03_Post-Exploitation/LinPEAS.md.tmp.233086.814fde069164",
     "06_Windows/winPEAS.md",
     "03_Post-Exploitation/Juicy_Files.md",
-    "03_Post-Exploitation/File_Transfer.md",
     "08_Labs/PG-Practice/Fired.md",
-    "08_Labs/PG-Practice/Twiggy.md.tmp.233086.a231e59a0bf0",
-    "03_Post-Exploitation/File_Transfer.md.tmp.233086.a23272cdf58c",
     "02_Exploitation/LFI_RFI.md",
-    "02_Exploitation/WebShells.md",
     "02_Exploitation/Password_Spraying.md",
     "02_Exploitation/Web_Template_RCE.md",
     "02_Exploitation/Malicious_Plugin_Upload.md",
     "05_Tools/GitHub_Repos.md",
-    "HTA_Files.md",
-    "08_Labs/PG-Practice/Suana.md",
-    "08_Labs/PG-Practice/Poison.md",
     "Pasted image 20260503014547.png",
     "Pasted image 20260503014418.png",
-    "Pasted image 20260503004851.png",
-    "Pasted image 20260503003048.png",
-    "Screenshot 2025-12-30 at 8.01.40 PM.png",
-    "Pasted image 20260428234908.png",
-    "Pasted image 20260428234623.png",
-    "Pasted image 20260411202405.png",
-    "Screenshot 2025-12-30 at 8.01.40 PM 1.png"
+    "Pasted image 20260503004851.png"
   ]
 }
