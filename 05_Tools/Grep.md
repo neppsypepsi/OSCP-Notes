@@ -96,6 +96,7 @@ Grepping for the **content** is the default first move. `-l` (filename-only) is 
 
 ## Related Notes
 
+- [[Find]]
 - [[Curl]]
 - [[Linux_Common_Commands]]
 - [[JohntheRipper]]

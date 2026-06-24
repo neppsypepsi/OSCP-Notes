@@ -89,7 +89,7 @@ smbclient -L //<IP>/ -N
 
 ### **STEP 3 — Check Share Permissions (Fast)**
 ```bash
-nxc smb <target ip> -u `` -p `` --shares
+nxc smb <target ip> -u '' -p '' --shares
 ```
 **Why:** shows share list + whether you have **READ / WRITE**.
 
@@ -161,6 +161,35 @@ mget * #which grabs all
 
 
 
+
+### **STEP 6 — Mount a Share (Better for Searching)**
+
+Mounting with `mount -t cifs` lets you use `find`, `grep`, and standard Linux tools across the whole share — much faster than navigating smbclient manually when you need to search for files or strings.
+
+```bash
+# anonymous / null session — use `guest` (this is the one that works)
+sudo mount -t cifs //<IP>/<share> /mnt -o guest
+
+# with credentials
+sudo mount -t cifs //<IP>/<share> /mnt -o username=user,password=pass
+
+# then search normally
+grep -Ri password /mnt              # recurse + case-insensitive, show matching lines
+find /mnt -name "*.xml" 2>/dev/null
+
+# unmount when done
+sudo umount /mnt
+```
+
+> **Null session gotcha:** `-o "username=,password="` throws `username specified with no parameter` — mount.cifs rejects the empty username. Use **`-o guest`** for anonymous instead.
+>
+> **If you get `Unable to find suitable address` / mount error(115):** the target isn't reachable — check the VPN (`ip addr show tun0`) and `ping <IP>` first. For an SMBv1-only host, add `vers=1.0`.
+
+**Why mount over smbclient:** `grep`/`find` work on the full tree. Use smbclient to browse; mount when you need to search or pull multiple files.
+
+> **Reading the grep output:** real secrets live in structured config under `/etc/` (`.yaml`, `.xml`, `.conf`, `.ini`). Treat hits under `doc/`, `lang/`, and `binary file matches` as noise — those are bundled docs/examples (e.g. Cassandra's CQL.html showing `alice`/`bob` example passwords), not live creds. A **backup config ≠ the live config** — a default like FreeSWITCH's `ClueCon` in the backup may not be what the running service uses.
+
+---
 
 ### **STEP 7 — Write Tests (Only if Writable)**
 ```bash
