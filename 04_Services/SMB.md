@@ -89,7 +89,7 @@ smbclient -L //<IP>/ -N
 
 ### **STEP 3 — Check Share Permissions (Fast)**
 ```bash
-smbmap -H <IP>
+nxc smb <target ip> -u `` -p `` --shares
 ```
 **Why:** shows share list + whether you have **READ / WRITE**.
 

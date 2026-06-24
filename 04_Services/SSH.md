@@ -87,6 +87,37 @@ cat ~/.ssh/authorized_keys
 
 ---
 
+## Reusing a Found Private Key
+
+You find an `id_rsa`/`id_ed25519` on the box (in `~/.ssh/`, a home dir, a backup share, an LFI read). Copy it to Kali, `chmod 600`, then use it. Two things people get wrong:
+
+**1. Where the key sits tells you NOTHING about which user it logs in as.** A private key authenticates you as whoever has the matching *public* key in their `authorized_keys` — that may be a **different** account than the one whose home you found it in. So **try it against every known user, including root:**
+
+```bash
+chmod 600 found_key
+ssh -o IdentitiesOnly=yes -i found_key anthony@target   # may fail...
+ssh -o IdentitiesOnly=yes -i found_key root@target      # ...and root works
+```
+
+> Clue: a key found in a user's home failed for `anthony` but logged straight into **root** — root's `authorized_keys` trusted it. The shell you launch from is irrelevant; only `-i <key>` + `<user>@host` decide success.
+
+**2. Is the key even encrypted? Check before bothering to crack:**
+
+- Open the key — an **encrypted old-format** key shows `Proc-Type: 4,ENCRYPTED`; a **new OpenSSH-format** encrypted key will **prompt for a passphrase** when you `ssh -i`.
+- If `ssh -i found_key user@target` logs in **without** asking for a passphrase, the key is **unencrypted** — nothing to crack, just use it.
+
+If it *is* passphrase-protected, crack it:
+
+```bash
+ssh2john found_key > hash.txt
+john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
+john --show hash.txt        # prints the passphrase IF it cracked
+```
+
+Cracked = john prints the plaintext (use it at the passphrase prompt). Exhausts rockyou with nothing = not the intended path with this wordlist — move on. See [[JohntheRipper]].
+
+---
+
 ## SSH Config Aliases → Privesc
 
 `~/.ssh/config` defines shortcut hosts:

