@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "05_Tools/Curl.md",
+                "file": "07_Attack-Chains/Clue-CassandraWeb-LFI-to-Root.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Curl"
+              "title": "Clue-CassandraWeb-LFI-to-Root"
             }
           },
           {
@@ -238,16 +238,20 @@
   },
   "active": "e2a97cf1a47df500",
   "lastOpenFiles": [
+    "08_Labs/PG-Practice/Clue.md",
+    "07_Attack-Chains/Clue-CassandraWeb-LFI-to-Root.md",
+    "07_Attack-Chains/Clue-CassandraWeb-LFI-to-Root.md.tmp.1329977.0510ae089df5",
+    "03_Post-Exploitation/Juicy_Files.md",
+    "03_Post-Exploitation/Linux_Common_Commands.md",
+    "05_Tools/Curl.md",
     "03_Post-Exploitation/Linux_Common_Commands.md.tmp.1265769.dd71fab34301",
     "05_Tools/Grep.md",
     "05_Tools/Grep.md.tmp.1265769.c4194bc072e8",
     "05_Tools/Curl.md.tmp.1265769.984b613582d2",
     "05_Tools/Msfvenom.md",
-    "05_Tools/Curl.md",
     "02_Exploitation/LFI_RFI.md",
     "03_Post-Exploitation/LinPEAS.md",
     "04_Services/SSH.md",
-    "08_Labs/PG-Practice/Clue.md",
     "04_Services/SSH.md.tmp.1265769.339c511f7d69",
     "08_Labs/PG-Practice/Boolean.md",
     "04_Services/SMB.md",
@@ -271,16 +275,12 @@
     "01_Enumeration/Web_Enum.md",
     "08_Labs/PG-Practice/Blackgate.md",
     "02_Exploitation/ReverseShells.md",
-    "04_Services/SSH.md.tmp.749878.5743b8cbba1e",
-    "08_Labs/PG-Practice/Blackgate.md.tmp.749878.8c9ba1278498",
     "08_Labs/PG-Practice/Astronaut.md",
     "08_Labs/PG-Practice/Pelican.md",
     "05_Tools/Python_venv.md",
     "08_Labs/Labs-Index.md",
     "07_Attack-Chains/Exhibitor-ZooKeeper-RCE-to-Root.md",
-    "03_Post-Exploitation/Linux_Common_Commands.md",
     "06_Windows/winPEAS.md",
-    "03_Post-Exploitation/Juicy_Files.md",
     "Pasted image 20260503014547.png",
     "Pasted image 20260503014418.png",
     "Pasted image 20260503004851.png"
