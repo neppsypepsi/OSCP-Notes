@@ -167,7 +167,7 @@ mget * #which grabs all
 Mounting with `mount -t cifs` lets you use `find`, `grep`, and standard Linux tools across the whole share — much faster than navigating smbclient manually when you need to search for files or strings.
 
 ```bash
-# anonymous / null session — use `guest` (this is the one that works)
+# anonymous / null session — use `guest` 
 sudo mount -t cifs //<IP>/<share> /mnt -o guest
 
 # with credentials
