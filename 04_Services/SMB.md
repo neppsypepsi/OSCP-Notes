@@ -164,30 +164,21 @@ mget * #which grabs all
 
 ### **STEP 6 — Mount a Share (Better for Searching)**
 
-Mounting with `mount -t cifs` lets you use `find`, `grep`, and standard Linux tools across the whole share — much faster than navigating smbclient manually when you need to search for files or strings.
+Mount the share so `grep`/`find` work on the whole tree. Use smbclient to browse, mount to search/pull many files.
 
 ```bash
-# anonymous / null session — use `guest` 
-sudo mount -t cifs //<IP>/<share> /mnt -o guest
-
-# with credentials
-sudo mount -t cifs //<IP>/<share> /mnt -o username=user,password=pass
-
-# then search normally
-grep -Ri password /mnt              # recurse + case-insensitive, show matching lines
+sudo mount -t cifs //<IP>/<share> /mnt -o guest                          # anonymous / null session
+sudo mount -t cifs //<IP>/<share> /mnt -o username=user,password=pass    # with creds
+grep -Ri password /mnt                                                   # search across the tree
 find /mnt -name "*.xml" 2>/dev/null
-
-# unmount when done
 sudo umount /mnt
 ```
 
-> **Null session gotcha:** `-o "username=,password="` throws `username specified with no parameter` — mount.cifs rejects the empty username. Use **`-o guest`** for anonymous instead.
+> **Null session:** use `-o guest`. `-o "username=,password="` throws `username specified with no parameter`.
 >
-> **If you get `Unable to find suitable address` / mount error(115):** the target isn't reachable — check the VPN (`ip addr show tun0`) and `ping <IP>` first. For an SMBv1-only host, add `vers=1.0`.
-
-**Why mount over smbclient:** `grep`/`find` work on the full tree. Use smbclient to browse; mount when you need to search or pull multiple files.
-
-> **Reading the grep output:** real secrets live in structured config under `/etc/` (`.yaml`, `.xml`, `.conf`, `.ini`). Treat hits under `doc/`, `lang/`, and `binary file matches` as noise — those are bundled docs/examples (e.g. Cassandra's CQL.html showing `alice`/`bob` example passwords), not live creds. A **backup config ≠ the live config** — a default like FreeSWITCH's `ClueCon` in the backup may not be what the running service uses.
+> **`Unable to find suitable address` / error(115):** target unreachable — check VPN (`ip addr show tun0`) and `ping <IP>`. SMBv1-only host → add `vers=1.0`.
+>
+> **Reading hits:** real creds = structured config (`.yaml .xml .conf .ini`). Noise = `doc/`, `lang/`, binary matches (bundled examples like CQL's `alice`/`bob`). **Backup ≠ live** — a default like FreeSWITCH `ClueCon` in the backup may not be the running value.
 
 ---
 

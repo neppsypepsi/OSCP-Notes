@@ -31,7 +31,7 @@ Service Info: Hosts: 127.0.0.1, CLUE; OS: Linux
 - **22 (SSH)** — useful with creds, or if we can drop a key into an `authorized_keys`. Also handy for file transfer.
 - **80 (HTTP)** — 403 Forbidden splash. Backup directory referenced but not accessible from the front end.
 - **139/445 (SMB)** — check for readable shares (the "backup web directory" hint lines up with port 80).
-- **3000 (HTTP / Cassandra Web)** — version **3.11.13**, served by `thin`. Visitable in browser.
+- **3000 (HTTP / Cassandra Web)** — version **3.11.13**, served by `thin`. Visit-able in browser.
 - **8021 (FreeSWITCH mod_event_socket)** — service product, likely needs the ESL password.
 
 ---

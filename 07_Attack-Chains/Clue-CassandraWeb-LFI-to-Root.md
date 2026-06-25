@@ -28,7 +28,7 @@ nxc smb <IP> -u '' -p '' --shares  # better: shows READ/WRITE perms per share
 → A `backup`-type share is readable anonymously. **Mount it** so native tools (find/grep) work against the whole tree instead of clicking through `smbclient`:
 
 ```bash
-sudo mount -t cifs -o "username=,password=" //<IP>/backup /mnt
+sudo mount -t cifs //<IP>/<share> /mnt -o guest      
 ls -laR /mnt
 grep -Ril password /mnt          # hunt creds across the entire backup
 ```
