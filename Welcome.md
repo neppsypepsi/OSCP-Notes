@@ -37,7 +37,7 @@ Personal notes for OSCP prep and HTB practice.
 - [[htaccess_Bypass]] — PHP execution via `.htaccess` upload bypass
 - [[Web_Login_Brute_Force]] — Python requests for JSON API logins
 - [[Password_Spraying]] — One password across many users
-- [[sqlmap]] — SQL injection workflow
+- [[SQL_Injection]] — SQL injection (manual detection, auth bypass, UNION)
 - [[ReverseShells]] — Payload library by language
 
 **Tools**

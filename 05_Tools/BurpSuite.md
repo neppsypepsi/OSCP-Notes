@@ -72,6 +72,53 @@ The blank line after `Connection: keep-alive` is required.
 
 ---
 
+## Intruder — Automated Fuzzing / Brute Force
+
+Intruder takes one request and resends it many times, substituting values from a **payload set** (a wordlist) into positions you mark. Main OSCP use: fuzzing login forms for SQLi auth bypass, and parameter brute forcing.
+
+### Workflow
+1. In the browser, **submit the form with junk creds** (e.g. `admin`/`test`). This generates the **POST** request that actually carries `username=...&password=...`. (Just reloading the page only captures the GET — useless here.)
+2. Proxy → HTTP history → right-click that POST → **Send to Intruder**.
+3. Intruder → **Positions** tab → click **Clear §** (it auto-marks everything).
+4. Mark only the field(s) you want to fuzz (see markers below).
+5. **Payloads** tab → load your wordlist → **Start attack**.
+6. Read the results (see "Spotting a hit" below).
+
+### Payload position markers — the `§` (section sign)
+
+The `§` markers tell Intruder **where** to insert each payload. Placement matters:
+
+- **Wrap a selection** (select the value → **Add §** → `§admin§`) → each payload **replaces** the whole selection. Field becomes *just the payload*.
+- **Place at a single point** (select nothing, click **Add §** → `§§`) → each payload is **inserted at that exact spot**, surrounding text stays. So `admin§§` becomes `admin` + payload (appended).
+
+Which to use depends on your wordlist format:
+- Lines are **complete field values** (`' or 1=1 -- -`) → **wrap** the field (replace).
+- Lines are **tails** meant to follow a known username → type `admin`, mark right after it (`admin§§`) so each payload **appends** → `admin' or 1=1 -- -`.
+
+### Attack types
+
+| Type | Payload sets | Behavior |
+|---|---|---|
+| **Sniper** | 1 | One position at a time. With two marked fields, it fuzzes username (password fixed), then fuzzes password (username fixed) — never both at once. Best with a small list, or when you already know one field (delete the other field's marker so only one is fuzzed → much faster). |
+| **Battering ram** | 1 | Puts the **same** payload into **all** marked positions at once. Use when username and password should be identical (e.g. the Cockpit query reuses one value for both). |
+| **Pitchfork** | multiple (1 per position) | Walks lists in parallel — payload set 1 → position 1, set 2 → position 2, in lockstep. Use with paired username:password lists. |
+| **Cluster bomb** | multiple (1 per position) | Tries **every combination** across all lists. Use for true cred brute forcing (every user × every password). |
+
+> A "payload set" is just a wordlist assigned to a position.
+
+### Spotting a hit
+
+Results appear **right in Intruder** — you don't need to retype on the page. Sort the table by:
+- **Status code** — a successful login bypass is often a **302 redirect** to a dashboard.
+- **Length** — the winning response is usually a different size than the failures.
+- Optionally add a **Grep – Match** rule (Options tab) on a string like `invalid` / `welcome` to flag the row automatically.
+
+To actually *use* the access, reproduce the winning payload in the browser login form so your browser gets the authenticated session cookie.
+
+> SQLi auth-bypass workflow and local wordlist paths: **[[SQL_Injection]]**.
+
+---
+
 ## Target Tab — Site Map
 
 Burp builds a site map from all proxied traffic. Found under Target → Site map.
@@ -106,3 +153,4 @@ Always switch to Raw before editing a request in Repeater.
 - [[LFI_RFI]]
 - [[Web_Enum]]
 - [[ReverseShells]]
+- [[SQL_Injection]]

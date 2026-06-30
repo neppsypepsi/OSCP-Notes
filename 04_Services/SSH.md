@@ -1,41 +1,82 @@
 # SSH (Port 22)
 
-Encrypted remote shell. Two auth methods: **password** and **public-key**. Key-based auth is the one that matters for exploitation — a file-write primitive on a target becomes a shell.
+Encrypted remote shell. Auth = **password** or **key**. Key auth is the exploit path: a write primitive on a target → shell.
 
 ---
 
-## Key-Based Auth — The Model
+## Flags
 
-Generate a key pair on Kali:
-- **Private key** (`id_ed25519`) → stays on your box, secret, never leaves.
-- **Public key** (`id_ed25519.pub`) → the `ssh-ed25519 AAAA...` string, safe to share.
+| Flag | Meaning |
+|---|---|
+| `-i <key>` | use this private key (relative path — see gotcha) |
+| `-o <opt>` | set a config option inline (see table below) |
+| `-p <port>` | non-standard port |
+| `-L l:host:r` | local forward (reach internal service on your localhost) |
+| `-D 1080` | dynamic SOCKS proxy |
+| `-J user@host` | ProxyJump — hop through a box |
+| `-v` / `-vv` | verbose — shows which key is offered + accept/reject |
 
-**The rule:** if your *public* key is in a user's `~/.ssh/authorized_keys`, you log in as that user with your *private* key — no password.
+### `-o` options worth keeping
 
-```
-~/.ssh/authorized_keys   → list of public keys allowed to log in as this user (one per line)
-```
-
-So the whole game: **get your public key written into a target user's `authorized_keys`.** Any write primitive (file upload, path traversal, Redis file-write, LFI→write) turns into SSH access as that user.
+| `-o` option | Why |
+|---|---|
+| `IdentitiesOnly=yes` | offer ONLY the `-i` key → fixes "Too many authentication failures" |
+| `PreferredAuthentications=publickey` | skip password prompt, fail fast |
+| `PubkeyAcceptedAlgorithms=+ssh-rsa` | needed for OLD ssh-rsa keys (new OpenSSH disables SHA-1 RSA) |
+| `StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null` | skip host-key prompts |
 
 ---
 
-## Workflow
+## File locations (target)
+
+| Path | What |
+|---|---|
+| `~/.ssh/id_rsa` / `id_ed25519` | **private** key — reusable, loot it |
+| `~/.ssh/id_rsa.pub` | public key |
+| `~/.ssh/authorized_keys` | **public** keys allowed to log in as this user (one per line) |
+| `~/.ssh/config` | host aliases → can lead to privesc |
+| `~/.ssh/known_hosts` | boxes this user reaches → pivoting |
+| `/etc/ssh/sshd_config` | server config (e.g. `PermitRootLogin`) |
+
+---
+
+## Found a private key → reuse it
 
 ```bash
-ssh-keygen -t ed25519 -f mykey          # -> mykey (private), mykey.pub (public)
-# write contents of mykey.pub into target's ~/.ssh/authorized_keys (any way you can). If you can upload, but are limited to cwd as a way to traverse, then make your .pub file, and use mv to move it into a new file called authorized_keys. From there you can ssh
-
-
-
-ssh -i mykey <user>@<target>            # log in with the private key
+chmod 600 found_key
+ssh -o IdentitiesOnly=yes -i found_key user@target
+ssh -o IdentitiesOnly=yes -i found_key root@target      # ALSO try root
 ```
+→ Where you found the key tells you **nothing** about which user it logs in as — it authenticates as whoever trusts the matching public key. Try every user **incl. root**.
+
+> **`-i` is a relative path.** `-i root` = a file named `root` in your cwd. Run from the key's dir or give the full path, or ssh silently drops to a password prompt.
+
+> **Key login refused on the external IP?** Try `root@127.0.0.1` from your foothold shell. Root is often reachable over loopback when blocked externally. `-vv` shows accept vs reject.
+
+### Encrypted key? Crack it
+```bash
+ssh2john found_key > hash.txt
+john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
+john --show hash.txt
+```
+→ If `ssh -i` logs in without asking a passphrase, it's unencrypted — skip this. `Proc-Type: 4,ENCRYPTED` in the key (or a passphrase prompt) = encrypted. See [[JohntheRipper]].
 
 ---
 
-## Permission Gotcha (wastes hours)
+## Can write to a user's home → plant YOUR key
 
-`sshd` rejects key auth if perms are too loose (StrictModes). On the target:
+```bash
+ssh-keygen -t ed25519 -f mykey                          # -> mykey + mykey.pub
+# write contents of mykey.pub into target's ~/.ssh/authorized_keys (any write primitive)
+ssh -o IdentitiesOnly=yes -i mykey <user>@<target>
+```
+→ Opposite of reusing a found key: here you push your **public** key into **their** `authorized_keys`. Any write primitive (upload, traversal, Redis file-write, LFI→write) → SSH as that user.
+
+> **Limited to cwd on upload?** Make `mykey.pub`, `mv` it into a file named `authorized_keys`, then ssh.
+
+---
+
+## StrictModes perms (wastes hours)
 
 | Path | Mode |
 |---|---|
@@ -43,111 +84,43 @@ ssh -i mykey <user>@<target>            # log in with the private key
 | `~/.ssh/authorized_keys` | `600` |
 | home dir | not group/other-writable |
 
-Key must be **one line**, valid format (`ssh-ed25519 AAAA... comment`), trailing newline. If a web upload mangles format/perms → silent `Permission denied (publickey)`. Suspect perms/format before the key itself.
+→ Key must be one line, valid format (`ssh-ed25519 AAAA... comment`), trailing newline. Bad perms/format = silent `Permission denied (publickey)`. Suspect perms before the key.
 
 ---
 
-## Forcing a Single Key — `-o IdentitiesOnly=yes` (fixes "Too many authentication failures")
-
-`-i mykey` does **not** mean "use only this key." By default ssh offers *every* identity it knows — your agent's loaded keys plus `~/.ssh/id_rsa`, `id_ed25519`, etc. Each rejected key burns an attempt, and the server caps attempts at `MaxAuthTries` (default **6**):
-
-```
-Received disconnect ... Too many authentication failures
-```
-
-…and it falls back to a password prompt you can't answer. Force ssh to use **only** the key you name:
-
-```bash
-ssh -o IdentitiesOnly=yes -i mykey <user>@<target>
-```
-
-Other `-o` flags worth keeping for labs:
-```bash
--o PreferredAuthentications=publickey            # skip password entirely (fail fast instead of prompting)
--o PubkeyAcceptedAlgorithms=+ssh-rsa             # needed for OLD ssh-rsa keys — newer OpenSSH disables SHA-1 RSA by default
--o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null   # skip host-key prompts/warnings
--v   /   -vv                                      # verbose — shows which key is offered and whether the server accepts it
-```
-
-**Gotcha — `-i` takes a *relative* path.** `-i root` points at a file named `root` **in your current directory**. If you found a key at `/home/user/.ssh/keys/root` on the box, run the ssh command from that directory (or give the full path) — otherwise ssh has no key to offer and drops straight to a password prompt.
-
-> When a key login is refused against the target's external IP, **try `127.0.0.1` from your foothold shell too** (and vice-versa). Root is often reachable over loopback when the external attempt is blocked — costs nothing to test both. See [[#SSH Config Aliases → Privesc]] for the `ssh -i ... root@127.0.0.1` pattern. Use `-vv` to see whether the server *accepted* or *rejected* the key.
-
----
-
-## Post-Foothold Enumeration — `~/.ssh/`
+## Post-foothold enum
 
 ```bash
 ls -la ~/.ssh/
-cat ~/.ssh/config          # Host aliases → can lead to privesc
-cat ~/.ssh/id_*            # private keys you can reuse on other accounts/boxes
-cat ~/.ssh/known_hosts     # boxes this user reaches → pivoting
+cat ~/.ssh/id_*            # private keys to reuse
+cat ~/.ssh/config          # Host aliases → privesc
+cat ~/.ssh/known_hosts     # pivot targets
 cat ~/.ssh/authorized_keys
 ```
 
----
-
-## Reusing a Found Private Key
-
-You find an `id_rsa`/`id_ed25519` on the box (in `~/.ssh/`, a home dir, a backup share, an LFI read). Copy it to Kali, `chmod 600`, then use it. Two things people get wrong:
-
-**1. Where the key sits tells you NOTHING about which user it logs in as.** A private key authenticates you as whoever has the matching *public* key in their `authorized_keys` — that may be a **different** account than the one whose home you found it in. So **try it against every known user, including root:**
-
-```bash
-chmod 600 found_key
-ssh -o IdentitiesOnly=yes -i found_key anthony@target   # may fail...
-ssh -o IdentitiesOnly=yes -i found_key root@target      # ...and root works
-```
-
-> Clue: a key found in a user's home failed for `anthony` but logged straight into **root** — root's `authorized_keys` trusted it. The shell you launch from is irrelevant; only `-i <key>` + `<user>@host` decide success.
-
-**2. Is the key even encrypted? Check before bothering to crack:**
-
-- Open the key — an **encrypted old-format** key shows `Proc-Type: 4,ENCRYPTED`; a **new OpenSSH-format** encrypted key will **prompt for a passphrase** when you `ssh -i`.
-- If `ssh -i found_key user@target` logs in **without** asking for a passphrase, the key is **unencrypted** — nothing to crack, just use it.
-
-If it *is* passphrase-protected, crack it:
-
-```bash
-ssh2john found_key > hash.txt
-john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt
-john --show hash.txt        # prints the passphrase IF it cracked
-```
-
-Cracked = john prints the plaintext (use it at the passphrase prompt). Exhausts rockyou with nothing = not the intended path with this wordlist — move on. See [[JohntheRipper]].
-
----
-
-## SSH Config Aliases → Privesc
-
-`~/.ssh/config` defines shortcut hosts:
-
+### Config alias → privesc
 ```
 Host myroot
     HostName 127.0.0.1
     User root
     IdentityFile /home/someuser/.ssh/id_ed25519
 ```
-
-`ssh myroot` then logs in as **root** using the referenced key — *if that key is already trusted in root's `authorized_keys`*. The config doesn't grant access; it just documents/uses an existing trust. Equivalent without the alias:
-
+→ `ssh myroot` logs in as root **if that key is trusted in root's authorized_keys**. Same thing without the alias:
 ```bash
 ssh -i /home/someuser/.ssh/id_ed25519 root@127.0.0.1
 ```
-
-**Always read `~/.ssh/config` after a foothold** — a pre-staged alias + a readable key trusted by root = straight to root.
+Always read `~/.ssh/config` after a foothold.
 
 ---
 
-## Tunneling / Pivoting
+## Tunneling / pivoting
 
 ```bash
-ssh -L 8080:127.0.0.1:80 user@target    # local forward → reach internal service on your localhost:8080
-ssh -D 1080 user@target                 # dynamic SOCKS proxy
-ssh -J jumpuser@jumphost user@target    # ProxyJump → hop through a box
+ssh -L 8080:127.0.0.1:80 user@target    # local forward → internal svc on localhost:8080
+ssh -D 1080 user@target                 # SOCKS proxy
+ssh -J jumpuser@jumphost user@target    # hop through a box
 ```
-
-(For OSCP multi-hop, ligolo-ng is usually preferred — but know SSH can do it.)
+→ For OSCP multi-hop ligolo-ng is usually preferred, but SSH can do it.
 
 ---
 
@@ -155,4 +128,5 @@ ssh -J jumpuser@jumphost user@target    # ProxyJump → hop through a box
 
 - [[Linux_Priv_Esc]]
 - [[Netcat]]
+- [[JohntheRipper]]
 - [[Port-Overview-and-Priorities]]

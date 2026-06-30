@@ -60,8 +60,8 @@ curl http://admin:password@<IP>/admin     # HTTP Basic auth in the URL
 ## SQLi handoff
 ```bash
 curl "http://<IP>/search?q='"                # single quote → SQL error = injectable
-sqlmap -u "http://<IP>/search?q=test" -p q   # point sqlmap at the param
 ```
+→ Quote throws a SQL error = injectable. Confirm and exploit manually — see [[SQL_Injection]] (sqlmap is banned on the OSCP exam).
 
 ---
 
@@ -87,6 +87,6 @@ sqlmap -u "http://<IP>/search?q=test" -p q   # point sqlmap at the param
 
 - [[Web_Enum]]
 - [[LFI_RFI]]
-- [[sqlmap]]
+- [[SQL_Injection]]
 - [[wpscan]]
 - [[htaccess_Bypass]]

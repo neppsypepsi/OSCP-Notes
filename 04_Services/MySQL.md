@@ -117,8 +117,16 @@ Try these if you find MySQL exposed with no credentials from enumeration:
 
 ---
 
+## SQL Injection against MySQL
+
+Detecting and exploiting SQLi (manual detection, login auth bypass, UNION extraction) lives in **[[SQL_Injection]]**. Burp Intruder mechanics (payload markers, attack types, spotting hits) live in **[[BurpSuite]] → Intruder**.
+
+---
+
 ## Related Notes
 
+- [[SQL_Injection]]
+- [[BurpSuite]]
 - [[Web_Enum]]
 - [[Linux_Common_Commands]]
 - [[File_Transfer]]
