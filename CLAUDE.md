@@ -134,14 +134,23 @@ Before starting any lab session, verify these are present. Missing any of these 
 > ligolo-ng is the current standard for OSCP pivoting. It creates a TUN interface on Kali so all tools work transparently on the routed network — no proxychains needed.
 
 ### Wordlists
-| Resource | Path | Install if missing |
+
+> **MUST-HAVE — verify BEFORE any lab.** Both of these were confirmed **missing** on a fresh Kali (2026-06-30): SecLists is not installed by default, and `rockyou.txt` ships gzipped so the plaintext path does not exist until you decompress it. Fix both up front — a missing wordlist silently breaks brute-force / fuzzing chains mid-attack.
+
+| Resource | Path | Fix if missing |
 |---|---|---|
-| SecLists | `/usr/share/seclists/` | `apt install seclists` |
-| rockyou.txt | `/usr/share/wordlists/rockyou.txt` | `gunzip /usr/share/wordlists/rockyou.txt.gz` |
+| SecLists | `/usr/share/seclists/` | `sudo apt install seclists -y` |
+| rockyou.txt | `/usr/share/wordlists/rockyou.txt` | `gunzip /usr/share/wordlists/rockyou.txt.gz` (removes the `.gz`, leaves plaintext) |
+
+> **Fallback dir-bust list (always present on Kali):** `/usr/share/wordlists/dirb/common.txt` — use if SecLists isn't installed yet.
+
+> **Burp Intruder file-picker hangs (infinite spinner)?** Burp's Java file chooser stalls on huge dirs — `/usr/share/seclists/` has ~6,000+ files, so browsing it locks up. Fix: keep a small **Burp-friendly copy** of just the lists you need in `/home/nepps1/wordlists/` and load from there. Do NOT move the SecLists files out of `/usr/share` — that breaks gobuster/hydra/ffuf paths; **copy** only.
+> - SQLi login-bypass lists (for MySQL web logins): `/home/nepps1/wordlists/SQLi/` — key file `MySQL-SQLi-Login-Bypass.fuzzdb.txt`.
 
 ### Quick install for common gaps
 ```bash
 apt install ligolo-ng peass netexec seclists -y
+gunzip /usr/share/wordlists/rockyou.txt.gz 2>/dev/null   # decompress rockyou if still gzipped
 ```
 
 ---

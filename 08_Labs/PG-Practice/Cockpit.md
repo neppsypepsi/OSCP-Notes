@@ -22,5 +22,23 @@ Port 22: Can be good if we can get ssh keys or credentials to a user.
 
 Port 80:
 Enumeration on the web:
+- Very boring two buttons that dont do anything. Even after checking with burpsuite to see what was picked up..nothing. 
+- Run gobuster:
+	- login.php            (Status: 200)
+		- Blaze login page. Tried admin admin, got invalid password. I then tested for sqli with admin' and was able to generate a new message
+```
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '%' AND password like '%%'' at line 1
+```
+- This tells us that we are using MySQL in the back end to interpret our commands.
+- Query shape leaked by the error: `username LIKE '%<input>%' AND password LIKE '%<input>%'`.
+- **Auth bypass:** loaded the **PayloadsAllTheThings MySQL Injection** list into Burp Intruder and let it run. Winning payload:
+```
+' OR ""='
+```
+→ `LIKE '%'` matches every row and the quotes stay balanced, so no comment (`-- -` / `#`) is needed — logged straight in. (The comment-based payloads had errored first; Burp was mangling the comment char, so this quote-balancing one was more reliable.)
+- Wordlist ref: https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/MySQL%20Injection.md
 
 Port 9090
+- Observed that there was a login page. Tried admin admin, and the target IP for an IP to connect to. Was given an error..
+- tried admin' to see if there was an sqli 
+- 
