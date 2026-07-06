@@ -33,12 +33,25 @@ Error: You have an error in your SQL syntax; check the manual that corresponds t
 - Query shape leaked by the error: `username LIKE '%<input>%' AND password LIKE '%<input>%'`.
 - **Auth bypass:** loaded the **PayloadsAllTheThings MySQL Injection** list into Burp Intruder and let it run. Winning payload:
 ```
-' OR ""='
+'OR""='
 ```
-→ `LIKE '%'` matches every row and the quotes stay balanced, so no comment (`-- -` / `#`) is needed — logged straight in. (The comment-based payloads had errored first; Burp was mangling the comment char, so this quote-balancing one was more reliable.)
-- Wordlist ref: https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/MySQL%20Injection.md
+
+Credentials obtained:
+
+james:Y2FudHRvdWNoaGh0aGlzc0A0NTUxNTI=
+cameron:dGhpc3NjYW50dGJldG91Y2hlZGRANDU1MTUy
+
+Appear to be base 64 encoded
+- james:canttouchhhthiss@455152
+- cameron:thisscanttbetouchedd@455152
+tried using these credentials to log into the dashboard and it did not work.
 
 Port 9090
 - Observed that there was a login page. Tried admin admin, and the target IP for an IP to connect to. Was given an error..
 - tried admin' to see if there was an sqli 
-- 
+- Cockpit web login accepts the dumped creds → logged in as **james**. Cockpit → **Terminal** gives a shell as james.
+
+Privesc → root:
+- `sudo -l` → `(ALL) NOPASSWD: /usr/bin/tar -czvf /tmp/backup.tar.gz *`
+- The trailing `*` = **wildcard injection**. Planted flag-named files (`--checkpoint=1`, `--checkpoint-action=exec=sh priv.sh`) so tar runs my payload as root → SUID root bash → root.
+- Full technique + the ownership gotcha I hit: [[Tar-Wildcard-Sudo-to-Root]]
