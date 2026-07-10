@@ -19,7 +19,7 @@
 | [[HUB]] | Linux | ✅ Complete | Barracuda/FuguHub LSP injection → root rev shell |
 | [[Workaholic]] | Linux | 🟡 In Progress | WordPress user enum done, no foothold yet |
 | [[Law]] | Linux | 🟡 In Progress | Unstructured notes — needs cleanup |
-| [[ImageMagick]] | Linux | 🟡 In Progress | Initial recon only — found upload form |
+| [[Image]] | Linux | 🟡 In Progress | Initial recon only — found upload form |
 | [[PyLoader]] | Linux | 🟡 In Progress | Nmap only — pyLoad on 9666 |
 
 ## PG-Play

@@ -13,34 +13,6 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "05_Tools/Hashcat.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Hashcat"
-            }
-          },
-          {
-            "id": "e2a97cf1a47df500",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "08_Labs/PG-Practice/Extplorer.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Extplorer"
-            }
-          },
-          {
-            "id": "eeba8997980833f0",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
                 "file": "03_Post-Exploitation/Linux_Priv_Esc.md",
                 "mode": "source",
                 "source": false
@@ -50,17 +22,31 @@
             }
           },
           {
-            "id": "f230e578b42eb962",
+            "id": "e2a97cf1a47df500",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "05_Tools/debugfs.md",
+                "file": "05_Tools/Hashcat.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "debugfs"
+              "title": "Hashcat"
+            }
+          },
+          {
+            "id": "eeba8997980833f0",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "08_Labs/PG-Practice/Image.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Image"
             }
           }
         ],
@@ -238,15 +224,21 @@
   },
   "active": "e2a97cf1a47df500",
   "lastOpenFiles": [
-    "05_Tools/debugfs.md",
+    "03_Post-Exploitation/LinPEAS.md",
+    "08_Labs/PG-Practice/Image.md",
+    "02_Exploitation/WebShells.md",
     "03_Post-Exploitation/Linux_Priv_Esc.md",
-    "03_Post-Exploitation/Linux_Common_Commands.md",
-    "08_Labs/PG-Practice/Extplorer.md",
     "05_Tools/Hashcat.md",
+    "02_Exploitation/ReverseShells.md",
+    "02_Exploitation/Web_Template_RCE.md",
+    "Pasted image 20260503014418.png",
+    "08_Labs/Labs-Index.md",
+    "08_Labs/PG-Practice/HUB.md",
+    "08_Labs/PG-Practice/Extplorer.md",
+    "05_Tools/debugfs.md",
+    "03_Post-Exploitation/Linux_Common_Commands.md",
     "04_Services/SSH.md",
     "05_Tools/debugfs.md.tmp.2941139.7b82f1edb13b",
-    "03_Post-Exploitation/LinPEAS.md",
-    "02_Exploitation/ReverseShells.md",
     "05_Tools/Grep.md",
     "Pasted image 20260709175600.png",
     "05_Tools/Find.md",
@@ -261,17 +253,12 @@
     "05_Tools/SearchSploit.md",
     "08_Labs/PG-Practice/Boolean.md",
     "Attack-Workflow.md",
-    "02_Exploitation/WebShells.md",
     "05_Tools/Msfvenom.md",
     "01_Enumeration/Web_Enum.md",
     "Welcome.md",
     "08_Labs/PG-Practice/Levram.md",
-    "05_Tools/BurpSuite.md",
     "Pasted image 20260707221014.png",
     "Pasted image 20260707220909.png",
-    "08_Labs/PG-Practice/Crane.md",
-    "08_Labs/PG-Practice/Cockpit.md",
-    "07_Attack-Chains/Tar-Wildcard-Sudo-to-Root.md",
     "02_Exploitation/SQL_Injection.md.tmp.1784014.a45a697ac21a",
     "08_Labs/PG-Practice/Cockpit.md.tmp.1784014.847eb6322e16",
     "08_Labs/PG-Practice/Cockpit.md.tmp.1784014.bf4748fcc593",
@@ -282,7 +269,6 @@
     "Pasted image 20260626133547.png",
     "Pasted image 20260626125948.png",
     "05_Tools/Grep.md.tmp.1403599.8064d1983bb6",
-    "Pasted image 20260622191347.png",
-    "Pasted image 20260622190802.png"
+    "Pasted image 20260622191347.png"
   ]
 }
