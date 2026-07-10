@@ -80,6 +80,13 @@ The short version:
 
 Before starting any lab session, verify these are present. Missing any of these can block an attack chain.
 
+> **⚠️ Install status is PER-MACHINE — do not share it across machines.** Whether a tool is installed depends on the specific box you are on. If this Claude session is running on a *different* machine than the one logged below, **re-run the checks locally** and log that machine separately. Never assume another machine's results apply here — that's how you end up thinking a tool is present when it isn't.
+>
+> **Machines checked:**
+> - **`kali` (Kali 2026.2), user `nepps1` — fully checked 2026-07-10.** Everything below present EXCEPT `pspy` and `ligolo-ng`: the apt mirror (`kali.download`) returned 403 that day, so both were staged as GitHub static binaries under `/home/nepps1/tools/`:
+>   - `pspy` → `/home/nepps1/tools/pspy/pspy64`
+>   - `ligolo-ng` → `/home/nepps1/tools/ligolo/{proxy, agent_linux, agent_windows.exe}`
+
 ### Core Recon
 | Tool | Check | Install if missing |
 |---|---|---|
@@ -108,6 +115,7 @@ Before starting any lab session, verify these are present. Missing any of these 
 |---|---|---|
 | `linpeas` | `which linpeas` | `apt install peass` |
 | `winpeas` | `which winpeas` | `apt install peass` |
+| `pspy` | `which pspy` | `apt install pspy` |
 
 > **PEASS files live at `/usr/share/peass/`** — always serve from there, never from stale copies elsewhere.
 > - Linux target: `/usr/share/peass/linpeas/linpeas.sh`
@@ -159,6 +167,7 @@ gunzip /usr/share/wordlists/rockyou.txt.gz 2>/dev/null   # decompress rockyou if
 
 - **No fluff** — keep explanations concise and practical
 - **OSCP context always** — explain why something matters in a pentest, not just what it does
+- **Keep tool/technique notes lean** — just the necessary info. Don't pad them with box-specific walkthrough examples unless I explicitly ask
 - **Don't create files I didn't ask for**
 - **Ask before deleting anything**
 - When I ask to improve or add to a note, **preserve all existing content** — only add, don't remove unless I say so
