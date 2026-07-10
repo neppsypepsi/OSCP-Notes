@@ -21,6 +21,10 @@ Create a file:
 
 ```bash
 nano user.hash
+
+#or you can echo it into a file
+
+echo 'hash' > user.hash
 ```
 Paste **only the hash**, one per line.
 

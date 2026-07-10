@@ -29,14 +29,14 @@ Encrypted remote shell. Auth = **password** or **key**. Key auth is the exploit 
 
 ## File locations (target)
 
-| Path | What |
-|---|---|
-| `~/.ssh/id_rsa` / `id_ed25519` | **private** key — reusable, loot it |
-| `~/.ssh/id_rsa.pub` | public key |
-| `~/.ssh/authorized_keys` | **public** keys allowed to log in as this user (one per line) |
-| `~/.ssh/config` | host aliases → can lead to privesc |
-| `~/.ssh/known_hosts` | boxes this user reaches → pivoting |
-| `/etc/ssh/sshd_config` | server config (e.g. `PermitRootLogin`) |
+| Path                           | What                                                          |
+| ------------------------------ | ------------------------------------------------------------- |
+| `~/.ssh/id_rsa` / `id_ed25519` | **private** key — reusable, loot it                           |
+| `~/.ssh/id_rsa.pub`            | public key                                                    |
+| `~/.ssh/authorized_keys`       | **public** keys allowed to log in as this user (one per line) |
+| `~/.ssh/config`                | host aliases → can lead to privesc                            |
+| `~/.ssh/known_hosts`           | boxes this user reaches → pivoting                            |
+| `/etc/ssh/sshd_config`         | server config (e.g. `PermitRootLogin`)                        |
 
 ---
 
@@ -66,11 +66,22 @@ john --show hash.txt
 ## Can write to a user's home → plant YOUR key
 
 ```bash
+#step 1:
 ssh-keygen -t ed25519 -f mykey                          # -> mykey + mykey.pub
-# write contents of mykey.pub into target's ~/.ssh/authorized_keys (any write primitive)
+
+#or create a key towhich it wont ask for a passphrase
+
+ssh-keygen -t ed25519 -f mykey -N ''
+
+#step 2:
+
+cat mykey.pub 
+
+
 ssh -o IdentitiesOnly=yes -i mykey <user>@<target>
 ```
-→ Opposite of reusing a found key: here you push your **public** key into **their** `authorized_keys`. Any write primitive (upload, traversal, Redis file-write, LFI→write) → SSH as that user.
+
+
 
 > **Limited to cwd on upload?** Make `mykey.pub`, `mv` it into a file named `authorized_keys`, then ssh.
 

@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "03_Post-Exploitation/LinPEAS.md",
+                "file": "05_Tools/Hashcat.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "LinPEAS"
+              "title": "Hashcat"
             }
           },
           {
@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "01_Enumeration/Web_Enum.md",
+                "file": "08_Labs/PG-Practice/Extplorer.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Web_Enum"
+              "title": "Extplorer"
             }
           },
           {
@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "08_Labs/PG-Practice/Levram.md",
+                "file": "03_Post-Exploitation/Linux_Priv_Esc.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Levram"
+              "title": "Linux_Priv_Esc"
             }
           },
           {
@@ -55,16 +55,16 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "05_Tools/Find.md",
+                "file": "05_Tools/debugfs.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Find"
+              "title": "debugfs"
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -236,53 +236,53 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "2abaa5604f5d024a",
+  "active": "e2a97cf1a47df500",
   "lastOpenFiles": [
-    "03_Post-Exploitation/LinPEAS.md",
-    "08_Labs/PG-Practice/Levram.md",
+    "05_Tools/debugfs.md",
     "03_Post-Exploitation/Linux_Priv_Esc.md",
-    "05_Tools/Find.md",
+    "03_Post-Exploitation/Linux_Common_Commands.md",
+    "08_Labs/PG-Practice/Extplorer.md",
+    "05_Tools/Hashcat.md",
+    "04_Services/SSH.md",
+    "05_Tools/debugfs.md.tmp.2941139.7b82f1edb13b",
+    "03_Post-Exploitation/LinPEAS.md",
     "02_Exploitation/ReverseShells.md",
-    "05_Tools/BurpSuite.md",
-    "01_Enumeration/Web_Enum.md",
+    "05_Tools/Grep.md",
+    "Pasted image 20260709175600.png",
+    "05_Tools/Find.md",
+    "Pasted image 20260709173733.png",
+    "Pasted image 20260709173348.png",
+    "02_Exploitation/htaccess_Bypass.md",
+    "Pasted image 20260709171851.png",
+    "06_Windows/CrackMapExec.md",
+    "05_Tools/Netcat.md",
+    "02_Exploitation/ReverseShells.md.tmp.2762573.05583fb97e1c",
+    "01_Enumeration/wpscan.md",
+    "05_Tools/SearchSploit.md",
     "08_Labs/PG-Practice/Boolean.md",
+    "Attack-Workflow.md",
+    "02_Exploitation/WebShells.md",
+    "05_Tools/Msfvenom.md",
+    "01_Enumeration/Web_Enum.md",
+    "Welcome.md",
+    "08_Labs/PG-Practice/Levram.md",
+    "05_Tools/BurpSuite.md",
     "Pasted image 20260707221014.png",
     "Pasted image 20260707220909.png",
     "08_Labs/PG-Practice/Crane.md",
     "08_Labs/PG-Practice/Cockpit.md",
     "07_Attack-Chains/Tar-Wildcard-Sudo-to-Root.md",
-    "07_Attack-Chains/Chown-Chmod-Rsync-Zip-Sudo-to-Root.md",
     "02_Exploitation/SQL_Injection.md.tmp.1784014.a45a697ac21a",
     "08_Labs/PG-Practice/Cockpit.md.tmp.1784014.847eb6322e16",
     "08_Labs/PG-Practice/Cockpit.md.tmp.1784014.bf4748fcc593",
-    "02_Exploitation/SQL_Injection.md",
     "02_Exploitation/SQL_Injection.md.tmp.1784014.c1b14aa77eea",
     "05_Tools/BurpSuite.md.tmp.1784014.5a0dcc2af40f",
     "CLAUDE.md.tmp.1784014.8c071bb465f7",
     "CLAUDE.md.tmp.1784014.2ebffe393cc8",
-    "05_Tools/Curl.md",
-    "04_Services/MySQL.md",
-    "08_Labs/PG-Practice/Snookums.md",
-    "05_Tools/Grep.md",
-    "07_Attack-Chains/Clue-CassandraWeb-LFI-to-Root.md",
     "Pasted image 20260626133547.png",
     "Pasted image 20260626125948.png",
-    "08_Labs/PG-Practice/clue2.0.md",
     "05_Tools/Grep.md.tmp.1403599.8064d1983bb6",
-    "05_Tools/Curl.md.tmp.1403599.8bfc59f25326",
-    "02_Exploitation/LFI_RFI.md",
-    "08_Labs/PG-Practice/Clue.md",
-    "04_Services/SMB.md",
-    "04_Services/SSH.md",
-    "07_Attack-Chains/Clue-CassandraWeb-LFI-to-Root.md.tmp.1329977.0510ae089df5",
-    "03_Post-Exploitation/Juicy_Files.md",
-    "03_Post-Exploitation/Linux_Common_Commands.md",
-    "05_Tools/Msfvenom.md",
     "Pasted image 20260622191347.png",
-    "Pasted image 20260622190802.png",
-    "Pasted image 20260622190639.png",
-    "Pasted image 20260622190323.png",
-    "Pasted image 20260622185706.png",
-    "Pasted image 20260622185346.png"
+    "Pasted image 20260622190802.png"
   ]
 }
