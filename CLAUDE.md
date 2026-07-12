@@ -24,6 +24,7 @@ OSCP-Notes/
 ├── 07_Attack-Chains/    # Full attack chain walkthroughs
 ├── 08_Labs/             # Lab notes
 │   └── PG-Practice/
+├── scripts/             # Synced tooling — oscp-toolcheck.sh (the /lab checklist) + SETUP-lab-command.md (bootstraps /lab on a new machine)
 ├── Attack-Workflow.md   # Master playbook — Step 0 through root
 ├── When_In_Doubt.md     # Methodology Q&A reference
 ├── CLAUDE.md
@@ -82,7 +83,10 @@ Before starting any lab session, verify these are present. Missing any of these 
 
 > **⚠️ Install status is PER-MACHINE — do not share it across machines.** Whether a tool is installed depends on the specific box you are on. If this Claude session is running on a *different* machine than the one logged below, **re-run the checks locally** and log that machine separately. Never assume another machine's results apply here — that's how you end up thinking a tool is present when it isn't.
 >
+> **Log discipline: keep AT MOST 4 dated entries here.** When adding a 5th, delete the oldest so this section never overflows. One entry per machine — if a machine is re-checked, update its existing entry in place (new date) rather than adding another.
+>
 > **Machines checked:**
+> - **`Defalt` (Kali 2026.1), user `nepps1` — fully checked 2026-07-11.** All tools now present. `feroxbuster` + `ligolo-ng` installed via apt (`ligolo-ng` provides the `ligolo-proxy` and `ligolo-agent` binaries — there is no `ligolo-ng` binary). `pspy` 403'd from `kali.download` (same mirror issue as the `kali` box), so it was staged as a GitHub static binary → `/home/nepps1/tools/pspy/pspy64` (v1.2.1, `chmod +x` done). SecLists + plaintext rockyou.txt both present.
 > - **`kali` (Kali 2026.2), user `nepps1` — fully checked 2026-07-10.** Everything below present EXCEPT `pspy` and `ligolo-ng`: the apt mirror (`kali.download`) returned 403 that day, so both were staged as GitHub static binaries under `/home/nepps1/tools/`:
 >   - `pspy` → `/home/nepps1/tools/pspy/pspy64`
 >   - `ligolo-ng` → `/home/nepps1/tools/ligolo/{proxy, agent_linux, agent_windows.exe}`
