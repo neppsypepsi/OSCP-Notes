@@ -85,10 +85,12 @@ Before starting any lab session, verify these are present. Missing any of these 
 >
 > **Log discipline: keep AT MOST 4 dated entries here.** When adding a 5th, delete the oldest so this section never overflows. One entry per machine — if a machine is re-checked, update its existing entry in place (new date) rather than adding another.
 >
+> **Why this log exists (read before trusting it):** each dated entry is a stamp meaning *"this exact machine — matched by hostname — was verified all-clear on this date."* If your hostname matches an entry and nothing's changed, trust it and skip re-staging. If your hostname isn't listed, treat this machine as unverified: run the checklist and add your own entry. Never apply another machine's entry to yours.
+>
 > **Machines checked:**
 > - **`Defalt` (Kali 2026.1), user `nepps1` — fully checked 2026-07-11.** All tools now present. `feroxbuster` + `ligolo-ng` installed via apt (`ligolo-ng` provides the `ligolo-proxy` and `ligolo-agent` binaries — there is no `ligolo-ng` binary). `pspy` 403'd from `kali.download` (same mirror issue as the `kali` box), so it was staged as a GitHub static binary → `/home/nepps1/tools/pspy/pspy64` (v1.2.1, `chmod +x` done). SecLists + plaintext rockyou.txt both present.
-> - **`kali` (Kali 2026.2), user `nepps1` — fully checked 2026-07-10.** Everything below present EXCEPT `pspy` and `ligolo-ng`: the apt mirror (`kali.download`) returned 403 that day, so both were staged as GitHub static binaries under `/home/nepps1/tools/`:
->   - `pspy` → `/home/nepps1/tools/pspy/pspy64`
+> - **`kali` (Kali 2026.2), user `nepps1` — fully checked 2026-07-12 (all clear, 26/26).** Every tool + wordlist present. `pspy` and `ligolo-ng` are not from apt (the `kali.download` mirror 403'd on 2026-07-10) — both staged as GitHub static binaries under `/home/nepps1/tools/`:
+>   - `pspy` → `/home/nepps1/tools/pspy/pspy64` — `chmod +x` set 2026-07-12 (had no execute bit, so the checklist read it as MISSING until fixed)
 >   - `ligolo-ng` → `/home/nepps1/tools/ligolo/{proxy, agent_linux, agent_windows.exe}`
 
 ### Core Recon
