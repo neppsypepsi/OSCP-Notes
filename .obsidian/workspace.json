@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "07_Attack-Chains/SUID-Bash-Copy-to-Root.md",
+                "file": "08_Labs/PG-Practice/Fired.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "SUID-Bash-Copy-to-Root"
+              "title": "Fired"
             }
           },
           {
@@ -55,12 +55,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "08_Labs/PG-Practice/Lavita.md",
+                "file": "02_Exploitation/ReverseShells.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Lavita"
+              "title": "ReverseShells"
             }
           }
         ],
@@ -106,7 +106,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "proc/",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -127,7 +127,8 @@
               "title": "Bookmarks"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "horizontal",
@@ -238,17 +239,23 @@
   },
   "active": "26e9fc59101a1381",
   "lastOpenFiles": [
-    "03_Post-Exploitation/Linux_Priv_Esc.md",
+    "05_Tools/BusyBox.md",
+    "05_Tools/BusyBox.md.tmp.15297.b878c3b2cc5d",
+    "08_Labs/PG-Practice/Fired.md",
+    "02_Exploitation/ReverseShells.md",
+    "03_Post-Exploitation/pspy.md",
+    "08_Labs/PG-Practice/Extplorer.md",
     "07_Attack-Chains/SUID-Bash-Copy-to-Root.md",
+    "05_Tools/Python_venv.md",
+    "CLAUDE.md",
     "08_Labs/PG-Practice/Lavita.md",
+    "03_Post-Exploitation/Linux_Priv_Esc.md",
     "07_Attack-Chains/SUID-Bash-Copy-to-Root.md.tmp.3217886.2e85b197f210",
     "08_Labs/PG-Practice/Lavita.md.tmp.3217886.b35cb88b9518",
     "08_Labs/PG-Practice/Lavita.md.tmp.3217886.8e991e228250",
     "08_Labs/PG-Practice/Lavita.md.tmp.3217886.09a955d0d77d",
     "Pasted image 20260712020703.png",
     "Pasted image 20260712020322.png",
-    "03_Post-Exploitation/pspy.md",
-    "02_Exploitation/ReverseShells.md",
     "Pasted image 20260712015632.png",
     "08_Labs/PG-Practice/Law.md",
     "02_Exploitation/Web_Template_RCE.md",
@@ -259,7 +266,6 @@
     "05_Tools/Find.md",
     "05_Tools/Grep.md",
     "03_Post-Exploitation/Juicy_Files.md",
-    "05_Tools/Python_venv.md",
     "Pasted image 20260711224853.png",
     "Pasted image 20260711224842.png",
     "08_Labs/PG-Practice/Image.md",
@@ -271,18 +277,13 @@
     "scripts/SETUP-lab-command.md.tmp.3217886.40d280dbb653",
     "scripts/oscp-toolcheck.sh",
     "scripts",
-    "CLAUDE.md.tmp.3217886.458c4da88768",
     "Pasted image 20260710125611.png",
     "Pasted image 20260710125558.png",
     "Pasted image 20260503014418.png",
     "08_Labs/Labs-Index.md",
     "08_Labs/PG-Practice/HUB.md",
-    "08_Labs/PG-Practice/Extplorer.md",
     "05_Tools/debugfs.md",
     "03_Post-Exploitation/Linux_Common_Commands.md",
-    "04_Services/SSH.md",
-    "Pasted image 20260709175600.png",
-    "02_Exploitation/htaccess_Bypass.md",
-    "06_Windows/CrackMapExec.md"
+    "Pasted image 20260709175600.png"
   ]
 }
