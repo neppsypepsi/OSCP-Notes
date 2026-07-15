@@ -35,4 +35,7 @@ Port 9090: Login.jsp web page, we find whats running it. along with a version.
 (Openfire, Version: 4.7.3). We can use this to enumerate further with exploits on the web. Meanwhile we will try admin admin to see if we can get in. 
 - Creds do not work (admin admin, admin password, and sqli single quote)
 Using the open fire version we were able to find this [exploit](https://github.com/K3ysTr0K3R/CVE-2023-32315-EXPLOIT/tree/main) online which bypasses and creats a valid account for us. (**[CVE-2023-32315](https://github.com/K3ysTr0K3R/CVE-2023-32315-EXPLOIT)**)
-- There is another user by the name of b99aid
+- Later realized that this exploit only gives us a user account, however we likley need another exploit that can grant us RCE. 
+- After searching the web again, we find this [Github repo](https://github.com/miko550/CVE-2023-32315) and its the same exploit that creates another account for us, however this time with a .jar plugin file that will grant us terminal access to the server. 
+![[Pasted image 20260714221831.png]] ![[Pasted image 20260714221908.png]]
+- I was having terrible trouble getting my reverse shells to work through this plugin terminal, so i resulted to using a tool called busybox. Combining it with nc and a port i got a shell as openfire. 
