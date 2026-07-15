@@ -55,12 +55,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "02_Exploitation/ReverseShells.md",
+                "file": "05_Tools/BusyBox.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "ReverseShells"
+              "title": "BusyBox"
             }
           }
         ],
@@ -106,7 +106,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "proc/",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -127,8 +127,7 @@
               "title": "Bookmarks"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "horizontal",
@@ -239,10 +238,11 @@
   },
   "active": "26e9fc59101a1381",
   "lastOpenFiles": [
-    "05_Tools/BusyBox.md",
-    "05_Tools/BusyBox.md.tmp.15297.b878c3b2cc5d",
+    "scripts/lab.md",
     "08_Labs/PG-Practice/Fired.md",
     "02_Exploitation/ReverseShells.md",
+    "05_Tools/BusyBox.md",
+    "05_Tools/BusyBox.md.tmp.15297.b878c3b2cc5d",
     "03_Post-Exploitation/pspy.md",
     "08_Labs/PG-Practice/Extplorer.md",
     "07_Attack-Chains/SUID-Bash-Copy-to-Root.md",
@@ -283,7 +283,6 @@
     "08_Labs/Labs-Index.md",
     "08_Labs/PG-Practice/HUB.md",
     "05_Tools/debugfs.md",
-    "03_Post-Exploitation/Linux_Common_Commands.md",
     "Pasted image 20260709175600.png"
   ]
 }
