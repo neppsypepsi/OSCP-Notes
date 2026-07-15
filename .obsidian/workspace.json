@@ -238,6 +238,8 @@
   },
   "active": "26e9fc59101a1381",
   "lastOpenFiles": [
+    "02_Exploitation/ReverseShells.md.tmp.15297.5879d402914d",
+    "02_Exploitation/ReverseShells.md.tmp.15297.fad7a7e51757",
     "scripts/lab.md",
     "08_Labs/PG-Practice/Fired.md",
     "02_Exploitation/ReverseShells.md",
@@ -276,13 +278,11 @@
     "scripts/SETUP-lab-command.md",
     "scripts/SETUP-lab-command.md.tmp.3217886.40d280dbb653",
     "scripts/oscp-toolcheck.sh",
-    "scripts",
     "Pasted image 20260710125611.png",
     "Pasted image 20260710125558.png",
     "Pasted image 20260503014418.png",
     "08_Labs/Labs-Index.md",
     "08_Labs/PG-Practice/HUB.md",
-    "05_Tools/debugfs.md",
     "Pasted image 20260709175600.png"
   ]
 }
