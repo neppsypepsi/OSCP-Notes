@@ -5,7 +5,12 @@ allowed-tools: Bash, Read, Edit
 
 You are starting an OSCP lab session on this Kali machine. Do all of the following, in order, then stop and wait for me:
 
-0. **Sync the vault FIRST** — run `cd /home/nepps1/OSCP-Notes && git pull --rebase` before anything else. The vault syncs across machines, so pulling up front guarantees the toolcheck script, guides, and machine-check log are current AND prevents end-of-session push rejections (`fetch first`). If the pull reports conflicts or fails, tell me and stop — don't proceed on a stale/broken vault.
+0. **Sync the vault FIRST** — before anything else, check the vault against GitHub and report the result:
+   - `cd /home/nepps1/OSCP-Notes && git fetch origin`, then read `git status -sb` for behind/ahead count and any local changes.
+   - **Report the sync state** in the readiness summary: in sync / behind N / ahead N / uncommitted local changes.
+   - If the tree is **clean and behind** → `git pull --rebase origin master` to get current.
+   - If there are **uncommitted local changes**, do NOT blindly pull — a plain `git pull --rebase` aborts on a dirty tree (`cannot pull with rebase: you have unstaged changes`). Show me what changed, check whether any incoming commit touches the same files (conflict risk), and ask whether to commit first. Only pull once the tree is clean, then remind me to push my commit up.
+   - Syncing up front keeps the toolcheck script, guides, and machine-check log current AND prevents end-of-session push rejections (`fetch first`). If a pull reports conflicts or fails, tell me and stop — don't proceed on a stale/broken vault.
 
 1. **Run the tool checklist** — execute `bash /home/nepps1/OSCP-Notes/scripts/oscp-toolcheck.sh` with the Bash tool and read its full output. This reports machine identity (hostname, Kali version, user, date) and the present/missing status of every required tool and wordlist. It is report-only and needs no sudo. (The script lives in the synced vault so every machine has it after `git pull`.)
 
