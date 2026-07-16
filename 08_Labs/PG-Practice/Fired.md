@@ -39,3 +39,9 @@ Using the open fire version we were able to find this [exploit](https://github.c
 - After searching the web again, we find this [Github repo](https://github.com/miko550/CVE-2023-32315) and its the same exploit that creates another account for us, however this time with a .jar plugin file that will grant us terminal access to the server. 
 ![[Pasted image 20260714221831.png]] ![[Pasted image 20260714221908.png]]
 - I was having terrible trouble getting my reverse shells to work through this plugin terminal, so i resulted to using a tool called busybox. Combining it with nc and a port i got a shell as openfire. 
+	- User flag -> `612f4170eac515f8c100dda577e40d6d`
+- After trying linpeas, trying to find cron related jobs, hidden files or scripts that we can write too there was nothing. 
+- I then resulted to credential digging and referred to my find commands. After a while of looking we find a smtp password.![[Pasted image 20260715232033.png]]The realistic thing would have been if I came across this password but had no clue who for, i would store it in a text file, gather all the usernames i can get (root b99id, openfire), and then run them with nxc with a service on a port I know i can use. For this situation it was ssh. 
+
+![[Pasted image 20260715232924.png]]
+- User Flag -> `5ebdfbcbd27df8be0643bc99e26e1ff0`
