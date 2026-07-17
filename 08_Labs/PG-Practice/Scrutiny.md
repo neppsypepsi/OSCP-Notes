@@ -23,3 +23,43 @@ PORT    STATE  SERVICE VERSION
 Service Info: Host:  onlyrands.com; OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 ```
+
+- We notice that there are a ton of mentions of the host name onlyrands.com in our nmap scan. `commonName=onlyrands.com`
+- Observing the the web page on port 80 we find that we really cannot do much. 
+	- No version numbers
+	- No Loging in or creating accounts
+	- No upload forms
+- Ill try running GoBuster
+```
+gobuster dir -u  http://192.168.196.91 -w /usr/share/dirb/wordlists/common.txt -x php,txt,bak
+===============================================================
+Gobuster v3.8.2
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://192.168.196.91
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /usr/share/dirb/wordlists/common.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.8.2
+[+] Extensions:              php,txt,bak
+[+] Timeout:                 10s
+===============================================================
+Starting gobuster in directory enumeration mode
+===============================================================
+css                  (Status: 301) [Size: 178] [--> http://192.168.196.91/css/]
+images               (Status: 301) [Size: 178] [--> http://192.168.196.91/images/]
+index.html           (Status: 200) [Size: 23375]
+js                   (Status: 301) [Size: 178] [--> http://192.168.196.91/js/]
+Progress: 18452 / 18452 (100.00%)
+===============================================================
+Finished
+===============================================================
+```
+- hmmm...we have hit a dead end. However we can try resolving hostnames.
+![[Pasted image 20260717160537.png]]
+- Additionally 
+![[Pasted image 20260717162939.png]]
+
+Resolving to the teams page we find a login screen
+![[Pasted image 20260717164304.png]]

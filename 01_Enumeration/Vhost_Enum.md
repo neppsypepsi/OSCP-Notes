@@ -20,6 +20,7 @@ The trigger is: **any service echoes a hostname/domain.**
   ```bash
   curl -s http://<IP> | grep -Eo '[a-z0-9.-]+\.(com|net|local|htb)'
   ```
+  > This only finds hostnames **literally written in the source**. Always view-source / read the raw HTML too — the useful one often hides in an `href` (e.g. a **Login button** → `<a href="http://teams.onlyrands.com">`) that the rendered page buries behind a button. Ignore external CDNs in the output (`fonts.googleapis.com`, etc.).
 - **Port 53 open → zone transfer** dumps all subdomains directly, no fuzzing:
   ```bash
   dig axfr @<IP> onlyrands.com
@@ -34,26 +35,28 @@ The trigger is: **any service echoes a hostname/domain.**
 ```bash
 echo "<TARGET_IP> onlyrands.com" | sudo tee -a /etc/hosts
 ```
-After finding a vhost, append it to the same line: `<TARGET_IP> onlyrands.com teams.onlyrands.com`
-
-> Entries are permanent — clean up stale ones between boxes (`sudo nano /etc/hosts`), the target IP changes each session.
 
 ---
 
 ## Step 2 — Fuzz the Host header
 
 ```bash
-ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt \
-     -u http://<TARGET_IP> \
-     -H "Host: FUZZ.onlyrands.com" \
-     -fs <default_page_size>
+ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt -u http://<TARGET_IP> -H "Host: FUZZ.hostname.com" -fs <default_page_size>
 ```
-`-fs` filters out the default page (every fake vhost returns it) so real vhosts stand out. Get the size from `curl -s http://<IP> | wc -c`. If noisy, filter words `-fw` or lines `-fl`.
+`-fs` filters out the default page (every fake vhost returns it) so real vhosts stand out. If noisy, filter words `-fw` or lines `-fl` instead.
+
+**Getting `<default_page_size>` — two reliable ways:**
+1. Ask for a vhost that definitely doesn't exist and measure the catch-all response:
+   ```bash
+   curl -s -H "Host: nope123.onlyrands.com" http://<IP> | wc -c
+   ```
+2. Look at the **Size** column: the value thats the most common→ plug it into `-fs` and re-run.
 
 ```bash
-gobuster vhost -u http://onlyrands.com \
-  -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt --append-domain
+gobuster vhost -u http://hostname.com -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt --append-domain
 ```
+
+Got a hit → add it to `/etc/hosts` (own explicit entry, no wildcards) so you can brosw to it on the web
 
 ---
 
