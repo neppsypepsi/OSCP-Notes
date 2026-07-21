@@ -1,6 +1,5 @@
 My IP: 192.168.45.211
-Target IP: 192.168.166.91
-
+Target IP: 192.168.108.91
 # nmap:
 ```
 PORT    STATE  SERVICE VERSION
@@ -63,3 +62,16 @@ Finished
 
 Resolving to the teams page we find a login screen
 ![[Pasted image 20260717164304.png]]
+
+- We are able to see there is a version number present towards the bottom -> ` Version 2023.05.4 (build 129421) `. Lets use this to try and find any exploits online.
+	- Dead end, as I was only finding exploits that work before my current version.
+- Loosening up my search for `Teamcity cve` we were able to find a new exploit, [CVE-2024-27198](https://github.com/W01fh4cker/CVE-2024-27198-RCE). 
+- Running the exploit we are able to create a user account, allowing us to log into the teamcity dashboard
+- ![[Pasted image 20260721000100.png]]
+- After broswing around we find plenty of users, but what stood out was one file that was logged, even though it was removed; id_rsa.
+- ![[Pasted image 20260721000235.png]]
+- Clicking the file link, we are then able to copy the entire private key to this user. However trying to use it to log in prompts us with a password even after using -o & -i. 
+- My next step would be to try and crack the hash, and if that didnt work, I would try and password spray the rest of the users we found under the freelancers tab
+- ![[Pasted image 20260721000450.png]]
+- We were successfully able to crack the users password (cheer) thus allowing us to ssh as the user marcot
+- 

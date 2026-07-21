@@ -56,7 +56,7 @@ ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt -u htt
 gobuster vhost -u http://hostname.com -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt --append-domain
 ```
 
-Got a hit → add it to `/etc/hosts` (own explicit entry, no wildcards) so you can brosw to it on the web
+Got a hit → add it to `/etc/hosts` (own explicit entry, no wildcards) so you can browse to it on the web
 
 ---
 
