@@ -103,4 +103,4 @@ Port 8090:
 - After getting our shell I exhausted most of my Linux priv esc steps/linpeas and wasn't able to find much. I then resulted into transferring pspy to see more about what was running that I couldn't see in terms of cron jobs. 
 - ![[Pasted image 20260723234007.png]]
 - Here we find that there is a backup.sh file. We see that root executes it due to the UID set to 0. The next best step to see what permissions we have over the file 
-- We can only read and execute the file however looking back into our linpeas output 
+- We can only read and execute the file however looking back into our linpeas output, it shows that we can indeed edit files inside of the /opt folder, so that means 
