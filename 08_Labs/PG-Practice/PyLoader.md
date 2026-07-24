@@ -1,6 +1,8 @@
-My Ip: 192.168.45.216
-IP: 192.168.125.26
-NMAP:
+My IP: 192.168.45.247
+Target IP: 192.168.225.26
+
+
+# nmap:
 ```
 PORT     STATE SERVICE VERSION
 22/tcp   open  ssh     OpenSSH 8.9p1 Ubuntu 3ubuntu0.1 (Ubuntu Linux; protocol 2.0)
@@ -15,3 +17,12 @@ PORT     STATE SERVICE VERSION
 |_http-server-header: Cheroot/8.6.0
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 ```
+
+- Here we find a very basic login page with not much to do.
+	- I tried admin admin, and admin password with no luck.
+- A google search with the potential version number of the web page we find a hit for [CVE-2023-0297](https://github.com/overgrowncarrot1/CVE-2023-0297).
+- Running the script gets us root allowing us to find the flag -> `15f32d2f6e34ee1d4a1691662095d2be`
+
+
+
+

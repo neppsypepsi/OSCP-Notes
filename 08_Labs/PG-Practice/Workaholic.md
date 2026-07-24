@@ -1,4 +1,5 @@
-192.168.206.229
+My IP: 192.168.45.247
+Target IP: 192.168.225.229
 
 NMAP:
 ```
@@ -113,8 +114,14 @@ Interesting Finding(s):
 
 ```
 
+
+
 Based off this scan we can see that we found some users. 
 
 admin
 charlie
 ted
+
+
+I tried to finish this but the same scan i ran last time isn't working. Not my fault.
+
