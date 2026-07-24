@@ -102,5 +102,7 @@ Port 8090:
 - Getting the exploit to work we are then able to get a shell as confluence@flu![[Pasted image 20260723223323.png]]
 - After getting our shell I exhausted most of my Linux priv esc steps/linpeas and wasn't able to find much. I then resulted into transferring pspy to see more about what was running that I couldn't see in terms of cron jobs. 
 - ![[Pasted image 20260723234007.png]]
-- Here we find that there is a backup.sh file. We see that root executes it due to the UID set to 0. The next best step to see what permissions we have over the file 
-- We can only read and execute the file however looking back into our linpeas output, it shows that we can indeed edit files inside of the /opt folder, so that means 
+- Here we find that there is a backup.sh file. We see that root executes it due to the UID set to 0. The next best step to see what permissions we have over the file  ![[Pasted image 20260724121711.png]]
+- We end up having write permissions over the file, thus allowing us to modify it. Typically from here our goal is to change the bit set on the bash binary file, so that we can run it as root. 
+- By modifying the file and appending "chmod u+s /bin/bash" at the end of this script, we are then able to escalate as root simply by running `bash -p`.
+- Now that we are root we can find our final flag which is -> `5ba9d5e70390ea89f4d371a15b84730e`
