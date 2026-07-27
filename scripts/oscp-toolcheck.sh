@@ -27,7 +27,7 @@ printf '  user    : %s\n' "$(whoami)"
 printf '  date    : %s\n' "$(date +%Y-%m-%d)"
 
 hdr "CORE RECON"
-for t in nmap gobuster feroxbuster ffuf enum4linux smbclient nikto; do check "$t" "$t"; done
+for t in nmap gobuster feroxbuster ffuf enum4linux smbclient nikto git-dumper; do check "$t" "$t"; done
 
 hdr "EXPLOITATION"
 for t in msfvenom searchsploit sqlmap hydra burpsuite; do check "$t" "$t"; done
@@ -75,14 +75,33 @@ else
   printf '  %s✗%s %-22s %sMISSING%s\n' "$C_BAD" "$C_RST" "rockyou.txt" "$C_BAD" "$C_RST"; missing+=("rockyou.txt")
 fi
 
+# exact install command per tool — apt is NOT correct for all of them
+fix_for() {
+  case "$1" in
+    msfvenom)          echo "sudo apt install metasploit-framework -y" ;;
+    searchsploit)      echo "sudo apt install exploitdb -y" ;;
+    linpeas|winpeas)   echo "sudo apt install peass -y" ;;
+    impacket-*)        echo "sudo apt install python3-impacket -y" ;;
+    netexec)           echo "sudo apt install netexec -y" ;;
+    seclists)          echo "sudo apt install seclists -y" ;;
+    python3-venv)      echo "sudo apt install python3-venv -y" ;;
+    ligolo-proxy)      echo "sudo apt install ligolo-ng -y   (or stage static binary -> /home/nepps1/tools/ligolo/)" ;;
+    bloodhound-python) echo "pipx install bloodhound" ;;
+    git-dumper)        echo "pipx install git-dumper   (NOT apt — pip is blocked system-wide on Kali)" ;;
+    pspy)              echo "stage static binary -> /home/nepps1/tools/pspy/pspy64 (github, chmod +x) — kali.download often 403s" ;;
+    rockyou*)          echo "gunzip /usr/share/wordlists/rockyou.txt.gz" ;;
+    *)                 echo "sudo apt install $1 -y" ;;
+  esac
+}
+
 hdr "SUMMARY"
 printf '  present: %d   missing: %d\n' "${#present[@]}" "${#missing[@]}"
 if [ "${#missing[@]}" -eq 0 ]; then
   printf '  %sAll clear — ready to lab.%s\n' "$C_OK" "$C_RST"
 else
-  printf '  %sGaps: %s%s\n' "$C_BAD" "${missing[*]}" "$C_RST"
-  printf '  %sapt-installable fix (needs sudo):%s\n' "$C_DIM" "$C_RST"
-  printf '    sudo apt install %s -y\n' "$(printf '%s ' "${missing[@]}" | sed 's/pspy//g; s/rockyou[^ ]*//g' | xargs)"
-  printf '  %s(pspy often 403s from kali.download — stage static binary to /home/nepps1/tools/pspy/pspy64 instead)%s\n' "$C_DIM" "$C_RST"
+  printf '  %sGaps (%d) — run the matching fix for each:%s\n' "$C_BAD" "${#missing[@]}" "$C_RST"
+  for m in "${missing[@]}"; do
+    printf '    %s%-22s%s %s\n' "$C_HDR" "$m" "$C_RST" "$(fix_for "$m")"
+  done
 fi
 exit 0

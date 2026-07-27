@@ -56,6 +56,12 @@ ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt -u htt
 gobuster vhost -u http://hostname.com -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt --append-domain
 ```
 
+**Every Host returns same 301/302, Size 0?** `-fs` fails (real vhost redirects too). Follow the redirect:
+```bash
+ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt -u http://<IP> -H "Host: FUZZ.hostname.com" -r -ac
+gobuster vhost -u http://<IP> -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt --append-domain --exclude-length 0
+```
+
 Got a hit → add it to `/etc/hosts` (own explicit entry, no wildcards) so you can browse to it on the web
 
 ---

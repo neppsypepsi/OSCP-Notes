@@ -103,6 +103,7 @@ Before starting any lab session, verify these are present. Missing any of these 
 | `enum4linux` | `which enum4linux` | `apt install enum4linux` |
 | `smbclient` | `which smbclient` | `apt install smbclient` |
 | `nikto` | `which nikto` | `apt install nikto` |
+| `git-dumper` | `which git-dumper` | `pipx install git-dumper` (pip blocked system-wide on Kali — use pipx) |
 
 ### Exploitation
 | Tool | Check | Install if missing |
