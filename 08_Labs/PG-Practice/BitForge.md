@@ -56,4 +56,13 @@ Port 80:
 ![[Pasted image 20260727161250.png]]
 - Typically passwords wouldn't be that long, and after verfying first by trying them with the login page, and with the ssh service i came to the conclusion that its indeed hashed.
 - Sure enough...![[Pasted image 20260727161412.png]]
+
+---
+# Where I got stuck
+- After not being able to crack this hashed password, and after NOT being apply this hashed password directly into the password field to the login page, we can infer that the login page does not take a hashed password as a possible value, and that the default password was likely changed (admin:admin). The next best step would be to use the info we know, the default creds (admin:admin), to then use this to try and find the hashed version of the default creds in source code somewhere online. 
+	- This would of course only work if the this hashed mechanism in the code was standard and not secondhandedly implemented by some web dev.
+- The smarter probably more reliable option would be to find the [github](https://github.com/Worteks/soplanning/tree/master) of the code online.
+	- Or a long shot could be just searching for the hashed password version of the default creds for the web page service (soplanning)
+- Download the github repo, then do a grep search for admin, or something similar in hopes for a line that reveals the hashed password for the default creds![[Screenshot From 2026-07-29 22-39-39.png]]
+- Luckily we do end up finding the hashed default password to admin/ADM, and we can use this to then try and and place the hashed password in the SQL database in hopes that the login page pulls creds directly from the SQL db, and that we have write access over the sql server as the user we are signed in as. 
 - 

