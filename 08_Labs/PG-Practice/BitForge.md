@@ -42,6 +42,18 @@ Port 80:
 - Observing our nmap scan, there is a http-git at -> `192.168.193.186:80/.git/`
 	- Clicking through logs we find a user and more info as to where credentials may be located.![[Pasted image 20260727125151.png|639]]
 	- After searching all of the folders under this directory I couldn't find anything
+		- I learned that I can pull the git logs along with content with git-dumper. Using the commit ID, I was able to view the commit and find credentials. ![[Pasted image 20260727144624.png]]
 - Resolving to Bitforge.lab we can see when hovering over Employee Planning Portal there is a new domain of "plan.bitforge.lab". ![[Pasted image 20260727132225.png]]
 	- Additionally this could have been found by running the correct ffuf command to follow redirects. The first run without `-r` failed because every Host returned an empty `302` (Size 0), so `plan` looked identical to every fake host. Adding `-r -ac` follows the redirect (real sizes appear) and auto-filters the boring default page, leaving `plan`: `ffuf -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt -u http://192.168.193.186 -H "Host: FUZZ.bitforge.lab" -r -ac` ![[Screenshot From 2026-07-27 13-34-05.png]]
 - Adding it to our /etc/hosts, we arrive at a new login page, which even reveals a version number -> `Simple Online Planning v1.52.01` . We can use this to find possible exploits. 
+	- All exploits require for us to be already logged into the dashboard. So far we haven't found valid creds. I tried all of the ones we came accross so far and still no.
+- Using the credentials we found from the Git push, we can use them to log in to the MySQL service. Also this line -> ` $dsn = "mysql:host=$dbHost;dbname=$dbName;charset=utf8mb4";` hints try MySQL.
+- ![[Pasted image 20260727155401.png]]
+- Logging in we can see there are 4 databases to observe. The one with interesting information ends up being `soplanning`.
+![[Screenshot From 2026-07-27 16-10-09 1.png]]
+"planning_user" catches my eye -> `describe planning_user;`
+![[Pasted image 20260727161116.png]]
+![[Pasted image 20260727161250.png]]
+- Typically passwords wouldn't be that long, and after verfying first by trying them with the login page, and with the ssh service i came to the conclusion that its indeed hashed.
+- Sure enough...![[Pasted image 20260727161412.png]]
+- 

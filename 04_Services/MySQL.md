@@ -13,6 +13,9 @@ mysql -u <user> -p'<password>' -h <target-ip> <database>
 
 # Local connection (from shell on target)
 mysql -u <user> -p'<password>' <database>
+
+#if ever you get a "ERROR 2026 (HY000): TLS/SSL error: self-signed certificate in certificate chain" append 
+--skip-ssl
 ```
 → If the remote connection gets `Host not allowed`, MySQL is locked to localhost only. You need a shell on the box first, then connect locally.
 
