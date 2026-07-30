@@ -56,6 +56,20 @@ select username, password from users;
 
 ---
 
+## Writing to a Table (needs UPDATE priv on the DB)
+
+```sql
+update <table> set <column>='<value>' where <pk_column>='<row_id>';
+```
+→ Overwrite a field in an existing row. The `where` is mandatory — without it you change EVERY row. Success returns `Rows matched: 1  Changed: 1` (that's also your write-access test — a `command denied` means no UPDATE priv).
+
+Example:
+```sql
+update planning_user set password='<known-plaintext-hash>' where user_id='ADM';
+```
+
+---
+
 ## What to Look For
 
 Once inside a database, prioritize:

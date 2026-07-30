@@ -64,5 +64,5 @@ Port 80:
 - The smarter probably more reliable option would be to find the [github](https://github.com/Worteks/soplanning/tree/master) of the code online.
 	- Or a long shot could be just searching for the hashed password version of the default creds for the web page service (soplanning)
 - Download the github repo, then do a grep search for admin, or something similar in hopes for a line that reveals the hashed password for the default creds![[Screenshot From 2026-07-29 22-39-39.png]]
-- Luckily we do end up finding the hashed default password to admin/ADM, and we can use this to then try and and place the hashed password in the SQL database in hopes that the login page pulls creds directly from the SQL db, and that we have write access over the sql server as the user we are signed in as. 
+- Luckily we do end up finding the hashed default password to admin/ADM, and we can use this to then try and and place the hashed password in the SQL database in hopes that the login page pulls creds directly from the SQL db, and that we have write access over the sql server as the user we are signed in as. ![[Screenshot From 2026-07-29 23-47-14.png]]
 - 
