@@ -14,7 +14,8 @@ Nmap shows `21/tcp open ftp`. Always check:
 
 ```bash
 ftp <IP>
-# Username: anonymous
+# Username: 
+anonymous
 # Password: (just press Enter — blank)
 ```
 

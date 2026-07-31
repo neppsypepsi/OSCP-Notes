@@ -65,4 +65,12 @@ Port 80:
 	- Or a long shot could be just searching for the hashed password version of the default creds for the web page service (soplanning)
 - Download the github repo, then do a grep search for admin, or something similar in hopes for a line that reveals the hashed password for the default creds![[Screenshot From 2026-07-29 22-39-39.png]]
 - Luckily we do end up finding the hashed default password to admin/ADM, and we can use this to then try and and place the hashed password in the SQL database in hopes that the login page pulls creds directly from the SQL db, and that we have write access over the sql server as the user we are signed in as. ![[Screenshot From 2026-07-29 23-47-14.png]]
-- 
+- Now after being able to login, we can see that we can add a task. There is the option to "Join a file", and there I uploaded a rev shell, and hovering over it provides me a new url, so I know I can browse to it.![[Pasted image 20260730182133.png]]
+- Doing so I was able to get a shell as `www-data`. After trying to find the local.txt file, I was given no file path so I was sure that there was another user to bounce to, and sure enough reading the /etc/passwd file reveals another user named jack. ![[Pasted image 20260730182640.png]]****
+- After greping for jacks password from the home directory i found nothing. Linpeas revealed nothing of interest and typically linpeas would be the step to get to root. So, I was left trying pspy. I found a mysqldump revealing the creds of jack, allowing us to find our first flag -> `a8dc9fa1e00b7c8f01d9f733089f9a02` ![[Pasted image 20260730192000.png]]
+	- jack:j4cKF0rg3@445
+- Running sudo -l as jack we find that we can run `/usr/bin/flask_password_changer` as root.![[Pasted image 20260730194752.png]]
+- Reading what the file does ->![[Pasted image 20260730194823.png]]
+- We learn that this is a directory and not a file. Changing directories we find a file called app.py. We end up having write permissions over the file so we can create our own malicious python code. ![[Pasted image 20260730194946.png]]![[Pasted image 20260730195014.png]]
+- thus allowing us to run bash as root![[Pasted image 20260730195204.png|675]]
+	- allowing me to find the last flag `b6154fcf0564e96139ff96436fdcbabe`
