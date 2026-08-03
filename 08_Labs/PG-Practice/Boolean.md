@@ -199,4 +199,4 @@ cat /root/proof.txt
 - [[SSH]]
 - [[LinPEAS]]
 - [[Linux_Priv_Esc]]
-- [[BurpSuite]]
+- [[SQL_Injection]]

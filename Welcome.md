@@ -24,7 +24,7 @@ Personal notes for OSCP prep and HTB practice.
 - [[Nmap]] — Port scanning workflow
 - [[enum4linux]] — SMB/AD enumeration
 - [[wpscan]] — WordPress enumeration
-- [[BurpSuite]] — HTTP interception, Repeater, Decoder
+- [[SQL_Injection]] — Burp Suite (HTTP interception, Repeater, Intruder, Decoder) now lives here
 - [[Curl]] — Raw HTTP requests for enum and probing
 
 ---

