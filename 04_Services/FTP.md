@@ -13,7 +13,8 @@ Nmap shows `21/tcp open ftp`. Always check:
 ## Anonymous Login
 
 ```bash
-ftp <IP>
+ftp <IP> #or
+ftp <ip or hostname> -p <non port 21 port>
 # Username: 
 anonymous
 # Password: (just press Enter — blank)
@@ -25,7 +26,7 @@ On success you'll see `230 Login successful`. Then:
 ls
 cd <dir>
 get <file>
-mget *        # download everything
+mget *        # download everything, but you can't just pull folders, must be file
 bye
 ```
 

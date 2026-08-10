@@ -35,6 +35,7 @@ The trigger is: **any service echoes a hostname/domain.**
 ```bash
 echo "<TARGET_IP> onlyrands.com" | sudo tee -a /etc/hosts
 ```
+- Don't take emails that you may find on a web page that look like it could hint to what the host name could be for an IP for granted.
 
 ---
 

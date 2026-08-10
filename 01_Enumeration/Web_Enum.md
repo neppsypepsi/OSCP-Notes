@@ -129,7 +129,9 @@ Gobuster is used to **discover hidden directories and files**.
 gobuster dir -u http://<IP> -w <wordlist>
 ```
 
-### **Common OSCP Gobuster Command**
+> **Wordlist tiers — pick the RIGHT default, not the biggest.** The dirb lists (`common.txt` 4.6k, `big.txt` 20k) are too small to be your primary scan — that's what let SpiderSociety's `/libspider` slip through. The OSCP standard default is **`directory-list-2.3-medium`** (220k), and it already contained `libspider`. Go bigger only when medium genuinely finds nothing.
+
+### **1. Quick first pass** (fast sanity check)
 ```bash
 gobuster dir -u http://<IP> -w /usr/share/dirb/wordlists/common.txt -t 40 -o gobuster-common.txt
 ```
@@ -142,14 +144,25 @@ gobuster dir -u http://<IP> -w /usr/share/dirb/wordlists/common.txt -t 40 -o gob
 - -t 40 → faster scanning
 - -o → save output for reference
 
-### **Larger Scan**
+### **2. Default OSCP scan** ⭐ (make this your go-to)
 ```bash
-gobuster dir -u http://<IP> -w /usr/share/dirb/wordlists/big.txt -t 40 -o gobuster-big.txt
+gobuster dir -u http://<IP> -w /usr/share/seclists/Discovery/Web-Content/DirBuster-2007_directory-list-2.3-medium.txt -x php,txt,bak -t 40 
 ```
-Use **only if**:
+220k entries + `-x php,txt,bak` so you catch **files** (e.g. `config.php`, `notes.txt`, `db.php.bak`), not just directories — in one pass. Catches the vast majority of OSCP paths, including thematic ones like `/libspider`. If you only run one scan, run this one.
 
-- Small list found little
-- You suspect more content exists
+> Tune `-x` to the stack: `asp,aspx,txt,bak` on IIS, `jsp,txt,bak` on Tomcat — full breakdown in **File Extensions** below.
+
+### **3. Last resort** (only if medium found nothing but content clearly exists)
+```bash
+gobuster dir -u http://<IP> -w /usr/share/seclists/Discovery/Web-Content/DirBuster-2007_directory-list-2.3-big.txt -t 40 -o gobuster-big.txt
+```
+The **largest** dir list on Kali (~1.27M entries). Slow — keep `-t 40` and let it finish. Rarely needed: if medium turns up nothing, the path usually isn't meant to be brute-forced at all → go **read the app** (source, `.js` files, `robots.txt`) instead of reaching for a bigger list.
+
+> ⚠️ **Path gotcha:** tutorials call these `directory-list-2.3-medium.txt` / `-big.txt`, but Kali's `seclists` package prefixes them **`DirBuster-2007_`** — same files. The bare name 404s; use the prefixed path above. (`/usr/share/wordlists/seclists` is a symlink to `/usr/share/seclists`, so either root works.)
+>
+> **SpiderSociety lesson:** `/libspider` was invisible to dirb `common.txt`/`big.txt` but present in `directory-list-2.3-medium` (line ~216k). Wrong-default problem, not a too-small-list problem. Also note it's *thematic* (lib + spider) — when a scan stalls, the app theme + reading source often beats brute force.
+
+- Add `-x php,txt,bak` to any tier if the server runs PHP (see below).
 
 
 
