@@ -60,6 +60,14 @@ elif [ -x /home/nepps1/tools/ligolo/proxy ]; then
 else
   printf '  %s✗%s %-22s %sMISSING%s\n' "$C_BAD" "$C_RST" "ligolo-proxy" "$C_BAD" "$C_RST"; missing+=("ligolo-proxy")
 fi
+# chisel: not in Kali repos — on PATH OR staged static binary (GitHub, same binary both ends)
+if command -v chisel >/dev/null 2>&1; then
+  check "chisel" "chisel"
+elif [ -x /home/nepps1/tools/chisel/chisel ]; then
+  printf '  %s✓%s %-22s %sstaged: /home/nepps1/tools/chisel/chisel%s\n' "$C_OK" "$C_RST" "chisel" "$C_DIM" "$C_RST"; present+=("chisel")
+else
+  printf '  %s✗%s %-22s %sMISSING%s\n' "$C_BAD" "$C_RST" "chisel" "$C_BAD" "$C_RST"; missing+=("chisel")
+fi
 
 hdr "WORDLISTS"
 if [ -d /usr/share/seclists ]; then
@@ -86,6 +94,7 @@ fix_for() {
     seclists)          echo "sudo apt install seclists -y" ;;
     python3-venv)      echo "sudo apt install python3-venv -y" ;;
     ligolo-proxy)      echo "sudo apt install ligolo-ng -y   (or stage static binary -> /home/nepps1/tools/ligolo/)" ;;
+    chisel)            echo "stage static binary -> /home/nepps1/tools/chisel/chisel (github jpillora/chisel, gunzip + chmod +x) — not in Kali repos" ;;
     bloodhound-python) echo "pipx install bloodhound" ;;
     git-dumper)        echo "pipx install git-dumper   (NOT apt — pip is blocked system-wide on Kali)" ;;
     pspy)              echo "stage static binary -> /home/nepps1/tools/pspy/pspy64 (github, chmod +x) — kali.download often 403s" ;;

