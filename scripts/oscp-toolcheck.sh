@@ -20,6 +20,16 @@ check() {
   fi
 }
 
+# checkfile <label> <path> — for staged binaries that don't live on PATH (Windows .exe, etc.)
+checkfile() {
+  local label="$1" p="$2"
+  if [ -e "$p" ]; then
+    printf '  %s✓%s %-22s %sstaged: %s%s\n' "$C_OK" "$C_RST" "$label" "$C_DIM" "$p" "$C_RST"; present+=("$label")
+  else
+    printf '  %s✗%s %-22s %sMISSING%s\n' "$C_BAD" "$C_RST" "$label" "$C_BAD" "$C_RST"; missing+=("$label")
+  fi
+}
+
 hdr "MACHINE"
 printf '  host    : %s\n' "$(hostname)"
 printf '  kali    : %s\n' "$(. /etc/os-release 2>/dev/null; echo "${VERSION:-unknown}")"
@@ -48,8 +58,17 @@ else
   printf '  %s✗%s %-22s %sMISSING%s\n' "$C_BAD" "$C_RST" "pspy" "$C_BAD" "$C_RST"; missing+=("pspy")
 fi
 
+hdr "WINDOWS PRIVESC (staged .exe — SeImpersonate -> SYSTEM, see 06_Windows/Potato_Attacks.md)"
+checkfile "juicypotato"  /home/nepps1/tools/potatoes/JuicyPotato.exe
+checkfile "printspoofer" /home/nepps1/tools/potatoes/PrintSpoofer64.exe
+checkfile "godpotato"    /home/nepps1/tools/potatoes/GodPotato-NET4.exe
+checkfile "roguepotato"  /home/nepps1/tools/potatoes/RoguePotato.exe
+
 hdr "CRED / NETWORK"
 for t in netexec bloodhound-python; do check "$t" "$t"; done
+# BloodHound legacy GUI + neo4j (the collector bloodhound-python above is separate) — needed to VIEW the graph
+checkfile "bloodhound-legacy" /home/nepps1/tools/bloodhound-legacy/BloodHound-linux-x64/BloodHound
+check "neo4j" "neo4j"
 
 hdr "TUNNELING / PIVOTING"
 # ligolo-ng package provides ligolo-proxy (+ ligolo-agent); accept staged copy too
@@ -98,6 +117,10 @@ fix_for() {
     bloodhound-python) echo "pipx install bloodhound" ;;
     git-dumper)        echo "pipx install git-dumper   (NOT apt — pip is blocked system-wide on Kali)" ;;
     pspy)              echo "stage static binary -> /home/nepps1/tools/pspy/pspy64 (github, chmod +x) — kali.download often 403s" ;;
+    juicypotato|printspoofer|godpotato|roguepotato)
+                       echo "stage from GitHub -> /home/nepps1/tools/potatoes/ (see 06_Windows/Potato_Attacks.md) — not in Kali repos" ;;
+    bloodhound-legacy) echo "stage legacy Electron app -> /home/nepps1/tools/bloodhound-legacy/ (github SpecterOps/BloodHound-Legacy, BloodHound-linux-x64.zip) — apt gives CE, not legacy. See 06_Windows/BloodHound.md" ;;
+    neo4j)             echo "sudo apt install neo4j -y (or bloodhound bundles it), then: sudo neo4j start" ;;
     rockyou*)          echo "gunzip /usr/share/wordlists/rockyou.txt.gz" ;;
     *)                 echo "sudo apt install $1 -y" ;;
   esac

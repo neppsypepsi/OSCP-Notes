@@ -89,9 +89,11 @@ Before starting any lab session, verify these are present. Missing any of these 
 >
 > **Machines checked:**
 > - **`Defalt` (Kali 2026.1), user `nepps1` — re-checked 2026-08-02 (all clear, 28/28).** Previous gap closed: `git-dumper` now present via pipx → `/home/nepps1/.local/bin/git-dumper`. `chisel` **newly added to the checklist** (not in Kali repos) — staged as GitHub static binary → `/home/nepps1/tools/chisel/chisel` (v1.11.8, `chmod +x` done). `feroxbuster` + `ligolo-ng` installed via apt (`ligolo-ng` provides the `ligolo-proxy` and `ligolo-agent` binaries — there is no `ligolo-ng` binary). `pspy` 403'd from `kali.download` (same mirror issue as the `kali` box), so it was staged as a GitHub static binary → `/home/nepps1/tools/pspy/pspy64` (v1.2.1, `chmod +x` done). SecLists + plaintext rockyou.txt both present.
-> - **`kali` (Kali 2026.2), user `nepps1` — re-checked 2026-08-11 (all clear, 28/28).** Every tool + wordlist present. `chisel` is now present via apt at `/usr/bin/chisel` (previously staged as a GitHub static binary — apt package now available, so no staging needed on this machine). `git-dumper` present via pipx at `/home/nepps1/.local/bin/git-dumper` (non-apt — pip blocked system-wide on Kali). `pspy` and `ligolo-ng` are not from apt (the `kali.download` mirror 403'd on 2026-07-10) — both staged as GitHub static binaries under `/home/nepps1/tools/`:
+> - **`kali` (Kali 2026.2), user `nepps1` — re-checked 2026-08-14 (all clear, 34/34).** All prior tools + wordlists still present. `chisel` present via apt at `/usr/bin/chisel`. `git-dumper` present via pipx at `/home/nepps1/.local/bin/git-dumper` (non-apt — pip blocked system-wide on Kali). `pspy` and `ligolo-ng` are not from apt (the `kali.download` mirror 403'd on 2026-07-10) — both staged as GitHub static binaries under `/home/nepps1/tools/`:
 >   - `pspy` → `/home/nepps1/tools/pspy/pspy64` — `chmod +x` set 2026-07-12 (had no execute bit, so the checklist read it as MISSING until fixed)
 >   - `ligolo-ng` → `/home/nepps1/tools/ligolo/{proxy, agent_linux, agent_windows.exe}`
+>   - **Potato family (NEW 2026-08-14)** → `/home/nepps1/tools/potatoes/` — `JuicyPotato.exe` (x64), `PrintSpoofer64.exe` + `PrintSpoofer32.exe`, `GodPotato-NET4.exe` + `GodPotato-NET35.exe`, `RoguePotato.exe` + `RogueOxidResolver.exe`. All verified PE binaries from the original author repos. **No x86 JuicyPotato** (official build is x64-only — a concern for 32-bit targets).
+>   - **BloodHound (NEW 2026-08-14) — LEGACY, not CE.** Kali's `apt bloodhound` installs BloodHound **CE** (web app :8080), which was **purged** (`apt remove --purge bloodhound`). The **legacy Electron GUI** (v4.3.1, official SpecterOps release) is staged → `/home/nepps1/tools/bloodhound-legacy/BloodHound-linux-x64/BloodHound`, symlinked to `~/.local/bin/bloodhound-legacy` (on PATH → just run `bloodhound-legacy`). Backend `neo4j` is apt-installed and kept (`apt-mark manual neo4j bloodhound.py sharphound` so CE removal didn't autoremove it). Session start: `sudo neo4j start` → `bloodhound-legacy` → login `bolt://localhost:7687`. **Do NOT `apt install bloodhound`** — that reinstalls CE. See [[BloodHound]].
 
 ### Core Recon
 | Tool | Check | Install if missing |
@@ -129,6 +131,18 @@ Before starting any lab session, verify these are present. Missing any of these 
 > - Windows 64-bit: `/usr/share/peass/winpeas/winPEASx64.exe`
 > - Windows any arch: `/usr/share/peass/winpeas/winPEASany.exe`
 > - No .exe execution: `/usr/share/peass/winpeas/winPEAS.bat`
+
+#### Windows Privesc Binaries — Potato family (staged, NOT in Kali repos)
+> `SeImpersonatePrivilege` / `SeAssignPrimaryTokenPrivilege` → SYSTEM. Precompiled Windows `.exe`, staged like chisel/pspy under `~/tools/potatoes/`. Transfer to target + run. See [[Potato_Attacks]] for the version→tool matrix + usage.
+
+| Tool | Check | Stage if missing (GitHub releases → `~/tools/potatoes/`) |
+|---|---|---|
+| JuicyPotato (2008–2016) | `-x ~/tools/potatoes/JuicyPotato.exe` | `ohpe/juicy-potato` (**x64 only**) |
+| PrintSpoofer (2016+) | `-x ~/tools/potatoes/PrintSpoofer64.exe` | `itm4n/PrintSpoofer` (64 + 32) |
+| GodPotato (2012–2022) | `-x ~/tools/potatoes/GodPotato-NET4.exe` | `BeichenDream/GodPotato` (NET4 + NET35) |
+| RoguePotato (2019+) | `-x ~/tools/potatoes/RoguePotato.exe` | `antonioCoco/RoguePotato` (+ `RogueOxidResolver.exe`) |
+
+> **x86 gotcha:** the official JuicyPotato is **x64-only** — it will NOT run on a 32-bit target (e.g. a Server 2008 **x86** box). No trustworthy x86 build exists in the original repo; on a 32-bit old box fall back to RottenPotato or a self-compiled x86 JuicyPotato.
 | `evil-winrm` | `which evil-winrm` | `gem install evil-winrm` |
 | `impacket-psexec` | `which impacket-psexec` | `apt install python3-impacket` |
 | `impacket-secretsdump` | `which impacket-secretsdump` | `apt install python3-impacket` |
@@ -139,7 +153,11 @@ Before starting any lab session, verify these are present. Missing any of these 
 | Tool | Check | Install if missing |
 |---|---|---|
 | `netexec` (replaces crackmapexec) | `which netexec` | `apt install netexec` |
-| `bloodhound-python` | `which bloodhound-python` | `pip3 install bloodhound` |
+| `bloodhound-python` (collector) | `which bloodhound-python` | `apt install bloodhound.py` |
+| `bloodhound-legacy` (GUI — view the graph) | `which bloodhound-legacy` (symlink) | stage from `SpecterOps/BloodHound-Legacy` (see [[BloodHound]]) — apt gives CE, not legacy |
+| `neo4j` (BloodHound DB) | `which neo4j` | `apt install neo4j`; start with `sudo neo4j start` |
+
+> **BloodHound is two halves:** `bloodhound-python`/SharpHound *collect* the data; the **legacy GUI + `neo4j` DB** are what you *view* it in. The collector ships on Kali; the GUI does NOT. **Use the LEGACY Electron app, not CE** — Kali's `apt bloodhound` installs CE (web app :8080, different UI) which we purged; the legacy app is staged + symlinked to `~/.local/bin/bloodhound-legacy`. Start: `sudo neo4j start` → run `bloodhound-legacy` → login `bolt://localhost:7687`. **Never `apt install bloodhound`** (reinstalls CE). See [[BloodHound]]. AD-only — not for local privesc.
 
 ### Tunneling / Pivoting (CRITICAL for multi-hop labs)
 | Tool | Check | Install if missing |

@@ -35,8 +35,15 @@ whoami /priv
 | `SeDebugPrivilege`              | Debug any process                   | Dump LSASS memory (Mimikatz / procdump) → creds & hashes                                             |
 | `SeLoadDriverPrivilege`         | Load a kernel driver                | Load a vulnerable/malicious driver → kernel code exec                                                |
 | `SeManageVolumePrivilege`       | Full volume access                  | Can be chained to gain write access to protected files                                               |
+|                                 |                                     |                                                                                                      |
 
 > **These are the highest-value findings on a Windows box.** If `whoami /priv` shows any of them Enabled, that's usually your path — you rarely need to go further down the list.
+
+> **Reference — the "GTFOBins" for Windows privileges** (look up any privilege → how to abuse it):
+> - **Priv2Admin** — `https://github.com/gtworek/Priv2Admin`
+> - **HackTricks** — `https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation` → *Abusing Tokens*
+> - **Google term** for the `SeImpersonate` / `SeAssignPrimaryToken` class: search **"token impersonation"** (leads to the Potato family).
+> - **Always confirm OS version first** (`ver` / `systeminfo`) — it decides *which* Potato works (2008/2012 → JuicyPotato/RoguePotato; 2016+ / Win10+ → PrintSpoofer/GodPotato).
 
 ### SeImpersonate → SYSTEM (most common)
 
