@@ -41,3 +41,18 @@ PORT     STATE SERVICE       VERSION
 |_Not valid after:  2025-01-31T10:50:21
 Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
 ```
+
+Port 21:
+- Based on our nmap scan we find that we are able to sign onto the ftp server using anonymous access. ![[Pasted image 20260817232905.png]]
+- Doing so we find that we can't really do much like read files or pull them onto our local machine, and that is because of the "root       root" permissions, however what caught my eye was that there was a directory by the name of accounts.![[Pasted image 20260817232934.png]] 
+- After seeing this I wondered if it were possible to login to the ftp server using admin admin. Here we find that we have the ability to place files on the ftp server. This comes in handy later.![[Pasted image 20260817232758.png]]
+	- The probe file contained contents that would end up proving that php was indeed able to be executed via the web browser, and by simply browsing to it. This also could've been proven by looking at our header response when running our nmap scan -> "http-server-header: Apache/2.2.21 (Win32) **PHP/5.3.8**"
+- After being able to log into the ftp server as admin we find 3 files (index.php, .htpasswd, and .htaccess.). We also find that we are also ![[Pasted image 20260817234430.png]]
+- The .htaccess file reveal to us a user name and a hash for that user.![[Screenshot From 2026-08-17 23-48-22 1.png]]
+- Observing the prefix of the hash -> `$apr1$` we find that this is a APR1-MD5 Hash. And with a google search we find that its able to get cracked with the hashcat mode of `1600`
+- I was able to crack the password to the hash![[Pasted image 20260818000347.png]]
+Port 242:
+- We end up finding that we need credentials to even access the web page. Using the credentials we found from the hashcat crack, we are able to authenticate ourselves. 
+- If we remember from our ftp session as admin admin, we end up having the ability to upload files. Since we know that php is executed on the web page, we can upload a php file that will accept cmd inputs through the query (search) bar. (simple-backdoor.php file)
+- Here I was able to test the whoami command which lets us know we can then upload a reverse shell to then use the certutil command to pull and execute our reverse shell file. 
+![[Screenshot From 2026-08-14 13-17-42.png]]
