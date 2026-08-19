@@ -64,4 +64,7 @@ Port 242:
 		- Windows Server 2008 SP1 x86 local privilege escalation exploit
 		- Windows Server 2008 SP1 privilege escalation github
 		- Server 2008 SP1 kernel exploit SYSTEM
-	- I also found by using teh 
+	- I also found by using that by using the wes-ng tool I am then able to search for all possible CVE's the machine could be vulnerable to, and we end up finding that same CVE in the out put list which is cool.
+- After downloading the file from the exploit db page, compiling it, transfering it back to the victim machine I was then able to run the executable which kicked me into SYSTEM.![[Pasted image 20260819155841.png]]
+
+- Thus allowing me to find the last flag of -> `1a3432551dbadb53d93fc4e5735fc27f`
