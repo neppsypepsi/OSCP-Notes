@@ -57,6 +57,16 @@ elif [ -x /home/nepps1/tools/pspy/pspy64 ]; then
 else
   printf '  %s✗%s %-22s %sMISSING%s\n' "$C_BAD" "$C_RST" "pspy" "$C_BAD" "$C_RST"; missing+=("pspy")
 fi
+# wes-ng (Windows Exploit Suggester): `wes` on PATH (pipx) + staged CVE definitions.zip
+if command -v wes >/dev/null 2>&1; then
+  if [ -f /home/nepps1/tools/wesng/definitions.zip ]; then
+    printf '  %s✓%s %-22s %s%s (defs: /home/nepps1/tools/wesng/definitions.zip)%s\n' "$C_OK" "$C_RST" "wes-ng" "$C_DIM" "$(command -v wes)" "$C_RST"; present+=("wes-ng")
+  else
+    printf '  %s✗%s %-22s %swes ok but DEFINITIONS MISSING%s\n' "$C_BAD" "$C_RST" "wes-ng" "$C_BAD" "$C_RST"; missing+=("wes-ng-defs")
+  fi
+else
+  printf '  %s✗%s %-22s %sMISSING%s\n' "$C_BAD" "$C_RST" "wes-ng" "$C_BAD" "$C_RST"; missing+=("wes-ng")
+fi
 
 hdr "WINDOWS PRIVESC (staged .exe — SeImpersonate -> SYSTEM, see 06_Windows/Potato_Attacks.md)"
 checkfile "juicypotato"  /home/nepps1/tools/potatoes/JuicyPotato.exe
@@ -117,6 +127,8 @@ fix_for() {
     bloodhound-python) echo "pipx install bloodhound" ;;
     git-dumper)        echo "pipx install git-dumper   (NOT apt — pip is blocked system-wide on Kali)" ;;
     pspy)              echo "stage static binary -> /home/nepps1/tools/pspy/pspy64 (github, chmod +x) — kali.download often 403s" ;;
+    wes-ng)            echo "pipx install wesng   (NOT apt/pip — pip is blocked system-wide on Kali). Then stage defs (below)." ;;
+    wes-ng-defs)       echo "cd /home/nepps1/tools/wesng && wes --update   (drops definitions.zip in CWD — keep it here, out of the vault)" ;;
     juicypotato|printspoofer|godpotato|roguepotato)
                        echo "stage from GitHub -> /home/nepps1/tools/potatoes/ (see 06_Windows/Potato_Attacks.md) — not in Kali repos" ;;
     bloodhound-legacy) echo "stage legacy Electron app -> /home/nepps1/tools/bloodhound-legacy/ (github SpecterOps/BloodHound-Legacy, BloodHound-linux-x64.zip) — apt gives CE, not legacy. See 06_Windows/BloodHound.md" ;;

@@ -56,3 +56,12 @@ Port 242:
 - If we remember from our ftp session as admin admin, we end up having the ability to upload files. Since we know that php is executed on the web page, we can upload a php file that will accept cmd inputs through the query (search) bar. (simple-backdoor.php file)
 - Here I was able to test the whoami command which lets us know we can then upload a reverse shell to then use the certutil command to pull and execute our reverse shell file. 
 ![[Screenshot From 2026-08-14 13-17-42.png]]
+- I was able to search and find the local.txt flag -> `f1d15547995b8aa589cfbe6315ba2236.`![[Pasted image 20260819144055.png]]
+- We then find that after running the `whoami /all` command we see the user account has some privileges that may be exploitable![[Pasted image 20260819144648.png]]
+- We then see after running system info that the machine is confirmed x84. This is a potential exploit route however lets see what else we can find. ![[Pasted image 20260819144728.png]]
+- I end up finding by searching for exploits relative to the build number `build 6001 windows exploit` and ended up finding an exploitdb page -> [CVE-2011-1249](https://www.exploit-db.com/exploits/40564)
+	- I learned that I could've bettered my search by searching up something like:
+		- Windows Server 2008 SP1 x86 local privilege escalation exploit
+		- Windows Server 2008 SP1 privilege escalation github
+		- Server 2008 SP1 kernel exploit SYSTEM
+	- I also found by using teh 
