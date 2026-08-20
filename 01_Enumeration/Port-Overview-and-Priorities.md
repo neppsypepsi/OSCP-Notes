@@ -128,6 +128,26 @@ Web is the **most common initial foothold**.
 
 ---
 
+## 88 — Kerberos
+
+**Service:** Windows/AD Authentication
+
+### What it might mean
+- 🚩 **This host is a Domain Controller** (AD box)
+- A Windows domain exists
+- Usernames become high-value (roasting, spraying)
+
+### First things to try
+- Pair with LDAP (389) to enumerate the domain
+- Build a username list first, THEN think Kerberos attacks
+- Add the domain name to `/etc/hosts` before any Kerberos tool
+
+### Why it matters
+Kerberos + LDAP open together = **Domain Controller**. That changes the whole
+playbook toward AD enumeration. See [[LDAP]] and [[Active_Directory_Attacks]].
+
+---
+
 ## 110 / 143 — POP3 / IMAP
 
 **Service:** Mail Access
@@ -164,6 +184,26 @@ Emails often contain:
 
 ### Why it matters
 SMB is one of the **highest-value services** in OSCP.
+
+---
+
+## 389 / 636 / 3268 / 3269 — LDAP / LDAPS / Global Catalog
+
+**Service:** Active Directory Directory Service
+
+### What it might mean
+- 🚩 **Domain Controller** (especially with 88/Kerberos also open)
+- The AD directory — every user, group, computer
+- Anonymous bind may leak the whole domain
+
+### First things to try
+- Anonymous bind for the base DN: `ldapsearch -x -H ldap://<ip> -s base namingcontexts`
+- Dump users → username list
+- `netexec ldap <ip> -u '' -p ''`
+
+### Why it matters
+LDAP tells you **who exists** in the domain — the seed for every AD attack.
+Full workflow in [[LDAP]].
 
 ---
 
@@ -239,6 +279,20 @@ Unauthenticated VNC = instant GUI access.
 
 ### Why it matters
 Alt web ports often hide **juicy interfaces**.
+
+---
+
+## 🚩 Recognizing a Domain Controller (read the ports as a group)
+
+Don't attack ports one-by-one — read the **set** to classify the box first:
+
+| Ports seen together | Verdict |
+|---|---|
+| 88 + 389 (+ 3268, 464, 53) | **Domain Controller → Active Directory box** |
+| 80/443 + 445, no 88/389 | Standalone Windows server |
+
+A DC changes your first moves: LDAP/SMB enumeration for a **username list** becomes a
+first-class path right alongside web/gobuster. See [[LDAP]] → [[Active_Directory_Attacks]] → [[BloodHound]].
 
 ---
 

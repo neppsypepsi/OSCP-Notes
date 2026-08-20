@@ -253,6 +253,23 @@ Only AFTER I know the service and version:
 - I check SearchSploit
 - I think about exploitation paths
 
+### **Classify the box — is it a Domain Controller?**
+
+Before deep-diving each service, read the port set as a **group** to decide what kind of
+box this is. It changes your whole first move:
+
+- **88 (Kerberos) + 389 (LDAP)** open together → 🚩 **Domain Controller → Active Directory box.**
+  Also-present tells: 464 (kpasswd), 3268/3269 (Global Catalog), 53 (DNS), 445 (SMB).
+- No 88/389, just web + SMB → standalone Windows server.
+
+If it's a DC, don't tunnel-vision on web. **LDAP/SMB enumeration for a username list**
+becomes a first-class path right next to gobuster:
+- `ldapsearch -x -H ldap://<ip> -s base namingcontexts` → base DN
+- `netexec ldap <ip> -u '' -p ''` and `netexec smb <ip> -u '' -p ''`
+- Goal of this pass: a **username** or the **domain name** — the seed for AD attacks.
+
+Then follow [[LDAP]] → [[Active_Directory_Attacks]] → [[BloodHound]].
+
 ### **Real OSCP decision points at STEP 3**
 
 - If service needs creds → note it and move on
