@@ -59,7 +59,7 @@ No credentials needed. Just a valid username list.
 ```bash
 netexec ldap <DC_IP> -u users.txt -p "" -k
 ```
-
+Will try and log in as users with empty passwords, if you 
 Look for:
 ```
 [+] DOMAIN\username account vulnerable to asreproast attack

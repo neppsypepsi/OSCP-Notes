@@ -93,6 +93,21 @@ nxc smb <target ip> -u '' -p '' --shares
 ```
 **Why:** shows share list + whether you have **READ / WRITE**.
 
+#### Default shares — ❌ X these out, they're standard on every Windows host / DC
+
+| Share | Normal perms | What it is | Verdict |
+|---|---|---|---|
+| `ADMIN$` | admin only | Remote admin (`C:\Windows`) | ❌ default — access = you're **local admin** |
+| `C$` | admin only | Whole C: drive | ❌ default — access = you're **local admin** |
+| `IPC$` | READ | RPC named-pipe channel, **no files** | ❌ default — used for null-session enum, not loot |
+| `NETLOGON` | READ | Logon scripts (DC only) | ❌ default — peek for stray scripts, usually empty |
+| `SYSVOL` | READ | GPOs / domain policy (DC only) | ❌ default — quick look for GPP creds, else skip |
+| `print$` | READ | Printer drivers | ❌ default |
+
+> **The signal is what's NOT on this list.** A **custom** share (`Backups`, `HR`, `Dev`, `Users`, an app name) is where loot lives — go there first. If the ONLY shares are the defaults above, SMB is likely **not your path** (no custom loot).
+>
+> **`ADMIN$` / `C$` access is itself a finding** — if `--shares` shows you have access to those, you're **local admin** → `impacket-psexec` for a SYSTEM shell. No access to them (the common case) = normal user.
+
 ### **STEP 4 — Deeper Enumeration (Confirmation)**
 ```bash
 enum4linux -a <IP>

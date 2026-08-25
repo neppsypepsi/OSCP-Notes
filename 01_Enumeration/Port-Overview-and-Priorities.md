@@ -263,6 +263,24 @@ Unauthenticated VNC = instant GUI access.
 
 ---
 
+## 5985 / 5986 — WinRM
+
+**Service:** Windows Remote Management
+
+### What it might mean
+- Remote command execution **if you have creds** (5985 HTTP / 5986 HTTPS)
+- Common on Windows servers and Domain Controllers
+
+### First things to try
+- Validate creds: `nxc winrm <ip> -u u -p p` → look for `(Pwn3d!)`
+- Get a shell: `evil-winrm -i <ip> -u u -p p`
+
+### Why it matters
+Valid creds + WinRM = **interactive shell** — the classic AD foothold once you
+recover a credential. See [[RDP_and_WinRM]].
+
+---
+
 ## 8080 / 8000 / 8443 — Alternate Web Ports
 
 **Service:** Web / Admin Panels
