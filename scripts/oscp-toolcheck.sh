@@ -37,7 +37,7 @@ printf '  user    : %s\n' "$(whoami)"
 printf '  date    : %s\n' "$(date +%Y-%m-%d)"
 
 hdr "CORE RECON"
-for t in nmap gobuster feroxbuster ffuf enum4linux smbclient nikto git-dumper; do check "$t" "$t"; done
+for t in nmap gobuster feroxbuster ffuf enum4linux smbclient nikto git-dumper cadaver davtest; do check "$t" "$t"; done
 
 hdr "EXPLOITATION"
 for t in msfvenom searchsploit sqlmap hydra burpsuite; do check "$t" "$t"; done

@@ -37,7 +37,6 @@ whoami /priv
 | `SeManageVolumePrivilege`       | Full volume access                  | Can be chained to gain write access to protected files                                               |
 |                                 |                                     |                                                                                                      |
 
-> **These are the highest-value findings on a Windows box.** If `whoami /priv` shows any of them Enabled, that's usually your path — you rarely need to go further down the list.
 
 > **Reference — the "GTFOBins" for Windows privileges** (look up any privilege → how to abuse it):
 > - **Priv2Admin** — `https://github.com/gtworek/Priv2Admin`

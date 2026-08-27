@@ -89,7 +89,7 @@ Before starting any lab session, verify these are present. Missing any of these 
 >
 > **Machines checked:**
 > - **`Defalt` (Kali 2026.1), user `nepps1` — re-checked 2026-08-02 (all clear, 28/28).** Previous gap closed: `git-dumper` now present via pipx → `/home/nepps1/.local/bin/git-dumper`. `chisel` **newly added to the checklist** (not in Kali repos) — staged as GitHub static binary → `/home/nepps1/tools/chisel/chisel` (v1.11.8, `chmod +x` done). `feroxbuster` + `ligolo-ng` installed via apt (`ligolo-ng` provides the `ligolo-proxy` and `ligolo-agent` binaries — there is no `ligolo-ng` binary). `pspy` 403'd from `kali.download` (same mirror issue as the `kali` box), so it was staged as a GitHub static binary → `/home/nepps1/tools/pspy/pspy64` (v1.2.1, `chmod +x` done). SecLists + plaintext rockyou.txt both present.
-> - **`kali` (Kali 2026.2), user `nepps1` — re-checked 2026-08-19 (all clear, 35/35).** **WES-NG (NEW 2026-08-19)** added to the checklist — installed via `pipx install wesng` → `~/.local/bin/wes`; CVE DB staged out of the vault at `/home/nepps1/tools/wesng/definitions.zip` (refresh with `wes --update` from that dir). All prior tools + wordlists still present. `chisel` present via apt at `/usr/bin/chisel`. `git-dumper` present via pipx at `/home/nepps1/.local/bin/git-dumper` (non-apt — pip blocked system-wide on Kali). `pspy` and `ligolo-ng` are not from apt (the `kali.download` mirror 403'd on 2026-07-10) — both staged as GitHub static binaries under `/home/nepps1/tools/`:
+> - **`kali` (Kali 2026.2), user `nepps1` — re-checked 2026-08-25 (all clear, 37/37).** **WebDAV tools (NEW 2026-08-25)** added to Core Recon: `cadaver` (`/usr/bin/cadaver`, v0.28) + `davtest` (`/usr/bin/davtest`) — both apt, already present. **WES-NG (2026-08-19)** added to the checklist — installed via `pipx install wesng` → `~/.local/bin/wes`; CVE DB staged out of the vault at `/home/nepps1/tools/wesng/definitions.zip` (refresh with `wes --update` from that dir). All prior tools + wordlists still present. `chisel` present via apt at `/usr/bin/chisel`. `git-dumper` present via pipx at `/home/nepps1/.local/bin/git-dumper` (non-apt — pip blocked system-wide on Kali). `pspy` and `ligolo-ng` are not from apt (the `kali.download` mirror 403'd on 2026-07-10) — both staged as GitHub static binaries under `/home/nepps1/tools/`:
 >   - `pspy` → `/home/nepps1/tools/pspy/pspy64` — `chmod +x` set 2026-07-12 (had no execute bit, so the checklist read it as MISSING until fixed)
 >   - `ligolo-ng` → `/home/nepps1/tools/ligolo/{proxy, agent_linux, agent_windows.exe}`
 >   - **Potato family (NEW 2026-08-14)** → `/home/nepps1/tools/potatoes/` — `JuicyPotato.exe` (x64), `PrintSpoofer64.exe` + `PrintSpoofer32.exe`, `GodPotato-NET4.exe` + `GodPotato-NET35.exe`, `RoguePotato.exe` + `RogueOxidResolver.exe`. All verified PE binaries from the original author repos. **No x86 JuicyPotato** (official build is x64-only — a concern for 32-bit targets).
@@ -106,6 +106,8 @@ Before starting any lab session, verify these are present. Missing any of these 
 | `smbclient` | `which smbclient` | `apt install smbclient` |
 | `nikto` | `which nikto` | `apt install nikto` |
 | `git-dumper` | `which git-dumper` | `pipx install git-dumper` (pip blocked system-wide on Kali — use pipx) |
+| `cadaver` | `which cadaver` | `apt install cadaver` (WebDAV client — upload webshell over HTTP `PUT`) |
+| `davtest` | `which davtest` | `apt install davtest` (probe WebDAV: what extensions upload + execute) |
 
 ### Exploitation
 | Tool | Check | Install if missing |

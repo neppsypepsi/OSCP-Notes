@@ -108,6 +108,23 @@ nxc smb <target ip> -u '' -p '' --shares
 >
 > **`ADMIN$` / `C$` access is itself a finding** — if `--shares` shows you have access to those, you're **local admin** → `impacket-psexec` for a SYSTEM shell. No access to them (the common case) = normal user.
 
+#### Quick check on SYSVOL — GPP passwords
+
+`SYSVOL` is a default share, but before you X it out, scan it for **GPP passwords**:
+old Group Policy Preferences stored a `cpassword` in XML files (`Groups.xml`, etc.),
+"encrypted" with a **key Microsoft published** — so anyone who can read SYSVOL can
+decrypt it. Needs any valid domain cred.
+
+```bash
+nxc smb <IP> -u <user> -p <password> -M gpp_password   # auto-find + decrypt in SYSVOL
+```
+Manual equivalent (find the file, then decrypt the hash):
+```bash
+gpp-decrypt <cpassword-string>
+```
+- **Hit** → plaintext creds for another (often privileged) account → test everywhere.
+- **Nothing found** → this box left no GPP cred; move on. (Not a miss — just absent.)
+
 ### **STEP 4 — Deeper Enumeration (Confirmation)**
 ```bash
 enum4linux -a <IP>

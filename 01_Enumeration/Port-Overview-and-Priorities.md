@@ -126,6 +126,10 @@ DNS leaks structure of the environment.
 ### Why it matters
 Web is the **most common initial foothold**.
 
+> 🚩 **Check for WebDAV.** Run `nmap -p80 --script http-methods <IP>` — if `PUT` /
+> `DELETE` show up, it's WebDAV (SMB over HTTP). With creds you can upload a webshell
+> (`.aspx` on IIS) → **RCE**. See [[WebDAV]].
+
 ---
 
 ## 88 — Kerberos

@@ -61,6 +61,7 @@ wmiexec.py user@TARGET_IP -hashes :NTLM_HASH
 ### **Command**
 ```bash
 psexec.py user:password@TARGET_IP
+#
 ```
 
 Pass-the-hash:

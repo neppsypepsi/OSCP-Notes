@@ -956,4 +956,21 @@ result: 0 Success
 
 - Here we try enumerating shares using the credentials we found however there were nothing but standard shares.![[Pasted image 20260825000738.png]]
 	- Below we find that we did indeed need credentials to even see any share.
-
+- After some research it was mentioned that there is a possibility that there could be some group policy files located in the SYSVOL share that could contain some plaintext passwords. 
+- I ran another nxc tool that checks for passwords instead of me manually checking and it found nothing![[Pasted image 20260825232535.png]]
+- Next what was determined was that when we first ran our nmap scan, we find that there is a WebDav server up and running. 
+- There are chances of their being authentication required to even access the webdav server, but given we have valid credentials, they also might be valid here. ![[Pasted image 20260825232952.png]]
+- Here we get an idea on what file extensions are allowed and are executed to give us a better understanding on what type of rev shell we can take advantage of.
+	- Here aspx seems to be put PUT and EXEC. 
+- Using cadaver I login into the WebDav server as fmcsorley and I was able to put a shell box command file in what I believed to be the web root directory. ![[Pasted image 20260825233141.png]]
+- Browsing to it, I was then able to find my input box and I was able to interact with it. Now time for a valid reverse shell.![[Pasted image 20260825233751.png]]
+	- ![[Pasted image 20260825234033.png]]
+	- I learned that powershell doesn't fully restrict but does make the process a bit differently when using commands. I mention this because we end up finding that we have the seImpersonate privilege over the `inetsrv` account. ![[Pasted image 20260826232036.png]]
+	- To help up better pin point which potato to use, `systeminfo` reveals that the OS version is on windows 10, which puts us in the PrintSpoofer64.exe category.
+	- After transferring the file, we run it which then grants us a shell as the domain controller machine itself. ![[Pasted image 20260826232415.png]]
+	- Thus allowing me to find both local and proof.txt files. -> local: e2dbd1dc37dd5c88b32fd6d4b361af95, proof: 749ac942b58f70463921195eeb2c6145
+- However we are not over yet as even though we have all privileges, there is still NT authority to get. And a new method I learned was using the LAPS password to escalate privileges. 
+- There are a few ways to find it as found in [[LAPS]] but i did it the easier way with `nxc`![[Pasted image 20260826234647.png]]
+- I learned that the LAPS password changes per session so this won't be the same next time -> `QFA1biZ8UM(%}5`
+- Now with this we can use something like evil-winrm, or psexec, or some impacket tool to use the creds.![[Pasted image 20260827000030.png]]
+- As you can see here i was able to get nt authority.
