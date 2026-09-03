@@ -388,7 +388,9 @@ type C:\Users\Administrator\Desktop\proof.txt
 → OffSec exam/lab flags. `local.txt` sits on the low-priv user's Desktop; `proof.txt` on the Administrator's Desktop (needs SYSTEM/admin). PG Practice may use `local.txt` / `proof.txt` or `user.txt` / `root.txt` depending on the platform.
 
 ```cmd
-where /r C:\Users local.txt proof.txt
+where.exe /r C:\Users local.txt proof.txt
+or 
+gci C:\Users -Recurse -Filter proof.txt -ErrorAction SilentlyContinue
 ```
 → Search all profiles for the flag files at once if you're not sure which Desktop.
 

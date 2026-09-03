@@ -55,6 +55,11 @@ Host script results:
 |_  start_date: N/A
 
 ```
-CVE-2019-7214
-![[Pasted image 20260812170106.png]]
-![[Pasted image 20260812170044.png]]
+
+Port 21: ftp found log files under one of the folders, and there were no critical findings.
+Port 80: Very basic windows screen image, can't interact with image. Also rand go buster but did not find anything of interest.
+
+After searching for any clues, I then tried using searchsploit and ended up coming across a remote code execution exploit -> CVE-2019-7214.
+![[Pasted image 20260812170106.png]]Here we see the body of the code of the exploit, however notice that there are 4 fields we are likley to change.
+- After trying over and over, I ended up learning that the correct port to use was on the port shown as open when we initially ran our nmap scan. `Port 17001`. I now know to be a little more aware of services on ports that could serve a purpose to my exploit. 
+![[Pasted image 20260812170044.png]]After running the script we end up getting a shell as nt authority\system allowing me to find the flag -> `34e3b07842099e9eb6529f4a4f67d535`
