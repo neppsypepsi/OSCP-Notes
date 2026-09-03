@@ -88,7 +88,7 @@ Before starting any lab session, verify these are present. Missing any of these 
 > **Why this log exists (read before trusting it):** each dated entry is a stamp meaning *"this exact machine — matched by hostname — was verified all-clear on this date."* If your hostname matches an entry and nothing's changed, trust it and skip re-staging. If your hostname isn't listed, treat this machine as unverified: run the checklist and add your own entry. Never apply another machine's entry to yours.
 >
 > **Machines checked:**
-> - **`Defalt` (Kali 2026.1), user `nepps1` — re-checked 2026-08-02 (all clear, 28/28).** Previous gap closed: `git-dumper` now present via pipx → `/home/nepps1/.local/bin/git-dumper`. `chisel` **newly added to the checklist** (not in Kali repos) — staged as GitHub static binary → `/home/nepps1/tools/chisel/chisel` (v1.11.8, `chmod +x` done). `feroxbuster` + `ligolo-ng` installed via apt (`ligolo-ng` provides the `ligolo-proxy` and `ligolo-agent` binaries — there is no `ligolo-ng` binary). `pspy` 403'd from `kali.download` (same mirror issue as the `kali` box), so it was staged as a GitHub static binary → `/home/nepps1/tools/pspy/pspy64` (v1.2.1, `chmod +x` done). SecLists + plaintext rockyou.txt both present.
+> - **`Defalt` (Kali 2026.3), user `nepps1` — re-checked 2026-09-02 (all clear, 37/37).** Full Windows/AD staging completed this session (previously only staged on `kali`). Core recon, exploitation, pivoting all present. `cadaver` + `davtest` (WebDAV) present via apt. `chisel` staged → `/home/nepps1/tools/chisel/chisel`. `pspy` staged → `/home/nepps1/tools/pspy/pspy64`. `feroxbuster` + `ligolo-ng` via apt (`ligolo-ng` provides `ligolo-proxy`/`ligolo-agent` — no `ligolo-ng` binary). `git-dumper` via pipx → `/home/nepps1/.local/bin/git-dumper`. `netexec` + `bloodhound-python` present. SecLists + plaintext rockyou.txt present. **Newly staged 2026-09-02:** `wes-ng` via pipx → `/home/nepps1/.local/bin/wes`, CVE DB out-of-vault at `/home/nepps1/tools/wesng/definitions.zip` (defs dated 20260828; refresh with `wes --update` from that dir). **Potato family** → `/home/nepps1/tools/potatoes/` — `JuicyPotato.exe` (x64 only), `PrintSpoofer64.exe`+`PrintSpoofer32.exe`, `GodPotato-NET4.exe`+`GodPotato-NET35.exe`, `RoguePotato.exe`+`RogueOxidResolver.exe` (see [[Potato_Attacks]]). **BloodHound legacy** (v4.3.1, SpecterOps Electron GUI) → `/home/nepps1/tools/bloodhound-legacy/BloodHound-linux-x64/BloodHound`, symlinked → `~/.local/bin/bloodhound-legacy`. Backend `neo4j` apt-installed → `/usr/bin/neo4j` (`sudo neo4j start`). **Do NOT `apt install bloodhound`** (installs CE, not legacy). See [[BloodHound]].
 > - **`kali` (Kali 2026.2), user `nepps1` — re-checked 2026-08-25 (all clear, 37/37).** **WebDAV tools (NEW 2026-08-25)** added to Core Recon: `cadaver` (`/usr/bin/cadaver`, v0.28) + `davtest` (`/usr/bin/davtest`) — both apt, already present. **WES-NG (2026-08-19)** added to the checklist — installed via `pipx install wesng` → `~/.local/bin/wes`; CVE DB staged out of the vault at `/home/nepps1/tools/wesng/definitions.zip` (refresh with `wes --update` from that dir). All prior tools + wordlists still present. `chisel` present via apt at `/usr/bin/chisel`. `git-dumper` present via pipx at `/home/nepps1/.local/bin/git-dumper` (non-apt — pip blocked system-wide on Kali). `pspy` and `ligolo-ng` are not from apt (the `kali.download` mirror 403'd on 2026-07-10) — both staged as GitHub static binaries under `/home/nepps1/tools/`:
 >   - `pspy` → `/home/nepps1/tools/pspy/pspy64` — `chmod +x` set 2026-07-12 (had no execute bit, so the checklist read it as MISSING until fixed)
 >   - `ligolo-ng` → `/home/nepps1/tools/ligolo/{proxy, agent_linux, agent_windows.exe}`
@@ -154,6 +154,8 @@ Before starting any lab session, verify these are present. Missing any of these 
 | `john` | `which john` | `apt install john` |
 | `hashcat` | `which hashcat` | `apt install hashcat` |
 
+> **Hashcat rules dir = `/usr/share/hashcat/rules/`** — notes reference `best64.rule` there (`05_Tools/Hashcat.md`, `06_Windows/Active_Directory_Attacks.md`). Current Kali hashcat ships `best66.rule` in that dir, **not `best64`**; the genuine `best64.rule` lives at `/usr/share/john/rules/best64.rule`. If `/usr/share/hashcat/rules/best64.rule` is missing, restore it: `sudo cp /usr/share/john/rules/best64.rule /usr/share/hashcat/rules/best64.rule` (byte-identical, real hashcat ruleset). Done on `Defalt` 2026-09-02.
+
 ### Credential / Network
 | Tool | Check | Install if missing |
 |---|---|---|
@@ -204,3 +206,22 @@ gunzip /usr/share/wordlists/rockyou.txt.gz 2>/dev/null   # decompress rockyou if
 - **Ask before deleting anything**
 - When I ask to improve or add to a note, **preserve all existing content** — only add, don't remove unless I say so
 - When Obsidian doesn't show changes, remind me to press `Ctrl+P` → "Reload app without saving" or restart Obsidian
+
+---
+
+## Terminal Quirks — Claude Code mouse capture (CONFIRMED FIX)
+
+**Symptoms (all three at once):** drag-select feels like it auto-copies / selection acts weird, scroll wheel feels slow/laggy, scrollbar thumb is huge and won't slide normally. Feels like the terminal broke — it didn't.
+
+**Root cause = Claude Code, NOT the terminal or fullscreen.** Since **Claude Code v2.1.150**, its TUI turns on **xterm mouse tracking by default**, so the app captures drag/click and the wheel scrolls Claude's view instead of terminal scrollback. `F11`/fullscreen toggling does nothing — it's not a GNOME Terminal setting.
+
+**THE FIX (verified working on `Defalt` 2026-09-02):** add the env var to `~/.claude/settings.json`, then **fully restart Claude Code** (env is read only at startup):
+```json
+{ "env": { "CLAUDE_CODE_DISABLE_MOUSE": "1" } }
+```
+Restores native terminal selection, copy, and scrollback. **Tradeoff:** wheel no longer scrolls Claude's view — use `PgUp`/`PgDn` (and `Shift`+`PgUp/PgDn` for scrollback) instead.
+
+**Alternative — keep wheel scroll in Claude, only stop click/drag hijack:** use `CLAUDE_CODE_DISABLE_MOUSE_CLICKS: "1"` (v2.1.195+) instead.
+
+> Note: this is a `~/.claude/settings.json` change (per-machine Claude config), **not** part of this vault. Redo it on any new machine that shows these symptoms.
+> Refs: anthropics/claude-code issues #71826, #62294; docs `code.claude.com/docs/en/fullscreen`.
