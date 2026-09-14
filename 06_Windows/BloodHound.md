@@ -1,44 +1,13 @@
-## BloodHound (Legacy v4.x) — AD Attack-Path Mapping
-
-→ Ingests Active Directory data and draws it as a **graph**: nodes = users / groups / computers, edges = rights/relationships (`MemberOf`, `AdminTo`, `GenericAll`, `CanRDP`, etc.). It finds the **shortest path to Domain Admin** for you. **AD only** — maps *domain* privileges, NOT local privesc like SeImpersonate ([[Potato_Attacks]]). Use it on the AD set / domain-joined boxes, not standalone machines.
-
-**Two halves:** a **collector** (bloodhound-python / SharpHound) grabs the data → produces a `.zip` → you **import** it into the BloodHound GUI to explore.
-
-> **This note = the LEGACY Electron app (v4.3.1) + neo4j** — the black-graph UI. Kali's `apt bloodhound` now installs **BloodHound CE** (a web app on :8080) instead, which has a different UI. Legacy is staged manually (below). Don't confuse the two.
-
----
-
-## 0. One-time setup (Kali) — get the legacy app + neo4j
-
-Legacy is **not in Kali repos anymore** (apt gives CE). Staged binary:
+Start the server 
+```bash 
+sudo neo4j start
+#or to stop
+sudo neo4j stop
 ```
-/home/nepps1/tools/bloodhound-legacy/BloodHound-linux-x64/BloodHound
-```
-> Source: official SpecterOps release `github.com/SpecterOps/BloodHound-Legacy` → `BloodHound-linux-x64.zip`, unzipped there.
-
-neo4j comes from the `bloodhound`/`neo4j` apt package (already installed).
-
----
-
-## 1. Start the backend (every session)
-
-```bash
-sudo systemctl stop bloodhound      # CE fights over neo4j — stop it first (once: systemctl disable bloodhound)
-sudo neo4j start                    # backend DB — listens on :7474 (web) + :7687 (bolt)
-```
-**First time only** — set a neo4j password: open `http://localhost:7474` → log in `neo4j` / `neo4j` → it forces a change → set e.g. `bloodhound`. (After that, neo4j remembers it.)
-
 Launch the GUI:
 ```bash
 bloodhound-legacy      # symlink -> /home/nepps1/tools/bloodhound-legacy/BloodHound-linux-x64/BloodHound
 ```
-> Shortcut set up once: `ln -sf /home/nepps1/tools/bloodhound-legacy/BloodHound-linux-x64/BloodHound ~/.local/bin/bloodhound-legacy` (`~/.local/bin` is on PATH). On a fresh machine, re-create it or run the full path.
-Login screen: **URL** `bolt://localhost:7687` · **User** `neo4j` · **Pass** `<what you set>`.
-> App window flashes and dies? Electron sandbox — relaunch with `--no-sandbox` appended.
-
-**Gotchas:**
-- **Only ONE of CE / legacy at a time** — both want neo4j and will clash. Always `systemctl stop bloodhound` before legacy.
-- **`localhost` won't resolve / neo4j "no such host"?** → `/etc/hosts` is missing the loopback line (OSCP VPN can clobber it). Fix: `sudo sed -i '1i 127.0.0.1\tlocalhost' /etc/hosts`, verify `getent hosts localhost`.
 
 ---
 

@@ -4,80 +4,13 @@
 ## What SMB Is
 
 **SMB = shared folders over a network.**  
-A machine exposes folders to other machines on the network. Those folders are called **shares**.
-
-Common share names you’ll see:
-- `Public`
-- `Backups`
-- `Users`
-- `HR`
-- `C$` (admin share)
-- `ADMIN$` (admin share)
-
 **Main question every time SMB is open:**
 > “Can I access any shares, and what permissions do I have (read / write)?”
 
----
-
-## When to Use SMB 
-
-Use this note when:
-- Nmap shows **139/tcp or 445/tcp**
-- You got creds and want to test SMB access
-- You need loot (configs, scripts, backups)
-- You want a path to execution (only if there is a trigger)
----
-
-## Why SMB Is Valuable (What It Usually Gives You)
-
-- Files with useful information
-- Backups left accessible
-- Scripts that are writable
-- Credentials stored for convenience
-- Paths / hostnames / internal network info
 
 ---
 
-## What to Look For in Shares (and What to Do Next)
-
-### Config files (`.xml .ini .config .conf`)
-**Why:** often contain plaintext creds or connection strings.  
-**What to do:**
-- Download
-- Read them
-- Extract usernames/passwords/hosts
-- Immediately test creds on SMB/RDP/WinRM/FTP
-
-### Scripts (`.ps1 .bat .vbs .sh`)
-**Why:** scripts may run automatically via tasks/services/backup jobs.  
-**What to do:**
-- Check if you can write/replace them
-- If writable, identify the trigger (task/service/reboot)
-- Do NOT assume upload = execution
-
-### Backups (`.bak .zip .tar` + database dumps)
-**Why:** backups often contain old creds / secrets / registry dumps.  
-**What to do:**
-- Download and unzip on Kali
-- Hunt for creds, hashes, configs inside
-
-### Obvious creds / notes (`password.txt`, `notes.txt`)
-**Why:** quick wins → immediate reuse.  
-**What to do:**
-- Test creds everywhere (SMB/RDP/WinRM/Web/FTP/SSH)
-
----
-## 5️⃣ SMB Enumeration Workflow (OSCP)
-
-Run these in order. Stop when you get new info.
-
----
-### STEP 1 — Confirm SMB Is Open
-```bash
-nmap -p 139,445 -sV <target>
-```
-
-### **STEP 2 — Try Anonymous / Guest 
+### **STEP 1 — Try Anonymous / Guest 
 ```bash
 smbclient -L //<IP>/ -N
 ```
@@ -87,7 +20,7 @@ smbclient -L //<IP>/ -N
 **Failure looks like:** NT_STATUS_ACCESS_DENIED → creds needed
 
 
-### **STEP 3 — Check Share Permissions (Fast)**
+### **STEP 2 — Check Share Permissions (Fast)**
 ```bash
 nxc smb <target ip> -u '' -p '' --shares
 ```
@@ -103,11 +36,6 @@ nxc smb <target ip> -u '' -p '' --shares
 | `NETLOGON` | READ | Logon scripts (DC only) | ❌ default — peek for stray scripts, usually empty |
 | `SYSVOL` | READ | GPOs / domain policy (DC only) | ❌ default — quick look for GPP creds, else skip |
 | `print$` | READ | Printer drivers | ❌ default |
-
-> **The signal is what's NOT on this list.** A **custom** share (`Backups`, `HR`, `Dev`, `Users`, an app name) is where loot lives — go there first. If the ONLY shares are the defaults above, SMB is likely **not your path** (no custom loot).
->
-> **`ADMIN$` / `C$` access is itself a finding** — if `--shares` shows you have access to those, you're **local admin** → `impacket-psexec` for a SYSTEM shell. No access to them (the common case) = normal user.
-
 #### Quick check on SYSVOL — GPP passwords
 
 `SYSVOL` is a default share, but before you X it out, scan it for **GPP passwords**:
@@ -125,7 +53,7 @@ gpp-decrypt <cpassword-string>
 - **Hit** → plaintext creds for another (often privileged) account → test everywhere.
 - **Nothing found** → this box left no GPP cred; move on. (Not a miss — just absent.)
 
-### **STEP 4 — Deeper Enumeration (Confirmation)**
+### **STEP 3 — Deeper Enumeration (Confirmation)**
 ```bash
 enum4linux -a <IP>
 ```
@@ -140,8 +68,13 @@ crackmapexec smb <IP>
 - SMB signing
 - auth behavior
 
+## profiles$ dump
+- If in the scenario where you have valid creds or anonymous access and there is an avail `profiles$` share to which you can read and you just want to dump it without the other columns run ->
 
-### **STEP 5 — How to Connect to a Share**
+```bash
+smbclient -N '//<ip>/profiles$' -c 'ls' | awk '$2=="D" && $1!="." && $1!=".." {print $1}' >  users.txt
+```
+### **STEP 4 — How to Connect to a Share**
 
 ```bash
 smbclient //<IP>/<share> -U user%password
@@ -194,7 +127,7 @@ mget * #which grabs all
 
 
 
-### **STEP 6 — Mount a Share (Better for Searching)**
+### **Mount a Share (Better for Searching)**
 
 Mount the share so `grep`/`find` work on the whole tree. Use smbclient to browse, mount to search/pull many files.
 

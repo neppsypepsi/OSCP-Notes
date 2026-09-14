@@ -206,6 +206,9 @@ Note on 403:
 - Worth noting in your notes — it confirms the path is real
 - Sometimes 403 paths become accessible after auth or with different methods
 
+---
+# Jamie's Recommended
+`gobuster dir -u http://<IP> -w /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt -x php,txt,bak`
 
 
 ## **🔗 Related Notes**
