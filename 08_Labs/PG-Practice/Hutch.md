@@ -952,7 +952,7 @@ result: 0 Success
 - Observing the output we got back from our LDAP dump, we find plain text credential in one of the descriptions for one of the users -> `CrabSharkJellyfish192`
 ![[Pasted image 20260824160000.png]]
 
- - I had then tried to use the smb service to verify the credentials were valid for us to use with a service that does grant a shell...like winrm.![[Pasted image 20260824235420.png]]
+ - I had then tried to use the smb service to verify if the credentials were valid for us to use with a service that does grant a shell...like winrm.![[Pasted image 20260824235420.png]]
 
 - Here we try enumerating shares using the credentials we found however there were nothing but standard shares.![[Pasted image 20260825000738.png]]
 	- Below we find that we did indeed need credentials to even see any share.

@@ -1,4 +1,3 @@
-# **🛠️ Section 1: General Nmap Commands & Cheat Sheet**
 
 ## **🧠 What is Nmap?**
 
@@ -8,21 +7,7 @@ nmap is an **active reconnaissance tool** used to:
 - Scan for open TCP/UDP ports
 - Detect service versions and OS types
 - Map firewall rules
-
-## **🔧 Basic Syntax**
-
-```bash
-nmap <scan types> <options> <target>
-```
-Think of it as:
-
-- **Scan type** → _How_ Nmap talks to the target
-    
-- **Options** → _What extra info_ you want
-    
-- **Target** → IP / range / hostname
-
-
+---
 **🧪 Typical OSCP Workflow**
 
 **1. Initial full port scan (fast/broad):**
@@ -51,3 +36,40 @@ nmap -sV -sC -p <open_ports> -oN version_scan.txt <target>
 |-p|**Specific ports only**|Faster + cleaner results|
 |-oN|**Save output**|Needed for reporting & review|
 
+
+---
+
+# **🔬 Section 2: NSE Scripts (`--script`)**
+
+
+## Ole-Reliable Commands
+```bash
+# Run every vuln-category check (service-aware -> keep -sV)
+nmap -sV -p<port> --script vuln <IP>
+
+# See what scripts EXIST for a service (find the exact name)
+ls /usr/share/nmap/scripts/ | grep <service>
+
+# Run ONE specific script by name
+nmap -sV -p<port> --script <script-name> <IP>
+
+# Read what a script does BEFORE running it
+nmap --script-help <script-name>
+```
+
+## Service -> Script Family (examples)
+| Open service  | Script family to grep |
+| ------------- | --------------------- |
+| SMB (445)     | `smb-vuln-*`          |
+| RDP (3389)    | `rdp-*`               |
+| HTTP (80/any) | `http-*`              |
+| DNS (53)      | `dns-*`               |
+| FTP (21)      | `ftp-*`               |
+
+> All scripts live in `/usr/share/nmap/scripts/`
+
+## 🔗 Related Notes
+- [[SMB]]
+- [[smbmap]]
+- [[enum4linux]]
+- [[Port-Overview-and-Priorities]]
