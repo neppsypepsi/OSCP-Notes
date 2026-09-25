@@ -62,6 +62,7 @@ linux/x86/shell_reverse_tcp
 ### **Meterpreter**
 ```bash
 windows/x64/meterpreter_reverse_tcp
+#must catch shell with a metasploit multihandeler!
 ```
 
 ### **Common Delivery Methods**

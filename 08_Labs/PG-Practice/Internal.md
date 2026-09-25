@@ -276,3 +276,11 @@ whomai
 dir
 ^C
 ```
+
+
+- I ended up learning the cause of my commands not going through was because the payload I generated expected me to use msfconsole to catch the shell. To fix this I need to use another payload like windows/shell_reverse_tcp so that the normal nc listener would work.
+
+
+
+I give up. and i refuse to use metasploit. My windows/shell_reverse_tcp
+

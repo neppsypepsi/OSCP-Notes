@@ -55,3 +55,19 @@ Port 389(Ldap):
 psexec does not work
 ![[Pasted image 20260911162845.png]]wmiexec does not work
 ![[Pasted image 20260914144810.png]]smbexec does not work
+
+command that was provided to us in bloodound in order to force change the password for the audit2020 account:
+```
+└─$ net rpc password "audit2020" "newP@ssword2022" -U BLACKFIELD.local/"support"%"#00^BlackKnight" -S 10.129.229.17
+
+```
+- Ends up working...it gave no out put but it worked and we could've tested this with smb or or someother service that would accept creds.
+
+
+We get lucky for smb being our first try...however we end up now being able to access that forensic share that we once werent able to. 
+![[Pasted image 20260915184816.png]]
+here  what stands out is the lsass.zip file (its always been important dont over think)
+
+
+There is a tool called pypykatz that is use to 
+pypykatz later download.
