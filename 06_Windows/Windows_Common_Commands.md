@@ -24,6 +24,14 @@ cmd
 ```
 → Drops back to cmd from PowerShell if a tool or command only behaves in cmd.
 
+# Repair Path when cmd commands aren't working
+```cmd
+set PATH=%PATH%;C:\Windows\System32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0
+```
+
+
+
+
 ---
 
 ## Who Am I

