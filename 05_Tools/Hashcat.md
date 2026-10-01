@@ -60,7 +60,7 @@ hashcat -m 1000 user.hash --show
 
 ## **Rules**
 ```bash
-hashcat -m 1000 user.hash rockyou.txt -r /usr/share/hashcat/rules/best64.rule
+hashcat -m 1000 user.hash /usr/share/wordlists/rockyou.txt -r /usr/share/hashcat/rules/best64.rule
 ```
 
 

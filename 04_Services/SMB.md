@@ -10,17 +10,17 @@
 
 ---
 
-### **STEP 1 — Try Anonymous / Guest 
+###  Anonymous Access Test 
 ```bash
 smbclient -L //<IP>/ -N
 ```
 - -L = list shares
 - -N = no password (anonymous)
-**Success looks like:** shares listed.
+**Success looks like:** shares listed. However if no shares listed but authenticated you still may be able to RID brute 
 **Failure looks like:** NT_STATUS_ACCESS_DENIED → creds needed
 
 
-### **STEP 2 — Check Share Permissions (Fast)**
+###  Check Share Permissions (Fast)**
 ```bash
 nxc smb <target ip> -u '' -p '' --shares
 ```
@@ -28,20 +28,20 @@ nxc smb <target ip> -u '' -p '' --shares
 
 #### Default shares — ❌ X these out, they're standard on every Windows host / DC
 
-| Share | Normal perms | What it is | Verdict |
-|---|---|---|---|
-| `ADMIN$` | admin only | Remote admin (`C:\Windows`) | ❌ default — access = you're **local admin** |
-| `C$` | admin only | Whole C: drive | ❌ default — access = you're **local admin** |
-| `IPC$` | READ | RPC named-pipe channel, **no files** | ❌ default — used for null-session enum, not loot |
-| `NETLOGON` | READ | Logon scripts (DC only) | ❌ default — peek for stray scripts, usually empty |
-| `SYSVOL` | READ | GPOs / domain policy (DC only) | ❌ default — quick look for GPP creds, else skip |
-| `print$` | READ | Printer drivers | ❌ default |
-#### Quick check on SYSVOL — GPP passwords
+| Share      | Normal perms | What it is                           | Verdict                                           |
+| ---------- | ------------ | ------------------------------------ | ------------------------------------------------- |
+| `ADMIN$`   | admin only   | Remote admin (`C:\Windows`)          | ❌ default — access = you're **local admin**       |
+| `C$`       | admin only   | Whole C: drive                       | ❌ default — access = you're **local admin**       |
+| `IPC$`     | READ         | RPC named-pipe channel, **no files** | ❌ default — used for null-session enum, not loot  |
+| `NETLOGON` | READ         | Logon scripts (DC only)              | ❌ default — peek for stray scripts, usually empty |
+| `SYSVOL`   | READ         | GPOs / domain policy (DC only)       |  default — quick look for GPP creds, else skip    |
+| `print$`   | READ         | Printer drivers                      | ❌ default                                         |
+#### SYSVOL — GPP passwords
 
 `SYSVOL` is a default share, but before you X it out, scan it for **GPP passwords**:
 old Group Policy Preferences stored a `cpassword` in XML files (`Groups.xml`, etc.),
 "encrypted" with a **key Microsoft published** — so anyone who can read SYSVOL can
-decrypt it. Needs any valid domain cred.
+decrypt it. **Needs any valid domain cred.**
 
 ```bash
 nxc smb <IP> -u <user> -p <password> -M gpp_password   # auto-find + decrypt in SYSVOL
@@ -57,7 +57,8 @@ gpp-decrypt <cpassword-string>
 ```bash
 enum4linux -a <IP>
 ```
-**Why:** can reveal users/shares/domain info. Use as supporting evidence.
+**Why:** can reveal users/shares/domain info. Great tool to use if you can authenticate with anonymous access but weren't able to list shares. You may be able to still find users (RID Brute)
+
 ```bash
 crackmapexec smb <IP>
 ```
@@ -79,10 +80,11 @@ smbclient -N '//<ip>/profiles$' -c 'ls' | awk '$2=="D" && $1!="." && $1!=".." {p
 ```bash
 smbclient //<IP>/<share> -U user%password
 
-#or anonymously 
+#or 
 
-smbclient //<IP>/<share> -N
+impacket-smbclient user:'pass'@<ip>
 
+#if there is a space in the share name wrap the everything from the // to the end of the password with double quotes.
 ```
 
 Once Inside smbclient:
@@ -92,7 +94,7 @@ cd <dir>
 get <file>
 ```
 
-## **How to List shares as a User**
+## List shares as a User
 This will work if you have obtained some sort of potential user name and password
 
 ```bash
@@ -100,13 +102,6 @@ smbclient -L //<ip>/ -U domain/username
 ```
 
 You will then be asked for a password and you will enter it there
-
-
-## **How to connect to a share as a User**
-After you have verified that there indeed is shares, you may then begin to connect to the share and see whats inside using this command:
-```bash
-impacket-smbclient user:'pass'@<ip>
-```
 
 ## **How to move around after connected**
 After you connected to the user, you should then refer back to the shares that are available to then interact with the share. From here you will want to see whats there and if there is loot pull it back to your machine:
@@ -119,9 +114,15 @@ This is to actually enter the share. Once in then you can "ls" to see whats in t
 
 After moving around and if you see some files that you like and want to download over to your machine you can use these commands:
 ```bash
+
+
 get <file>
-#or 
-mget * #which grabs all
+
+#or all in one go
+smb: \> prompt off
+smb: \> recurse on
+smb: \> mget *
+
 ```
 
 
