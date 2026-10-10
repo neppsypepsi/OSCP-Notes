@@ -132,4 +132,7 @@ WINRM       192.168.207.175 5985   RESOURCEDC       [+] resourced.local\L.Living
 
 
 **Port 5985:**
-- 
+- Here is the port for WinRM. Because we were able to use pass the hash to get a shell, we then chose to drop the sharphound python executable that gathers all the data we need from AD so that we can potentially escalate privleges. 
+- After marking L.Livingstone as Owned, I then chose to see what the shortest path to Domain Admins from Owned Principals and it came back with -> ![[Pasted image 20261003004157.png]]
+- This is important because there indeed is a path but there is a specific one that should catch our attention
+	- Simply clicking on the node that `L.Livingstone` we are then able to find that under node info, they have an `OUTBOUND OBJECT CONTROL`, and by clicking on the First Degree Object control we find that L.Livingstone has the GenericAll privilege over the machine to the Domain controller.![[Pasted image 20261003004441.png]]
