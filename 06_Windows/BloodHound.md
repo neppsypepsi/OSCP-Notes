@@ -6,7 +6,7 @@ sudo neo4j stop
 ```
 Launch the GUI:
 ```bash
-bloodhound-legacy      # symlink -> /home/nepps1/tools/bloodhound-legacy/BloodHound-linux-x64/BloodHound
+bloodhound-legacy      
 ```
 
 ---
@@ -20,11 +20,19 @@ bloodhound-python -u <user> -p '<pass>' -d <domain.local> -dc <DC_FQDN> -ns <DC_
 → `-c all` runs every collection method · `--zip` bundles the JSON. Just needs valid domain creds + reachability to the DC. Preferred when pivoting.
 
 ### On a Windows target (SharpHound)
-```cmd
+```bash
 SharpHound.exe -c all
+
+# /home/nepps1/tools/bloodhound-legacy/BloodHound-linux-x64/resources/app/Collectors/SharpHound.exe
+
 ```
+
+
+
 ```powershell
 Import-Module .\SharpHound.ps1; Invoke-BloodHound -CollectionMethod All
+
+#/home/nepps1/tools/bloodhound-legacy/BloodHound-linux-x64/resources/app/Collectors/SharpHound.ps1
 ```
 → Transfer SharpHound ([[File_Transfer]]), run it, exfil the resulting `.zip` back to Kali.
 
