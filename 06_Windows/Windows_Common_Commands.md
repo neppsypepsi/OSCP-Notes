@@ -191,6 +191,14 @@ Get-ChildItem -Path C:\ -Recurse -Include *.config,*.xml,*.ini,*.txt -ErrorActio
 ```
 → PowerShell equivalent — recurse, filter by extension, then search contents. `-ErrorAction SilentlyContinue` is the `2>/dev/null` of PowerShell (suppresses access-denied noise).
 
+# Evil-winrm cmd search
+```powershell
+dir /s /b C:\Users\*proof*
+where /r C:\Users proof.txt
+
+```
+Avoid searching under just the C:\ drive because 
+
 ### High-value cred file locations (check these directly)
 
 ```cmd

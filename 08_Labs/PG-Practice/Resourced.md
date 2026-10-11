@@ -136,3 +136,14 @@ WINRM       192.168.207.175 5985   RESOURCEDC       [+] resourced.local\L.Living
 - After marking L.Livingstone as Owned, I then chose to see what the shortest path to Domain Admins from Owned Principals and it came back with -> ![[Pasted image 20261003004157.png]]
 - This is important because there indeed is a path but there is a specific one that should catch our attention
 	- Simply clicking on the node that `L.Livingstone` we are then able to find that under node info, they have an `OUTBOUND OBJECT CONTROL`, and by clicking on the First Degree Object control we find that L.Livingstone has the GenericAll privilege over the machine to the Domain controller.![[Pasted image 20261003004441.png]]
+	- This POC as Bloodhound explains this "Generic All exploit" requires a set of various different tools. 
+		- The tools being Rubeus, powerview, and powermad. What I did at first locally was check to see if I already had these exploit files on my machine. I had all three, all three were powershell files. 
+	- ![[Pasted image 20261010004038.png]]
+		- I learned that I was setting the SID number to the new attacker system we created to be the environmental variable `$ComputerSid`. This is one of the steps...
+	- ![[Pasted image 20261010004055.png]]
+		- I learned from ehre that this segment of the POC was formatted in this specific way to signify new lines, and that they were not all supposed to be ran in conjunction as you would on linux i think...
+	- ![[Pasted image 20261010004110.png]]
+		- After attempts doing this box I found out that trying to use Rubeus as a powershell file was not the move, and it was best to find the traditional executable binary `Rubeus.exe`.
+		- In the end Rubeus did end up successfully spitting back out to me the rc4 hash for the s4U proxy ticket that I would then be able to use over smb. Now, whether that mean I choose to just read the root flag or to actually have a shell as Administrator is one me..but of course for this lab I want Administrator, so I followed steps from the [[Rubeus]] note in order to set my KRB5NAME variable to point to a specific `key` file called ticket.kirbi so that my machine could use impackets psexec tool to get me a shell as Admin. 
+		- Now I was able to get a shell and I learned that my shell is a tad limited, and its best to avoid piping things  when running commands related to searching for files, so I searched the \Users directory for something ending in Proof.txt and we
+![[Pasted image 20261010004947.png]]

